@@ -119,6 +119,32 @@ namespace LetWeCook.Data.Migrations
                     b.ToTable("application_user", (string)null);
                 });
 
+            modelBuilder.Entity("LetWeCook.Data.Entities.Badge", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("date_created");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("description");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("badge", (string)null);
+                });
+
             modelBuilder.Entity("LetWeCook.Data.Entities.CollectionRecipe", b =>
                 {
                     b.Property<Guid>("DishCollectionId")
@@ -138,6 +164,51 @@ namespace LetWeCook.Data.Migrations
                     b.HasIndex("RecipeId");
 
                     b.ToTable("collection_recipe", (string)null);
+                });
+
+            modelBuilder.Entity("LetWeCook.Data.Entities.Course", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("ApplicationUserId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("instructor_id");
+
+                    b.Property<bool>("Certificate")
+                        .HasColumnType("bit")
+                        .HasColumnName("certificate");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("date_created");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("description");
+
+                    b.Property<bool>("IsPublished")
+                        .HasColumnType("bit")
+                        .HasColumnName("is_published");
+
+                    b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("price");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("title");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("course", (string)null);
                 });
 
             modelBuilder.Entity("LetWeCook.Data.Entities.DietaryPreference", b =>
@@ -188,6 +259,32 @@ namespace LetWeCook.Data.Migrations
                     b.ToTable("dish_collection", (string)null);
                 });
 
+            modelBuilder.Entity("LetWeCook.Data.Entities.Enrollment", b =>
+                {
+                    b.Property<Guid>("ApplicationUserId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("user_id");
+
+                    b.Property<Guid>("CourseId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("course_id");
+
+                    b.Property<DateTime>("DateEnrolled")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("date_enrolled");
+
+                    b.Property<decimal>("Progress")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("progress");
+
+                    b.HasKey("ApplicationUserId", "CourseId");
+
+                    b.HasIndex("CourseId");
+
+                    b.ToTable("enrollment", (string)null);
+                });
+
             modelBuilder.Entity("LetWeCook.Data.Entities.Feed", b =>
                 {
                     b.Property<Guid>("Id")
@@ -216,6 +313,34 @@ namespace LetWeCook.Data.Migrations
                     b.ToTable("feed", (string)null);
                 });
 
+            modelBuilder.Entity("LetWeCook.Data.Entities.Follow", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("DateFollowed")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("date_followed");
+
+                    b.Property<Guid>("FollowedId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("followed_id");
+
+                    b.Property<Guid>("FollowerId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("follower_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FollowedId");
+
+                    b.HasIndex("FollowerId");
+
+                    b.ToTable("follow", (string)null);
+                });
+
             modelBuilder.Entity("LetWeCook.Data.Entities.Ingredient", b =>
                 {
                     b.Property<Guid>("Id")
@@ -236,6 +361,72 @@ namespace LetWeCook.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ingredient", (string)null);
+                });
+
+            modelBuilder.Entity("LetWeCook.Data.Entities.Lesson", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("CourseId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("course_id");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("date_created");
+
+                    b.Property<bool>("IsTrial")
+                        .HasColumnType("bit")
+                        .HasColumnName("is_trial");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("title");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.ToTable("lesson", (string)null);
+                });
+
+            modelBuilder.Entity("LetWeCook.Data.Entities.LessonContent", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<string>("ContentData")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("content_data");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("content_type");
+
+                    b.Property<Guid>("LessionId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("lesson_id");
+
+                    b.Property<Guid>("LessonId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("OrderNumber")
+                        .HasColumnType("int")
+                        .HasColumnName("order_number");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LessonId");
+
+                    b.ToTable("lesson_content", (string)null);
                 });
 
             modelBuilder.Entity("LetWeCook.Data.Entities.MealPlan", b =>
@@ -267,7 +458,7 @@ namespace LetWeCook.Data.Migrations
 
             modelBuilder.Entity("LetWeCook.Data.Entities.MealPlanRecipe", b =>
                 {
-                    b.Property<Guid>("MealId")
+                    b.Property<Guid>("MealPlanId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("meal_id");
 
@@ -275,16 +466,11 @@ namespace LetWeCook.Data.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("recipe_id");
 
-                    b.Property<Guid>("MealPlanId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int>("Servings")
                         .HasColumnType("int")
                         .HasColumnName("servings");
 
-                    b.HasKey("MealId", "RecipeId");
-
-                    b.HasIndex("MealPlanId");
+                    b.HasKey("MealPlanId", "RecipeId");
 
                     b.HasIndex("RecipeId");
 
@@ -311,6 +497,166 @@ namespace LetWeCook.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("media_url", (string)null);
+                });
+
+            modelBuilder.Entity("LetWeCook.Data.Entities.Notification", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("ApplicationUserId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("user_id");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("date_created");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit")
+                        .HasColumnName("is_read");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("message");
+
+                    b.Property<string>("NotificationType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("notification_type");
+
+                    b.Property<Guid>("ReferenceId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("reference_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("notification", (string)null);
+                });
+
+            modelBuilder.Entity("LetWeCook.Data.Entities.QuestionOption", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<bool>("IsCorrect")
+                        .HasColumnType("bit")
+                        .HasColumnName("is_correct");
+
+                    b.Property<string>("OptionLetter")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("option_letter");
+
+                    b.Property<string>("OptionText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("option_text");
+
+                    b.Property<Guid>("QuestionId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("question_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("question_option", (string)null);
+                });
+
+            modelBuilder.Entity("LetWeCook.Data.Entities.Quiz", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("date_created");
+
+                    b.Property<Guid>("LessonId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("lesson_id");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("title");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LessonId");
+
+                    b.ToTable("quiz", (string)null);
+                });
+
+            modelBuilder.Entity("LetWeCook.Data.Entities.QuizQuestion", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<string>("CorrectAnswer")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("correct_answer");
+
+                    b.Property<string>("QuestionText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("question_text");
+
+                    b.Property<Guid>("QuizId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("quiz_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuizId");
+
+                    b.ToTable("quiz_question", (string)null);
+                });
+
+            modelBuilder.Entity("LetWeCook.Data.Entities.QuizResult", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("ApplicationUserId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("user_id");
+
+                    b.Property<DateTime>("DateCompleted")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("date_completed");
+
+                    b.Property<Guid>("QuizId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("quiz_id");
+
+                    b.Property<decimal>("Score")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("score");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("QuizId");
+
+                    b.ToTable("quiz_result", (string)null);
                 });
 
             modelBuilder.Entity("LetWeCook.Data.Entities.Recipe", b =>
@@ -389,6 +735,48 @@ namespace LetWeCook.Data.Migrations
                     b.HasIndex("RecipeId");
 
                     b.ToTable("recipe_ingredient", (string)null);
+                });
+
+            modelBuilder.Entity("LetWeCook.Data.Entities.RecipeReview", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("ApplicationUserId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("user_id");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("created_date");
+
+                    b.Property<bool>("IsPossitive")
+                        .HasColumnType("bit")
+                        .HasColumnName("is_possitive");
+
+                    b.Property<decimal>("Rating")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("rating");
+
+                    b.Property<Guid>("RecipeId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("recipe_id");
+
+                    b.Property<string>("Review")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("review");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("RecipeId");
+
+                    b.ToTable("recipe_review", (string)null);
                 });
 
             modelBuilder.Entity("LetWeCook.Data.Entities.RecipeStep", b =>
@@ -496,6 +884,27 @@ namespace LetWeCook.Data.Migrations
                     b.HasIndex("ShoppingListId");
 
                     b.ToTable("shopping_list_item", (string)null);
+                });
+
+            modelBuilder.Entity("LetWeCook.Data.Entities.UserBadge", b =>
+                {
+                    b.Property<Guid>("ApplicationUserId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("user_id");
+
+                    b.Property<Guid>("BadgeId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("badge_id");
+
+                    b.Property<DateTime>("DateEarned")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("date_earned");
+
+                    b.HasKey("ApplicationUserId", "BadgeId");
+
+                    b.HasIndex("BadgeId");
+
+                    b.ToTable("user_badge", (string)null);
                 });
 
             modelBuilder.Entity("LetWeCook.Data.Entities.UserDietaryPreference", b =>
@@ -606,6 +1015,17 @@ namespace LetWeCook.Data.Migrations
                     b.Navigation("Recipe");
                 });
 
+            modelBuilder.Entity("LetWeCook.Data.Entities.Course", b =>
+                {
+                    b.HasOne("LetWeCook.Data.Entities.ApplicationUser", "Instructor")
+                        .WithMany("TaughtCourses")
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Instructor");
+                });
+
             modelBuilder.Entity("LetWeCook.Data.Entities.DishCollection", b =>
                 {
                     b.HasOne("LetWeCook.Data.Entities.ApplicationUser", "User")
@@ -613,6 +1033,25 @@ namespace LetWeCook.Data.Migrations
                         .HasForeignKey("ApplicationUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("LetWeCook.Data.Entities.Enrollment", b =>
+                {
+                    b.HasOne("LetWeCook.Data.Entities.ApplicationUser", "User")
+                        .WithMany("Enrollments")
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LetWeCook.Data.Entities.Course", "Course")
+                        .WithMany("Enrollments")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Course");
 
                     b.Navigation("User");
                 });
@@ -634,6 +1073,47 @@ namespace LetWeCook.Data.Migrations
                     b.Navigation("Activity");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("LetWeCook.Data.Entities.Follow", b =>
+                {
+                    b.HasOne("LetWeCook.Data.Entities.ApplicationUser", "Followed")
+                        .WithMany("Followers")
+                        .HasForeignKey("FollowedId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("LetWeCook.Data.Entities.ApplicationUser", "Follower")
+                        .WithMany("Followings")
+                        .HasForeignKey("FollowerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Followed");
+
+                    b.Navigation("Follower");
+                });
+
+            modelBuilder.Entity("LetWeCook.Data.Entities.Lesson", b =>
+                {
+                    b.HasOne("LetWeCook.Data.Entities.Course", "Course")
+                        .WithMany("Lessons")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+                });
+
+            modelBuilder.Entity("LetWeCook.Data.Entities.LessonContent", b =>
+                {
+                    b.HasOne("LetWeCook.Data.Entities.Lesson", "Lesson")
+                        .WithMany("LessonContents")
+                        .HasForeignKey("LessonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Lesson");
                 });
 
             modelBuilder.Entity("LetWeCook.Data.Entities.MealPlan", b =>
@@ -666,6 +1146,69 @@ namespace LetWeCook.Data.Migrations
                     b.Navigation("Recipe");
                 });
 
+            modelBuilder.Entity("LetWeCook.Data.Entities.Notification", b =>
+                {
+                    b.HasOne("LetWeCook.Data.Entities.ApplicationUser", "User")
+                        .WithMany("Notifications")
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("LetWeCook.Data.Entities.QuestionOption", b =>
+                {
+                    b.HasOne("LetWeCook.Data.Entities.QuizQuestion", "Question")
+                        .WithMany("QuestionOptions")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Question");
+                });
+
+            modelBuilder.Entity("LetWeCook.Data.Entities.Quiz", b =>
+                {
+                    b.HasOne("LetWeCook.Data.Entities.Lesson", "Lesson")
+                        .WithMany("Quizzes")
+                        .HasForeignKey("LessonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Lesson");
+                });
+
+            modelBuilder.Entity("LetWeCook.Data.Entities.QuizQuestion", b =>
+                {
+                    b.HasOne("LetWeCook.Data.Entities.Quiz", "Quiz")
+                        .WithMany("QuizQuestions")
+                        .HasForeignKey("QuizId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Quiz");
+                });
+
+            modelBuilder.Entity("LetWeCook.Data.Entities.QuizResult", b =>
+                {
+                    b.HasOne("LetWeCook.Data.Entities.ApplicationUser", "User")
+                        .WithMany("QuizResults")
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("LetWeCook.Data.Entities.Quiz", "Quiz")
+                        .WithMany("QuizResults")
+                        .HasForeignKey("QuizId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Quiz");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("LetWeCook.Data.Entities.Recipe", b =>
                 {
                     b.HasOne("LetWeCook.Data.Entities.ApplicationUser", "CreatedBy")
@@ -694,6 +1237,25 @@ namespace LetWeCook.Data.Migrations
                     b.Navigation("Ingredient");
 
                     b.Navigation("Recipe");
+                });
+
+            modelBuilder.Entity("LetWeCook.Data.Entities.RecipeReview", b =>
+                {
+                    b.HasOne("LetWeCook.Data.Entities.ApplicationUser", "User")
+                        .WithMany("RecipeReviews")
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LetWeCook.Data.Entities.Recipe", "Recipe")
+                        .WithMany("RecipeReviews")
+                        .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Recipe");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("LetWeCook.Data.Entities.RecipeStep", b =>
@@ -756,6 +1318,25 @@ namespace LetWeCook.Data.Migrations
                     b.Navigation("ShoppingList");
                 });
 
+            modelBuilder.Entity("LetWeCook.Data.Entities.UserBadge", b =>
+                {
+                    b.HasOne("LetWeCook.Data.Entities.ApplicationUser", "User")
+                        .WithMany("UserBadges")
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LetWeCook.Data.Entities.Badge", "Badge")
+                        .WithMany("UserBadges")
+                        .HasForeignKey("BadgeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Badge");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("LetWeCook.Data.Entities.UserDietaryPreference", b =>
                 {
                     b.HasOne("LetWeCook.Data.Entities.DietaryPreference", "DietaryPreference")
@@ -797,15 +1378,43 @@ namespace LetWeCook.Data.Migrations
 
                     b.Navigation("DishCollection");
 
+                    b.Navigation("Enrollments");
+
                     b.Navigation("Feeds");
 
+                    b.Navigation("Followers");
+
+                    b.Navigation("Followings");
+
                     b.Navigation("MealPlans");
+
+                    b.Navigation("Notifications");
+
+                    b.Navigation("QuizResults");
+
+                    b.Navigation("RecipeReviews");
 
                     b.Navigation("Recipes");
 
                     b.Navigation("ShoppingLists");
 
+                    b.Navigation("TaughtCourses");
+
+                    b.Navigation("UserBadges");
+
                     b.Navigation("UserProfile");
+                });
+
+            modelBuilder.Entity("LetWeCook.Data.Entities.Badge", b =>
+                {
+                    b.Navigation("UserBadges");
+                });
+
+            modelBuilder.Entity("LetWeCook.Data.Entities.Course", b =>
+                {
+                    b.Navigation("Enrollments");
+
+                    b.Navigation("Lessons");
                 });
 
             modelBuilder.Entity("LetWeCook.Data.Entities.DietaryPreference", b =>
@@ -825,6 +1434,13 @@ namespace LetWeCook.Data.Migrations
                     b.Navigation("ShoppingListItems");
                 });
 
+            modelBuilder.Entity("LetWeCook.Data.Entities.Lesson", b =>
+                {
+                    b.Navigation("LessonContents");
+
+                    b.Navigation("Quizzes");
+                });
+
             modelBuilder.Entity("LetWeCook.Data.Entities.MealPlan", b =>
                 {
                     b.Navigation("MealPlanRecipes");
@@ -835,6 +1451,18 @@ namespace LetWeCook.Data.Migrations
                     b.Navigation("RecipeStepsMedia");
                 });
 
+            modelBuilder.Entity("LetWeCook.Data.Entities.Quiz", b =>
+                {
+                    b.Navigation("QuizQuestions");
+
+                    b.Navigation("QuizResults");
+                });
+
+            modelBuilder.Entity("LetWeCook.Data.Entities.QuizQuestion", b =>
+                {
+                    b.Navigation("QuestionOptions");
+                });
+
             modelBuilder.Entity("LetWeCook.Data.Entities.Recipe", b =>
                 {
                     b.Navigation("CollectionRecipes");
@@ -842,6 +1470,8 @@ namespace LetWeCook.Data.Migrations
                     b.Navigation("MealPlanRecipes");
 
                     b.Navigation("RecipeIngredients");
+
+                    b.Navigation("RecipeReviews");
 
                     b.Navigation("RecipeSteps");
                 });

@@ -87,6 +87,12 @@ namespace LetWeCook.Data.Configurations
 				.HasForeignKey("RecipeId")
 				.OnDelete(DeleteBehavior.Cascade)
 				.IsRequired();
+
+			builder.HasMany(r => r.RecipeReviews)
+				.WithOne(rr => rr.Recipe)
+				.HasForeignKey("RecipeId")
+				.OnDelete(DeleteBehavior.Cascade)
+				.IsRequired();
 		}
 	}
 }
