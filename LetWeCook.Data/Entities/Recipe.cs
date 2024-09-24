@@ -21,5 +21,6 @@ namespace LetWeCook.Data.Entities
 		public List<MealPlanRecipe> MealPlanRecipes { get; set; } = new List<MealPlanRecipe>();
 		public List<DishCollection> DishCollections { get; set; } = new List<DishCollection>();
 		public List<CollectionRecipe> CollectionRecipes { get; set; } = new List<CollectionRecipe>();
+		public List<RecipeReview> RecipeReviews { get; set; } = new List<RecipeReview>();
 	}
 }
