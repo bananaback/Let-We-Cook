@@ -1,0 +1,156 @@
+﻿
+@{
+	@model LetWeCook.Web.Areas.Account.Models.ViewModels.RegisterViewModel
+}
+<div class="flex h-screen flex-col items-center justify-start bg-[#191920]">
+	<div class="header flex flex-row items-center justify-center gap-x-4 py-4">
+		<div class="logo">
+			<svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 fill-white" viewBox="0 -960 960 960"><path d="M177-560q14-36 4.5-64T149-680q-33-40-43.5-75.5T102-840h78q-8 38-2.5 62t28.5 52q38 46 48.5 81.5t.5 84.5h-78Zm160 0q14-36 5-64t-32-56q-33-40-44-75.5t-4-84.5h78q-8 38-2.5 62t28.5 52q38 46 48.5 81.5t.5 84.5h-78Zm160 0q14-36 5-64t-32-56q-33-40-44-75.5t-4-84.5h78q-8 38-2.5 62t28.5 52q38 46 48.5 81.5t.5 84.5h-78ZM200-160q-50 0-85-35t-35-85v-200h561q5-34 27-59.5t54-36.5l185-62 25 76-185 62q-12 4-19.5 14.5T720-462v182q0 50-35 85t-85 35H200Zm0-80h400q17 0 28.5-11.5T640-280v-120H160v120q0 17 11.5 28.5T200-240Zm200-80Z" /></svg>
+		</div>
+		<div class="title text-4xl font-semibold text-white">
+			LETWECOOK
+		</div>
+	</div>
+	<div class="main flex-1 flex w-full flex-row items-center justify-center gap-x-32">
+		<div class="slideshow mt-9 w-[579px] rounded-[20px]">
+			<div class="image-holder relative h-[492px] w-[579px] overflow-hidden rounded-[20px]">
+				<img data-imageindex="1" class="absolute h-full w-full object-cover transition-all duration-500" src="~/images/intro_dish_1.jpg" alt="intro-dish-1" />
+				<img data-imageindex="2" class="opacity-0 absolute h-full w-full object-cover transition-all duration-500" src="~/images/intro_dish_2.jpg" alt="intro-dish-1" />
+				<img data-imageindex="3" class="opacity-0 absolute h-full w-full object-cover transition-all duration-500" src="~/images/intro_dish_3.jpg" alt="intro-dish-1" />
+				<img data-imageindex="4" class="opacity-0 absolute h-full w-full object-cover transition-all duration-500" src="~/images/intro_dish_4.jpg" alt="intro-dish-1" />
+
+			</div>
+			<div class="indicator my-2 flex flex-row items-center justify-center gap-x-2 py-2">
+				<div data-index="1" class="slide-nav-btn h-4 w-8 rounded-full bg-gray-600 transition-all duration-500 hover:bg-gray-500">
+
+				</div>
+				<div data-index="2" class="slide-nav-btn h-4 w-4 rounded-full bg-slate-50 transition-all duration-500 hover:bg-gray-500">
+
+				</div>
+				<div data-index="3" class="slide-nav-btn h-4 w-4 rounded-full bg-slate-50 transition-all duration-500 hover:bg-gray-500">
+
+				</div>
+				<div data-index="4" class="slide-nav-btn h-4 w-4 rounded-full bg-slate-50 transition-all duration-500 hover:bg-gray-500">
+				</div>
+			</div>
+		</div>
+
+		<div class="login-form flex w-1/4 flex-col items-center justify-start rounded-[20px] bg-[#232329] p-4">
+			<div class="greet-1 w-full pb-2 pt-4 text-center text-2xl font-semibold text-white">
+				Start with us.
+			</div>
+			<div class="greet-2 w-full py-2 text-center text-base text-white">
+				Fill your informations.
+			</div>
+			
+			<div class="register-info flex w-5/6 flex-col items-center justify-center">
+				<form asp-action="Register" method="post">
+					<div asp-validation-summary="All" class="text-sm text-red-500"></div>
+
+					<label asp-for="Username" class="w-full text-start text-base font-semibold text-white">
+						Username 
+					</label>
+					<input asp-for="Username" class="my-2 h-9 w-full rounded-[10px] fill-[#D9D9D9] px-2" />
+					<span asp-validation-for="Username" class="text-sm text-red-500"></span>
+
+					<label asp-for="Email" class="w-full text-start text-base font-semibold text-white">
+						Email
+					</label>
+					<input asp-for="Email" class="my-2 h-9 w-full rounded-[10px] fill-[#D9D9D9] px-2" />
+					<span asp-validation-for="Email" class="text-sm text-red-500"></span>
+
+
+					<label asp-for="Password" class="w-full pt-2 text-start text-base font-semibold text-white">
+						Password
+					</label>
+					<input asp-for="Password" type="password" class="my-2 h-9 w-full rounded-[10px] fill-[#D9D9D9] px-2" />
+					<span asp-validation-for="Password" class="text-sm text-red-500"></span>
+
+					<label asp-for="ConfirmPassword" class="w-full pt-2 text-start text-base font-semibold text-white">
+						Confirm Password
+					</label>
+					<input asp-for="ConfirmPassword" type="password" class="my-2 h-9 w-full rounded-[10px] fill-[#D9D9D9] px-2" />
+					<span asp-validation-for="ConfirmPassword" class="text-sm text-red-500"></span>
+
+					<!-- Keep the button as is -->
+					<button type="submit" class="register-btn my-4 flex w-full items-center justify-center rounded-[10px] bg-[#4BBC05] px-4 py-1 text-center text-lg font-bold text-white hover:bg-green-400">REGISTER</button>
+				</form>
+			</div>
+
+
+			<div class="register-link flex w-full cursor-pointer items-center justify-center pb-4">
+				<a class="text-lg font-bold text-[#8C29E2]">Already have an account?</a>
+			</div>
+		</div>
+
+		
+
+	</div>
+</div>
+
+@section Scripts {
+	<script type="text/javascript" src="~/js/register.js"></script>
+	<partial name="_ValidationScriptsPartial" />
+
+		<script>
+			document.addEventListener("DOMContentLoaded", function () {
+				const form = document.querySelector('form');
+				const passwordInput = document.querySelector('input[name="Password"]');
+				const confirmPasswordInput = document.querySelector('input[name="ConfirmPassword"]');
+
+				passwordInput.addEventListener('input', function () {
+					validatePassword(passwordInput);
+					validateConfirmPassword();
+					passwordInput.reportValidity();
+				});
+
+				confirmPasswordInput.addEventListener('input', function () {
+					validateConfirmPassword();
+					confirmPasswordInput.reportValidity();
+				});
+
+				form.addEventListener('submit', function (event) {
+					validatePassword(passwordInput);
+					validateConfirmPassword();
+
+					if (!form.checkValidity()) {
+						event.preventDefault();
+						passwordInput.reportValidity();
+						confirmPasswordInput.reportValidity();
+					}
+				});
+
+				function validatePassword(input) {
+					const password = input.value;
+					const minLength = 6;
+					const requireDigit = /\d/.test(password);
+					const requireLowercase = /[a-z]/.test(password);
+					const requireUppercase = /[A-Z]/.test(password);
+					const requireNonAlphanumeric = /[^a-zA-Z0-9]/.test(password);
+
+					let message = '';
+					if (password.length < minLength) {
+						message = "Password must be at least 6 characters long.";
+					} else if (!requireDigit) {
+						message = "Password must contain at least one digit.";
+					} else if (!requireLowercase) {
+						message = "Password must contain at least one lowercase letter.";
+					} else if (!requireUppercase) {
+						message = "Password must contain at least one uppercase letter.";
+					} else if (!requireNonAlphanumeric) {
+						message = "Password must contain at least one non-alphanumeric character.";
+					}
+
+					input.setCustomValidity(message);
+				}
+
+				function validateConfirmPassword() {
+					if (passwordInput.value !== confirmPasswordInput.value) {
+						confirmPasswordInput.setCustomValidity("Passwords do not match");
+					} else {
+						confirmPasswordInput.setCustomValidity("");
+					}
+				}
+			});
+		</script>
+}
