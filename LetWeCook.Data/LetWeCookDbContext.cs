@@ -2,11 +2,12 @@
 using LetWeCook.Data.Configurations;
 using LetWeCook.Data.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace LetWeCook.Data
 {
-	public class LetWeCookDbContext : DbContext, IApplicationDbContext
+	public class LetWeCookDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>, IApplicationDbContext
 	{
 		public LetWeCookDbContext(DbContextOptions<LetWeCookDbContext> options) : base(options)
 		{
@@ -16,6 +17,7 @@ namespace LetWeCook.Data
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);
+
 			modelBuilder.Entity<IdentityUserRole<Guid>>(entity =>
 			{
 				entity.HasKey(r => new { r.UserId, r.RoleId });

@@ -2,9 +2,25 @@
     // Attach the click event handler on document ready
     attachSlideNavButtonClickHandler();
 
+    //
+    attachRegisterButtonClickHandler();
+
     // Start automatic slide transition after a specific duration
     startAutoSlideChange(5000); // Change slides every 5 seconds
 });
+
+function attachRegisterButtonClickHandler() {
+    $('.register-btn button').on('click', function (event) {
+        // Prevent the default form submission
+        event.preventDefault();
+
+        // Serialize form data
+        var formData = $('form').serialize();
+
+        // Make the AJAX POST request
+       
+    });
+}
 
 // Function to attach the click event handler to the slide-nav buttons
 function attachSlideNavButtonClickHandler() {

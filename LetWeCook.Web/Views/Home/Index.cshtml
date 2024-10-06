@@ -1,11 +1,111 @@
-﻿@{
+﻿@using System.Security.Claims
+
+@{
     ViewData["Title"] = "Home Page";
+    string? pictureUrl = null;
+    pictureUrl = User.FindFirst("picture")?.Value;
 }
 
-Hello World!
-<div class="bg-green-500 text-white font-semibold">
+<div class="bg-green-500 p-4 font-semibold text-white">
     This is Tailwind testing
-    <a asp-area="Account" asp-controller="Auth" asp-action="Login">
-        Login
-    </a>
+
+    @if (User.Identity!.IsAuthenticated)
+    {
+        <p>Welcome, @User.Identity.Name!</p>
+    }
+    else
+    {
+        <p>You are not logged in.</p>
+        <a asp-area="Account" asp-controller="Auth" asp-action="Login" class="text-white underline">
+            Login
+        </a>
+    }
+</div>
+
+<div class="flex w-full flex-col items-center justify-center">
+    <div class="header-bar flex w-full flex-row items-center justify-between">
+        <div class="nav-bar flex flex-row items-center justify-center gap-x-4 py-4">
+            <div class="border-2 flex h-11 w-36 items-center justify-center rounded-[20px] border-[#FF2600] text-center text-xl font-medium text-[#575757]">
+                Recipes
+            </div>
+            <div class="flex h-11 w-36 items-center justify-center rounded-[20px] border-[#FF2600] text-center text-xl font-medium text-[#575757] hover:border-2">
+                About
+            </div>
+            <div class="flex h-11 w-36 items-center justify-center rounded-[20px] border-[#FF2600] text-center text-xl font-medium text-[#575757] hover:border-2">
+                Ingredients
+            </div>
+            <div class="flex h-11 w-36 items-center justify-center rounded-[20px] border-[#FF2600] text-center text-xl font-medium text-[#575757] hover:border-2">
+                Courses
+            </div>
+            <div class="flex h-11 w-36 items-center justify-center rounded-[20px] border-[#FF2600] text-center text-xl font-medium text-[#575757] hover:border-2">
+                News
+            </div>
+        </div>
+        <div class="right-panel flex flex-row items-center justify-center">
+            @if (User.Identity!.IsAuthenticated)
+            {
+                if (!string.IsNullOrEmpty(pictureUrl))
+                {
+                    <img class="mx-4 h-9 w-9 cursor-pointer rounded-full hover:border-2 hover:border-blue-500" src="@pictureUrl" alt="Profile Image" />
+                }
+                <form asp-area="Account" asp-controller="Auth" asp-action="Logout" method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="font-semibold text-gray-500 underline">Logout</button>
+                </form>
+            }
+            else
+            {
+                <a asp-area="Account" asp-controller="Auth" asp-action="Login" class="font-semibold text-gray-500 underline">
+                    Login
+                </a>
+               
+            }
+        </div>
+    </div>
+    <div class="main-section relative flex flex-row items-center justify-center">
+        <div class="decoration-home-1 -rotate-45 absolute translate-x-[750px] translate-y-[280px]">
+            <img src="~/images/vegetable-1.png" alt="vegetable-1"/>
+        </div>
+        <div class="decoration-home-2 -translate-x-[300px] -translate-y-[80px] absolute left-0 top-0 rotate-90">
+            <img class="w-96" src="~/images/chilli.png" alt="chilli" />
+        </div>
+        <div class="flex-1 flex flex-col items-start justify-center">
+            <div class="bg-indigo-500 p-2 text-lg font-semibold text-white">
+                Featured Recipe
+            </div>
+            <div class="title text-7xl font-medium text-black">
+                Arugula Salad
+            </div>
+            <div class="sub-title pt-3 text-lg font-medium text-black">
+                with green apple, Goat cheese and Candies
+            </div>
+            <div class="description w-full pt-3 text-base text-[#746F6F]">
+                While eating at a restaurant is an enjoyable and convenient occasion treat, most individuals and families prepare their meals at home. To make breakfast, lunch, and dinner daily, these persons must have the required foods on handy and ingredients to go.
+            </div>
+            <div class="flex w-4/5 items-center justify-around pt-8">
+                <div class="flex flex-col items-center">
+                    <span class="text-gray-500">Calories</span>
+                    <span class="font-semibold text-black">200 kcal</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <span class="text-gray-500">Fat</span>
+                    <span class="font-semibold text-black">10 g</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <span class="text-gray-500">Protein</span>
+                    <span class="font-semibold text-black">15 g</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <span class="text-gray-500">Fiber</span>
+                    <span class="font-semibold text-black">5 g</span>
+                </div>
+            </div>
+
+        </div>
+        <div class="flex-1 flex items-center justify-center">
+            <img class="h-5/6 w-5/6" src="~/images/home-dish-1.png" alt="home-dish-1"/>
+        </div>
+    </div>
+
+
 </div>
