@@ -1,6 +1,80 @@
 ﻿@{
     ViewData["Title"] = "Privacy Policy";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<body class="bg-gray-100 text-gray-800">
+
+    <!-- Container for the Privacy Policy -->
+    <div class="mx-auto mt-8 max-w-4xl rounded-lg bg-white px-6 py-10 shadow-lg sm:px-12">
+        <h1 class="mb-6 text-center text-3xl font-bold">@ViewData["Title"]</h1>
+        <p class="mb-4 text-center text-gray-500">Last updated: <span class="font-semibold">[10-06-2024]</span></p>
+
+        <!-- Welcome Section -->
+        <p class="mb-6">
+            Welcome to <span class="font-semibold">Let We Cook</span>! We respect your privacy and are committed to protecting the personal information you share with us. This privacy policy outlines how we collect, use, and safeguard your information.
+        </p>
+
+        <!-- Information We Collect -->
+        <h2 class="mb-4 text-2xl font-semibold">1. Information We Collect</h2>
+        <ul class="mb-6 list-inside list-disc">
+            <li><span class="font-semibold">Personal Information</span>: This includes your name, email address, and any other details you provide while interacting with our website (e.g., when signing up for newsletters).</li>
+            <li><span class="font-semibold">Usage Data</span>: We may automatically collect information about how you use our website, such as your IP address, browser type, and pages viewed.</li>
+        </ul>
+
+        <!-- How We Use Your Information -->
+        <h2 class="mb-4 text-2xl font-semibold">2. How We Use Your Information</h2>
+        <p class="mb-6">
+            We use your information to:
+        </p>
+        <ul class="mb-6 list-inside list-disc">
+            <li>Improve the user experience on our website.</li>
+            <li>Send you updates, newsletters, or promotional materials.</li>
+            <li>Analyze website usage to enhance our services.</li>
+        </ul>
+
+        <!-- Cookies -->
+        <h2 class="mb-4 text-2xl font-semibold">3. Cookies</h2>
+        <p class="mb-6">
+            We may use cookies to personalize your experience on <span class="font-semibold">Let We Cook</span>. You can disable cookies through your browser settings, but this may affect the functionality of our website.
+        </p>
+
+        <!-- Third-Party Services -->
+        <h2 class="mb-4 text-2xl font-semibold">4. Third-Party Services</h2>
+        <p class="mb-6">
+            We do not share your personal information with third parties, except when necessary to comply with legal obligations or to improve our website using trusted service providers.
+        </p>
+
+        <!-- Data Security -->
+        <h2 class="mb-4 text-2xl font-semibold">5. Data Security</h2>
+        <p class="mb-6">
+            We implement appropriate security measures to protect your data. However, no method of transmission over the Internet is 100% secure, so we cannot guarantee absolute security.
+        </p>
+
+        <!-- Your Rights -->
+        <h2 class="mb-4 text-2xl font-semibold">6. Your Rights</h2>
+        <p class="mb-6">
+            You can request to:
+        </p>
+        <ul class="mb-6 list-inside list-disc">
+            <li>Access the personal information we have about you.</li>
+            <li>Correct any incorrect information.</li>
+            <li>Request deletion of your personal data.</li>
+        </ul>
+
+        <!-- Contact Us -->
+        <h2 class="mb-4 text-2xl font-semibold">7. Contact Us</h2>
+        <p class="mb-6">
+            If you have any questions about this privacy policy, feel free to contact us at: <span class="font-semibold">[Insert Contact Email]</span>.
+        </p>
+
+        <a class="font-semibold text-blue-500" asp-area="" asp-action="Index" asp-controller="Home">
+            Back to Home
+        </a>
+
+        <!-- Footer -->
+        <footer class="mt-8 text-center text-gray-500">
+            &copy; 2024 Let We Cook. All rights reserved.
+        </footer>
+    </div>
+
+</body>

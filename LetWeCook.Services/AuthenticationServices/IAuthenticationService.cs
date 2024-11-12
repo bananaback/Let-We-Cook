@@ -13,6 +13,7 @@ namespace LetWeCook.Services.AuthenticationServices
 		Task LogUserOut();
 		AuthenticationProperties ConfigureExternalAuthenticationProperties(string? provider, string? returnUrl);
 		Task<ExternalLoginResult> ExternalLoginAsync();
-
+		Task<bool> SendPasswordResetEmailAsync(string email);
+		Task<bool> ResetUserPasswordAsync(string email, string token, string newPassword);
 	}
 }

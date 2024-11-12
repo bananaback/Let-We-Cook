@@ -49,7 +49,7 @@
 				<form asp-area="Account" asp-controller="Auth" asp-action="ExternalLogin" asp-route-provider="Google" method="post" class="google-login-btn border-2 flex h-12 w-1/3 items-center justify-center rounded-[10px] border-white hover:!border-4">
 					@Html.AntiForgeryToken()
 					<input type="hidden" name="returnUrl" value="@returnUrl" />
-					<button type="submit" class="tw-flex tw-justify-between items-center">
+					<button type="submit" class="tw-flex tw-justify-center items-center">
 						<svg xmlns="http://www.w3.org/2000/svg" class="ml-2 h-8 w-8 fill-none" viewBox="0 0 32 33">
 							<path d="M30.0014 17.1604C30.0014 16.0093 29.9061 15.1693 29.6998 14.2982H16.2871V19.4937H24.1601C24.0014 20.7849 23.1442 22.7293 21.2394 24.0359L21.2127 24.2098L25.4536 27.4295L25.7474 27.4582C28.4458 25.016 30.0014 21.4226 30.0014 17.1604Z" fill="#4285F4" />
 							<path d="M16.2863 30.8495C20.1434 30.8495 23.3814 29.605 25.7466 27.4584L21.2386 24.036C20.0323 24.8605 18.4132 25.436 16.2863 25.436C12.5086 25.436 9.30225 22.9939 8.15929 19.6183L7.99176 19.6322L3.58208 22.9767L3.52441 23.1338C5.87359 27.7072 10.699 30.8495 16.2863 30.8495Z" fill="#34A853" />
@@ -63,7 +63,7 @@
 				<form asp-area="Account" asp-controller="Auth" asp-action="ExternalLogin" asp-route-provider="Facebook" method="post" class="facebook-login-btn border-2 flex h-12 w-1/3 items-center justify-center rounded-[10px] border-white hover:!border-4">
 					@Html.AntiForgeryToken()
 					<input type="hidden" name="returnUrl" value="@returnUrl" />
-					<button type="submit" class="tw-flex tw-justify-between items-center">
+					<button type="submit" class="tw-flex tw-justify-center items-center">
 						<svg xmlns="http://www.w3.org/2000/svg" class="ml-2 h-8 w-8 fill-none" viewBox="0 0 32 33">
 							<circle cx="16" cy="16.8495" r="14" fill="url(#paint0_linear_15855_187608)" />
 							<path d="M21.2137 21.131L21.8356 17.1796H17.9452V14.6165C17.9452 13.5352 18.4877 12.4806 20.2302 12.4806H22V9.11648C22 9.11648 20.3945 8.84949 18.8603 8.84949C15.6548 8.84949 13.5617 10.7424 13.5617 14.1679V17.1796H10V21.131H13.5617V30.684C14.2767 30.7934 15.0082 30.8495 15.7534 30.8495C16.4986 30.8495 17.2302 30.7934 17.9452 30.684V21.131H21.2137Z" fill="white" />
@@ -100,10 +100,34 @@
 				</form>
 			</div>
 
-			<div class="register-link flex w-full cursor-pointer items-center justify-center pb-4">
-				<a class="text-lg font-bold text-[#8C29E2]">Don't have an account?</a>
+			<div class="register-link flex w-full cursor-pointer items-center justify-center pb-2">
+				<a asp-area="Account"asp-controller="Auth" asp-action="Register"  class="text-lg font-bold text-[#8C29E2]">Don't have an account?</a>
 			</div>
+
+			<div class="forgot-password-link flex w-full cursor-pointer items-center justify-center pb-4">
+				<a asp-area="Account" asp-controller="Auth" asp-action="ForgotPassword" class="text-lg font-bold text-[#8C29E2]">Forgot password?</a>
+			</div>
+
+			<div class="terms flex w-full flex-col items-center justify-center">
+				<div class="text-base text-white">
+					by continuing you are agreeing to our
+				</div>
+				<div class="flex flex-row items-center gap-x-1.5">
+					<a asp-action="Privacy" asp-area="" asp-controller="Home" class="cursor-pointer text-[#730DCD]">
+						Terms of Use
+					</a>
+					<div class="text-white">
+						and
+					</div>
+					<a asp-action="Privacy" asp-area="" asp-controller="Home" class="cursor-pointer text-[#730DCD]">
+						Privacy Policy
+					</a>
+				</div>
+			</div>
+
 		</div>
+
+		
 	</div>
 </div>
 

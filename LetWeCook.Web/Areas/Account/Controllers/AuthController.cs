@@ -1,5 +1,6 @@
 ﻿using LetWeCook.Common.Results;
 using LetWeCook.Web.Areas.Account.Models.ViewModels;
+using LetWeCook.Web.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -25,6 +26,42 @@ namespace LetWeCook.Web.Areas.Account.Controllers
 		{
 			return View();
 		}
+
+		[HttpGet]
+		public IActionResult ForgotPassword()
+		{
+			return View();
+		}
+
+		[HttpGet]
+		public IActionResult ForgotPasswordConfirmation(string email)
+		{
+			ViewData["Email"] = email;
+			return View();
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+		{
+			if (!ModelState.IsValid)
+			{
+				return View(model);
+			}
+
+			var result = await _authenticationService.SendPasswordResetEmailAsync(model.Email);
+			if (result)
+			{
+				return RedirectToAction("ForgotPasswordConfirmation", "Auth", new { area = "Account", email = model.Email });
+			}
+			else
+			{
+				// Handle the case where sending email fails
+				ModelState.AddModelError(string.Empty, "Failed to send reset password email. Please try again later.");
+				return View(model);
+			}
+		}
+
+
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> LoginAsync(LoginViewModel model)
@@ -181,6 +218,40 @@ namespace LetWeCook.Web.Areas.Account.Controllers
 			return Redirect(returnUrl);
 		}
 
+		[HttpGet]
+		public IActionResult ResetPassword(string token, string email)
+		{
+			if (token == null || email == null)
+			{
+				var requestId = HttpContext.TraceIdentifier;
+				var errorViewModel = new ErrorViewModel
+				{
+					RequestId = requestId
+				};
+				return View("Error", errorViewModel);
+			}
+			ResetPasswordViewModel resetPasswordViewModel = new ResetPasswordViewModel { Token = token, Email = email };
+			return View(resetPasswordViewModel);
+		}
 
+		[HttpPost]
+		public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+		{
+			if (!ModelState.IsValid)
+			{
+				return View(model);
+			}
+
+			var result = await _authenticationService.ResetUserPasswordAsync(model.Email, model.Token, model.NewPassword);
+
+			return RedirectToAction("ResetPasswordConfirmation", "Auth", new { area = "Account", success = result });
+		}
+
+		[HttpGet]
+		public IActionResult ResetPasswordConfirmation(bool success)
+		{
+			ViewData["Success"] = success;
+			return View();
+		}
 	}
 }

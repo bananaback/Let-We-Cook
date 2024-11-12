@@ -1,0 +1,206 @@
+﻿<div class="min-h-screen bg-gray-100 p-8">
+    <!-- Page Title -->
+    <h1 class="mb-10 text-center text-3xl font-bold text-gray-800">Recipe Browser</h1>
+
+    <!-- Search, Filter, and Sort Section -->
+    <div class="flex flex-col items-center justify-between space-y-4 md:flex-row md:space-y-0">
+        <!-- Search Bar -->
+        <div class="relative w-full max-w-md">
+            <input type="text" placeholder="Search recipes..." class="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-700 shadow focus:outline-none focus:ring-2 focus:ring-blue-400" />
+            <button class="absolute right-2 top-2 rounded bg-blue-500 px-4 py-1 text-white hover:bg-blue-600">Search</button>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="flex w-full flex-col space-y-2 md:w-auto md:flex-row md:space-y-0 md:space-x-4">
+            <!-- Filter by Cuisine -->
+            <select class="w-full rounded border border-gray-300 px-3 py-2 shadow focus:outline-none focus:ring-2 focus:ring-blue-400">
+                <option value="">Filter by Cuisine</option>
+                <option value="Vietnamese">Vietnamese</option>
+                <option value="Italian">Italian</option>
+                <option value="American">American</option>
+                <option value="Mexican">Mexican</option>
+                <option value="Indian">Indian</option>
+            </select>
+
+            <!-- Filter by Difficulty -->
+            <select class="w-full rounded border border-gray-300 px-3 py-2 shadow focus:outline-none focus:ring-2 focus:ring-blue-400">
+                <option value="">Filter by Difficulty</option>
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+
+            <!-- Filter by Cook Time -->
+            <select class="w-full rounded border border-gray-300 px-3 py-2 shadow focus:outline-none focus:ring-2 focus:ring-blue-400">
+                <option value="">Filter by Cook Time</option>
+                <option value="under-30">Under 30 mins</option>
+                <option value="30-60">30 - 60 mins</option>
+                <option value="over-60">Over 60 mins</option>
+            </select>
+
+            <!-- Filter by Servings -->
+            <select class="w-full rounded border border-gray-300 px-3 py-2 shadow focus:outline-none focus:ring-2 focus:ring-blue-400">
+                <option value="">Filter by Servings</option>
+                <option value="1-2">1-2 Servings</option>
+                <option value="3-4">3-4 Servings</option>
+                <option value="5+">5+ Servings</option>
+            </select>
+        </div>
+
+        <!-- Sort Dropdown -->
+        <select class="w-full max-w-xs rounded border border-gray-300 px-3 py-2 shadow focus:outline-none focus:ring-2 focus:ring-blue-400">
+            <option value="default">Sort by</option>
+            <option value="popular">Most Popular</option>
+            <option value="newest">Newest</option>
+            <option value="rating">Top Rated</option>
+        </select>
+    </div>
+
+    <!-- Recipe Cards Grid -->
+    <div class="grid-cols-1 mt-8 grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <!-- Mock Recipe Cards -->
+        <a href="https://localhost:7157/Cooking/Recipe/Details" class="cursor-pointer overflow-hidden rounded-lg bg-white shadow-lg transition-transform duration-300 hover:scale-105 hover:shadow-xl">
+            <img src="https://www.yummyhealthyeasy.com/wp-content/uploads/2018/06/Spicy-Grilled-Salmon-Avocado-Salsa-Yummy-Healthy-Easy-1-1-683x1024.jpg" alt="Grilled Salmon with Avocado Salsa" class="h-48 w-full object-cover" />
+            <div class="p-4">
+                <h2 class="text-xl font-semibold text-gray-800">Grilled Salmon with Avocado Salsa</h2>
+                <p class="text-gray-600">Delicious grilled salmon topped with fresh avocado salsa for a zesty flavor.</p>
+                <div class="mt-2 flex items-center text-sm text-gray-500">
+                    <span>Difficulty: Easy</span>
+                    <span class="mx-2">•</span>
+                    <span>Cook Time: 25 mins</span>
+                    <span class="mx-2">•</span>
+                    <span>Servings: 2</span>
+                </div>
+            </div>
+        </a>
+
+        <a href="https://localhost:7157/Cooking/Recipe/Details" class="cursor-pointer overflow-hidden rounded-lg bg-white shadow-lg transition-transform duration-300 hover:scale-105 hover:shadow-xl">
+            <img src="https://th.bing.com/th/id/OIP.rNw1SOJsZRA7CydoyBuf_wHaLH?rs=1&pid=ImgDetMain" alt="Spaghetti Carbonara" class="h-48 w-full object-cover" />
+            <div class="p-4">
+                <h2 class="text-xl font-semibold text-gray-800">Spaghetti Carbonara</h2>
+                <p class="text-gray-600">A classic Italian pasta dish with creamy sauce and pancetta.</p>
+                <div class="mt-2 flex items-center text-sm text-gray-500">
+                    <span>Difficulty: Medium</span>
+                    <span class="mx-2">•</span>
+                    <span>Cook Time: 30 mins</span>
+                    <span class="mx-2">•</span>
+                    <span>Servings: 2</span>
+                </div>
+            </div>
+        </a>
+
+        <a href="https://localhost:7157/Cooking/Recipe/Details" class="cursor-pointer overflow-hidden rounded-lg bg-white shadow-lg transition-transform duration-300 hover:scale-105 hover:shadow-xl">
+            <img src="https://th.bing.com/th/id/R.9341f08cdf818f452232f97d3e7e6eb2?rik=zpgS0Ald%2f6UalQ&pid=ImgRaw&r=0" alt="Vegetable Stir Fry" class="h-48 w-full object-cover" />
+            <div class="p-4">
+                <h2 class="text-xl font-semibold text-gray-800">Vegetable Stir Fry</h2>
+                <p class="text-gray-600">Healthy stir-fried vegetables with a hint of soy sauce.</p>
+                <div class="mt-2 flex items-center text-sm text-gray-500">
+                    <span>Difficulty: Easy</span>
+                    <span class="mx-2">•</span>
+                    <span>Cook Time: 20 mins</span>
+                    <span class="mx-2">•</span>
+                    <span>Servings: 3</span>
+                </div>
+            </div>
+        </a>
+
+        <a href="https://localhost:7157/Cooking/Recipe/Details" class="cursor-pointer overflow-hidden rounded-lg bg-white shadow-lg transition-transform duration-300 hover:scale-105 hover:shadow-xl">
+            <img src="https://th.bing.com/th/id/OIP.SbwVTn3QHJkveiFkZCkFzQHaHa?rs=1&pid=ImgDetMain" alt="Chicken Curry" class="h-48 w-full object-cover" />
+            <div class="p-4">
+                <h2 class="text-xl font-semibold text-gray-800">Chicken Curry</h2>
+                <p class="text-gray-600">A rich and flavorful curry with tender chicken pieces.</p>
+                <div class="mt-2 flex items-center text-sm text-gray-500">
+                    <span>Difficulty: Medium</span>
+                    <span class="mx-2">•</span>
+                    <span>Cook Time: 45 mins</span>
+                    <span class="mx-2">•</span>
+                    <span>Servings: 4</span>
+                </div>
+            </div>
+        </a>
+
+        <a href="https://localhost:7157/Cooking/Recipe/Details" class="cursor-pointer overflow-hidden rounded-lg bg-white shadow-lg transition-transform duration-300 hover:scale-105 hover:shadow-xl">
+            <img src="https://th.bing.com/th/id/R.f54f98b1c309ec923cf20bfd512d2570?rik=lDZOT4HkkwdKFg&pid=ImgRaw&r=0" alt="Pancakes" class="h-48 w-full object-cover" />
+            <div class="p-4">
+                <h2 class="text-xl font-semibold text-gray-800">Pancakes</h2>
+                <p class="text-gray-600">Fluffy pancakes perfect for a sweet breakfast treat.</p>
+                <div class="mt-2 flex items-center text-sm text-gray-500">
+                    <span>Difficulty: Easy</span>
+                    <span class="mx-2">•</span>
+                    <span>Cook Time: 15 mins</span>
+                    <span class="mx-2">•</span>
+                    <span>Servings: 2</span>
+                </div>
+            </div>
+        </a>
+
+        <a href="https://localhost:7157/Cooking/Recipe/Details" class="cursor-pointer overflow-hidden rounded-lg bg-white shadow-lg transition-transform duration-300 hover:scale-105 hover:shadow-xl">
+            <img src="https://th.bing.com/th/id/OIP.ia5adnEIsa1GiYcuFPpPNwHaLH?rs=1&pid=ImgDetMain" alt="Beef Tacos" class="h-48 w-full object-cover" />
+            <div class="p-4">
+                <h2 class="text-xl font-semibold text-gray-800">Beef Tacos</h2>
+                <p class="text-gray-600">Classic Mexican tacos filled with spicy beef and fresh toppings.</p>
+                <div class="mt-2 flex items-center text-sm text-gray-500">
+                    <span>Difficulty: Medium</span>
+                    <span class="mx-2">•</span>
+                    <span>Cook Time: 25 mins</span>
+                    <span class="mx-2">•</span>
+                    <span>Servings: 4</span>
+                </div>
+            </div>
+        </a>
+
+        <a href="https://localhost:7157/Cooking/Recipe/Details" class="cursor-pointer overflow-hidden rounded-lg bg-white shadow-lg transition-transform duration-300 hover:scale-105 hover:shadow-xl">
+            <img src="https://th.bing.com/th/id/OIP.tN5aBEz732FyXo7D_w_0RwAAAA?rs=1&pid=ImgDetMain" alt="Chocolate Cake" class="h-48 w-full object-cover" />
+            <div class="p-4">
+                <h2 class="text-xl font-semibold text-gray-800">Chocolate Cake</h2>
+                <p class="text-gray-600">Rich and moist chocolate cake for dessert lovers.</p>
+                <div class="mt-2 flex items-center text-sm text-gray-500">
+                    <span>Difficulty: Hard</span>
+                    <span class="mx-2">•</span>
+                    <span>Cook Time: 1 hr</span>
+                    <span class="mx-2">•</span>
+                    <span>Servings: 6</span>
+                </div>
+            </div>
+        </a>
+
+        <a href="https://localhost:7157/Cooking/Recipe/Details" class="cursor-pointer overflow-hidden rounded-lg bg-white shadow-lg transition-transform duration-300 hover:scale-105 hover:shadow-xl">
+            <img src="https://th.bing.com/th/id/OIP.8UagT3WWGxruvIOqJTCPeQHaE8?rs=1&pid=ImgDetMain" alt="Caesar Salad" class="h-48 w-full object-cover" />
+            <div class="p-4">
+                <h2 class="text-xl font-semibold text-gray-800">Caesar Salad</h2>
+                <p class="text-gray-600">Fresh Caesar salad with crisp lettuce and a tangy dressing.</p>
+                <div class="mt-2 flex items-center text-sm text-gray-500">
+                    <span>Difficulty: Easy</span>
+                    <span class="mx-2">•</span>
+                    <span>Cook Time: 15 mins</span>
+                    <span class="mx-2">•</span>
+                    <span>Servings: 2</span>
+                </div>
+            </div>
+        </a>
+
+        <a href="https://localhost:7157/Cooking/Recipe/Details" class="cursor-pointer overflow-hidden rounded-lg bg-white shadow-lg transition-transform duration-300 hover:scale-105 hover:shadow-xl">
+            <img src="https://th.bing.com/th/id/R.239766ab50843463c9f17faf058c25e6?rik=qGkNfqEEWP9KPg&pid=ImgRaw&r=0" alt="Vegetable Soup" class="h-48 w-full object-cover" />
+            <div class="p-4">
+                <h2 class="text-xl font-semibold text-gray-800">Vegetable Soup</h2>
+                <p class="text-gray-600">A comforting, healthy soup packed with fresh vegetables.</p>
+                <div class="mt-2 flex items-center text-sm text-gray-500">
+                    <span>Difficulty: Easy</span>
+                    <span class="mx-2">•</span>
+                    <span>Cook Time: 30 mins</span>
+                    <span class="mx-2">•</span>
+                    <span>Servings: 4</span>
+                </div>
+            </div>
+        </a>
+    </div>
+
+
+    <!-- Pagination -->
+    <div class="mt-8 flex items-center justify-center space-x-2">
+        <button class="rounded border border-gray-300 bg-white px-4 py-2 text-gray-700 hover:bg-gray-100">Previous</button>
+        <button class="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600">1</button>
+        <button class="rounded border border-gray-300 bg-white px-4 py-2 text-gray-700 hover:bg-gray-100">2</button>
+        <button class="rounded border border-gray-300 bg-white px-4 py-2 text-gray-700 hover:bg-gray-100">Next</button>
+    </div>
+</div>
