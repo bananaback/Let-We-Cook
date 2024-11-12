@@ -31,26 +31,31 @@ namespace LetWeCook.Services.RecipeServices
             _userManager = userManager;
         }
 
-        public async Task<Result<RecipeDTO>> CreateRecipeAsync(Guid userId, RecipeDTO recipeDTO, CancellationToken cancellationToken)
+        public async Task<Result<RecipeDTO>> CreateRecipeAsync(string userId, RecipeDTO recipeDTO, CancellationToken cancellationToken)
         {
-            Result<MediaUrl?> result = await _mediaUrlRepository.GetMediaUrlById(recipeDTO.RecipeCoverImage.Id, cancellationToken);
+            Result<MediaUrl?> getCoverImageUrlResult = await _mediaUrlRepository.GetMediaUrlById(recipeDTO.RecipeCoverImage.Id, cancellationToken);
 
-            if (!result.IsSuccess || result.Data == null)
+            if (!getCoverImageUrlResult.IsSuccess || getCoverImageUrlResult.Data == null)
             {
-                return Result<RecipeDTO>.Failure("Failed to create recipe because media url for cover image not found", ErrorCode.RecipeCreationFailed, result.Exception);
+                return Result<RecipeDTO>.Failure(
+                    "Failed to create recipe because media url for cover image not found",
+                    ErrorCode.RecipeCreationFailed, getCoverImageUrlResult.Exception);
             }
 
-            MediaUrl mediaUrl = result.Data;
+            MediaUrl coverImageMediaUrl = getCoverImageUrlResult.Data;
 
-            ApplicationUser? user = await _userManager.FindByIdAsync(userId.ToString());
+            ApplicationUser? user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
                 return Result<RecipeDTO>.Failure("User not found", ErrorCode.UserNotFound);
             }
 
+            // ^ code above is fine now, fix under
+
             // Retrieve Ingredient entities by IDs from the database
-            var ingredientIds = recipeDTO.IngredientDTOs.Select(i => i.Id).ToList();
+            var ingredientIds = recipeDTO.RecipeIngredientDTOs.Select(ri => ri.IngredientId).ToList();
             var ingredientsResult = await _ingredientRepository.GetIngredientsByIdsAsync(ingredientIds, cancellationToken);
+
 
             if (!ingredientsResult.IsSuccess)
             {
@@ -63,6 +68,7 @@ namespace LetWeCook.Services.RecipeServices
                 return Result<RecipeDTO>.Failure("One or more ingredients not found", ErrorCode.RecipeCreationFailed);
             }
 
+            var ingredientMap = ingredientsResult.Data.ToDictionary(i => i.Id, i => i);
 
             Recipe recipe = new Recipe
             {
@@ -76,31 +82,106 @@ namespace LetWeCook.Services.RecipeServices
                 CookTimeInMinutes = recipeDTO.CookTimeInMinutes,
                 Serving = recipeDTO.Serving,
                 CreatedBy = user,
-                RecipeCoverImage = mediaUrl,
+                RecipeCoverImage = coverImageMediaUrl,
                 DateCreated = DateTime.Now,
-                Ingredients = ingredientsResult.Data,
-                RecipeSteps = recipeDTO.StepDTOs.Select(s => new RecipeStep
-                {
-                    Id = Guid.NewGuid(),
-                    StepNumber = s.Order,
-                    Instruction = s.Text,
-                    MediaUrls = new List<MediaUrl>
-                    {
-                        !string.IsNullOrEmpty(s.ImageId) ? new MediaUrl
-                        {
-                            Id = Guid.Parse(s.ImageId),
-                            Url = s.ImageUrl,
-                            Alt = s.ImageUrl
-                        } : new MediaUrl(),
-                        !string.IsNullOrEmpty(s.VideoId) ? new MediaUrl
-                        {
-                            Id = Guid.Parse(s.VideoId),
-                            Url = s.VideoUrl,
-                            Alt = s.VideoUrl
-                        } : new MediaUrl()
-                    }.Where(media => media.Url != string.Empty).ToList() // Filter out default fallback
-                }).ToList()
             };
+
+            try
+            {
+                var recipeIngredientList = recipeDTO.RecipeIngredientDTOs.Select(
+                    ri => new RecipeIngredient
+                    {
+                        Recipe = recipe,
+                        Ingredient = ingredientMap[ri.IngredientId],
+                        Quantity = ri.Quantity,
+                        Unit = (UnitEnum)Enum.Parse(typeof(UnitEnum), ri.Unit)
+                    }
+                ).ToList();
+
+                recipe.RecipeIngredients = recipeIngredientList;
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return Result<RecipeDTO>.Failure("One or more ingredients not found", ErrorCode.RecipeCreationFailed, ex);
+            }
+            catch (FormatException ex)
+            {
+                return Result<RecipeDTO>.Failure("Invalid unit enum", ErrorCode.RecipeCreationFailed, ex);
+            }
+            catch (Exception ex)
+            {
+                return Result<RecipeDTO>.Failure("Failed to create recipe", ErrorCode.RecipeCreationFailed, ex);
+            }
+
+            List<Guid> stepMediaGuids;
+
+            try
+            {
+                stepMediaGuids = recipeDTO.StepDTOs
+                    .SelectMany(s => new[] { s.ImageId, s.VideoId })
+                    .Where(id => !string.IsNullOrEmpty(id))
+                    .Distinct()
+                    .Select(id => Guid.Parse(id)) // This will throw if id is invalid
+                    .ToList();
+            }
+            catch (FormatException ex)
+            {
+                return Result<RecipeDTO>.Failure(
+                    "Invalid media ID found.",
+                    ErrorCode.RecipeCreationFailed,
+                    ex); // Return failure if any ID is invalid
+            }
+
+            var stepMediaUrlRetrievalResult = await _mediaUrlRepository.GetMediaUrlByIdList(stepMediaGuids, cancellationToken);
+
+            if (!stepMediaUrlRetrievalResult.IsSuccess || stepMediaUrlRetrievalResult.Data!.Count != stepMediaGuids.Count)
+            {
+                return Result<RecipeDTO>.Failure(
+                    "Invalid media ID found.",
+                    ErrorCode.RecipeCreationFailed,
+                    stepMediaUrlRetrievalResult.Exception); // Return failure if any ID is invalid
+            }
+
+
+            // as this point, I think the id and corresponding media url is valid, and we dont need to try get value?
+            var mediaUrlMap = stepMediaUrlRetrievalResult.Data!.ToDictionary(m => m.Id, m => m);
+
+            var stepDTOMap = recipeDTO.StepDTOs.ToDictionary(s => s.Order);
+
+            var recipeSteps = recipeDTO.StepDTOs.Select(s => new RecipeStep
+            {
+                Id = Guid.NewGuid(),
+                Recipe = recipe,
+                StepNumber = s.Order,
+                Instruction = s.Text
+            }).ToList();
+
+            foreach (var recipeStep in recipeSteps)
+            {
+                if (!stepDTOMap.TryGetValue(recipeStep.StepNumber, out var stepDTO))
+                {
+                    return Result<RecipeDTO>.Failure(
+                        "StepDTO not found for step number " + recipeStep.StepNumber,
+                        ErrorCode.RecipeCreationFailed);
+                }
+
+                // Create RecipeStepMedias, only adding non-null items
+                var recipeStepMedias = new List<RecipeStepMedia>();
+
+                if (!string.IsNullOrEmpty(stepDTO.ImageId) && mediaUrlMap.TryGetValue(Guid.Parse(stepDTO.ImageId), out var imageMedia))
+                {
+                    recipeStepMedias.Add(new RecipeStepMedia { RecipeStep = recipeStep, MediaUrl = imageMedia });
+                }
+
+                if (!string.IsNullOrEmpty(stepDTO.VideoId) && mediaUrlMap.TryGetValue(Guid.Parse(stepDTO.VideoId), out var videoMedia))
+                {
+                    recipeStepMedias.Add(new RecipeStepMedia { RecipeStep = recipeStep, MediaUrl = videoMedia });
+                }
+
+                recipeStep.RecipeStepMedias = recipeStepMedias;
+            }
+
+            recipe.RecipeSteps = recipeSteps;
 
             Result<Recipe> createResult = await _recipeRepository.CreateRecipeAsync(recipe, cancellationToken);
 

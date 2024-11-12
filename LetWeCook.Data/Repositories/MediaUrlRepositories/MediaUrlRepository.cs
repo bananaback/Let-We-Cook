@@ -65,5 +65,21 @@ namespace LetWeCook.Data.Repositories.MediaUrlRepositories
                 return Result<MediaUrl?>.Failure("Failed to retrieve media url", ErrorCode.MediaUrlRetrievalFailed, ex);
             }
         }
+
+        public async Task<Result<List<MediaUrl>>> GetMediaUrlByIdList(List<Guid> idList, CancellationToken cancellationToken)
+        {
+            try
+            {
+                List<MediaUrl> mediaUrls = await _context.MediaUrls
+                    .Where(m => idList.Contains(m.Id))
+                    .ToListAsync(cancellationToken);
+
+                return Result<List<MediaUrl>>.Success(mediaUrls, "Media urls retrieved successfully by IDs.");
+            }
+            catch (Exception ex)
+            {
+                return Result<List<MediaUrl>>.Failure("Failed to retrieve media urls by IDs", ErrorCode.MediaUrlRetrievalFailed, ex);
+            }
+        }
     }
 }

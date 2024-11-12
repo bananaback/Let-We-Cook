@@ -259,12 +259,12 @@ function prepareRecipeDataForBackend(recipeData) {
         difficulty: recipeData.difficulty,
         cookingTimeInMinutes: recipeData.cookTime,
         serving: recipeData.servings,
-        ingredientDTOs: recipeData.ingredients.map(ingredient => ({
-            id: ingredient.id || '00000000-0000-0000-0000-000000000000', // Use empty Guid as fallback
+        recipeIngredientDTOs: recipeData.ingredients.map(ingredient => ({
+            recipeId: '00000000-0000-0000-0000-000000000000', // Use empty Guid as fallback
+            ingredientId: ingredient.id,
             ingredientName: ingredient.name,
-            ingredientDescription: "", // Or fill with actual description if available
-            coverImageUrl: "", // Or fill with actual cover image URL if available
-            frames: [] // Add frames if necessary
+            quantity: ingredient.quantity,
+            unit: ingredient.unit,
         })),
         stepDTOs: recipeData.steps.map((step, index) => ({
             id: step.id || '00000000-0000-0000-0000-000000000000', // Use empty Guid as fallback

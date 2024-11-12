@@ -63,11 +63,11 @@ namespace LetWeCook.Web.Areas.Cooking.Controllers
                     Id = Guid.Parse(request.CoverImageId)
                 },
                 DateCreated = DateTime.Now,
-                IngredientDTOs = request.IngredientDTOs,
+                RecipeIngredientDTOs = request.RecipeIngredientDTOs,
                 StepDTOs = request.StepDTOs
             };
 
-            Result<RecipeDTO> createRecipeResult = await _recipeService.CreateRecipeAsync(userId, recipeDTO, cancellationToken);
+            Result<RecipeDTO> createRecipeResult = await _recipeService.CreateRecipeAsync(userIdString, recipeDTO, cancellationToken);
 
             if (!createRecipeResult.IsSuccess)
             {

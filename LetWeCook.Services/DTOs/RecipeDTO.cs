@@ -12,7 +12,7 @@
         public Guid CreatedBy { get; set; }
         public MediaUrlDTO RecipeCoverImage { get; set; } = null!;
         public DateTime DateCreated { get; set; }
-        public List<IngredientDTO> IngredientDTOs { get; set; } = new List<IngredientDTO>();
+        public List<RecipeIngredientDTO> RecipeIngredientDTOs { get; set; } = new List<RecipeIngredientDTO>();
         public List<StepDTO> StepDTOs { get; set; } = new List<StepDTO>();
 
     }

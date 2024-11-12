@@ -11,7 +11,7 @@ namespace LetWeCook.Web.Areas.Cooking.Models.Requests
         public string Difficulty { get; set; } = string.Empty;
         public decimal CookingTimeInMinutes { get; set; }
         public int Serving { get; set; }
-        public List<IngredientDTO> IngredientDTOs { get; set; } = new List<IngredientDTO>();
+        public List<RecipeIngredientDTO> RecipeIngredientDTOs { get; set; } = new List<RecipeIngredientDTO>();
         public List<StepDTO> StepDTOs { get; set; } = new List<StepDTO>();
 
     }
