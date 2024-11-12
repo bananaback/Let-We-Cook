@@ -366,6 +366,10 @@ namespace LetWeCook.Data.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("description");
 
+                    b.Property<Guid?>("MediaUrlId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("media_url_id");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
@@ -373,7 +377,44 @@ namespace LetWeCook.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("MediaUrlId")
+                        .IsUnique()
+                        .HasFilter("[media_url_id] IS NOT NULL");
+
                     b.ToTable("ingredient", (string)null);
+                });
+
+            modelBuilder.Entity("LetWeCook.Data.Entities.IngredientSection", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("IngredientId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("ingredient_id");
+
+                    b.Property<Guid?>("MediaUrlId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("media_url_id");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int")
+                        .HasColumnName("section_order");
+
+                    b.Property<string>("TextContent")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("text_content");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IngredientId");
+
+                    b.HasIndex("MediaUrlId");
+
+                    b.ToTable("ingredient_section", (string)null);
                 });
 
             modelBuilder.Entity("LetWeCook.Data.Entities.Lesson", b =>
@@ -707,6 +748,10 @@ namespace LetWeCook.Data.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("difficulty");
 
+                    b.Property<Guid?>("MediaUrlId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("recipe_cover_image");
+
                     b.Property<int>("Serving")
                         .HasColumnType("int")
                         .HasColumnName("serving");
@@ -719,6 +764,10 @@ namespace LetWeCook.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("MediaUrlId")
+                        .IsUnique()
+                        .HasFilter("[recipe_cover_image] IS NOT NULL");
 
                     b.ToTable("recipe", (string)null);
                 });
@@ -1225,6 +1274,33 @@ namespace LetWeCook.Data.Migrations
                     b.Navigation("Follower");
                 });
 
+            modelBuilder.Entity("LetWeCook.Data.Entities.Ingredient", b =>
+                {
+                    b.HasOne("LetWeCook.Data.Entities.MediaUrl", "CoverImageUrl")
+                        .WithOne("Ingredient")
+                        .HasForeignKey("LetWeCook.Data.Entities.Ingredient", "MediaUrlId");
+
+                    b.Navigation("CoverImageUrl");
+                });
+
+            modelBuilder.Entity("LetWeCook.Data.Entities.IngredientSection", b =>
+                {
+                    b.HasOne("LetWeCook.Data.Entities.Ingredient", "Ingredient")
+                        .WithMany("IngredientSections")
+                        .HasForeignKey("IngredientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LetWeCook.Data.Entities.MediaUrl", "MediaUrl")
+                        .WithMany("IngredientSections")
+                        .HasForeignKey("MediaUrlId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Ingredient");
+
+                    b.Navigation("MediaUrl");
+                });
+
             modelBuilder.Entity("LetWeCook.Data.Entities.Lesson", b =>
                 {
                     b.HasOne("LetWeCook.Data.Entities.Course", "Course")
@@ -1348,7 +1424,13 @@ namespace LetWeCook.Data.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("LetWeCook.Data.Entities.MediaUrl", "RecipeCoverImage")
+                        .WithOne("Recipe")
+                        .HasForeignKey("LetWeCook.Data.Entities.Recipe", "MediaUrlId");
+
                     b.Navigation("CreatedBy");
+
+                    b.Navigation("RecipeCoverImage");
                 });
 
             modelBuilder.Entity("LetWeCook.Data.Entities.RecipeIngredient", b =>
@@ -1611,6 +1693,8 @@ namespace LetWeCook.Data.Migrations
 
             modelBuilder.Entity("LetWeCook.Data.Entities.Ingredient", b =>
                 {
+                    b.Navigation("IngredientSections");
+
                     b.Navigation("RecipeIngredients");
 
                     b.Navigation("ShoppingListItems");
@@ -1630,6 +1714,12 @@ namespace LetWeCook.Data.Migrations
 
             modelBuilder.Entity("LetWeCook.Data.Entities.MediaUrl", b =>
                 {
+                    b.Navigation("Ingredient");
+
+                    b.Navigation("IngredientSections");
+
+                    b.Navigation("Recipe");
+
                     b.Navigation("RecipeStepsMedia");
                 });
 

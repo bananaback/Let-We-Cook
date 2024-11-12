@@ -1,0 +1,29 @@
+﻿@{
+    Layout = "_ProfileLayout";
+}
+
+<div class="mx-auto mt-12 max-w-4xl rounded-lg bg-white p-6 shadow-lg">
+    <h1 class="text-3xl font-bold text-red-600">Oops! Something went wrong.</h1>
+    <p class="mt-4 text-lg text-gray-600">
+        We encountered an issue while fetching your recipes. Please try again later, or contact support if the problem persists.
+    </p>
+
+    <div class="mt-6">
+        <a href="@Url.Action("Recipes", "Profile")" class="inline-block rounded-md bg-blue-500 px-6 py-3 text-white hover:bg-blue-600">
+            Go Back to Recipes
+        </a>
+        <!-- Optional: Retry button for an immediate retry -->
+        <button id="retryButton" class="ml-4 inline-block rounded-md bg-green-500 px-6 py-3 text-white hover:bg-green-600">
+            Retry
+        </button>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Retry functionality (if you want the user to retry the operation directly)
+        document.getElementById('retryButton').addEventListener('click', function () {
+            window.location.reload();
+        });
+    </script>
+}

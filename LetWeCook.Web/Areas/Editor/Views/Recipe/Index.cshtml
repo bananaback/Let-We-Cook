@@ -1,0 +1,136 @@
+﻿<div class="flex min-h-screen w-full items-start justify-center bg-gray-50 p-5">
+    <!-- Editor Section -->
+    <div class="mr-5 w-1/2 rounded-lg bg-white p-8 shadow-lg">
+        <h1 class="mb-6 text-center text-4xl font-bold text-gray-800">Create a New Recipe</h1>
+
+        <div class="">
+            <!-- Recipe Title -->
+            <div>
+                <label for="title" class="mb-2 block text-lg font-semibold text-gray-700">Recipe Title</label>
+                <input type="text" id="title" class="w-full rounded border border-gray-300 px-3 py-2 text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Enter the recipe title" required>
+            </div>
+
+            <!-- Description -->
+            <div class="mt-4">
+                <label for="description" class="mb-2 block text-lg font-semibold text-gray-700">Description</label>
+                <textarea id="description" class="w-full rounded border border-gray-300 px-3 py-2 text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Enter recipe description" required></textarea>
+            </div>
+
+            <!-- Cover Image Section -->
+            <div class="mt-4 flex w-full flex-col items-start justify-center">
+                <div class="my-2 block text-lg font-semibold text-gray-700">
+                    Cover Image
+                </div>
+                <button data-type="cover" type="button" class="uploadImageButton mt-2 w-1/3 rounded border bg-blue-500 p-2 text-white">Upload Cover Image</button>
+
+                <!-- Cover Image Preview -->
+                <img id="coverImagePreview" src="" class="my-4 hidden h-auto w-full rounded-md border object-cover" alt="Cover Image Preview">
+
+                <div id="coverMediaId" value="" class="hidden"></div>
+
+                <!-- Info Text -->
+                <p id="coverImageInfo" class="hidden text-sm text-gray-500">The cover image should be at least 800x600 pixels for best quality.</p>
+            </div>
+
+            <!-- Cuisine Dropdown -->
+            <div class="mt-4">
+                <label for="cuisine" class="mb-2 block text-lg font-semibold text-gray-700">Cuisine</label>
+                <select id="cuisine" class="w-full rounded border border-gray-300 px-3 py-2 text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    <option value="" disabled selected>Select Cuisine</option>
+                    <option value="Vietnamese">Vietnamese</option>
+                    <option value="Italian">Italian</option>
+                    <option value="Chinese">Chinese</option>
+                    <option value="Indian">Indian</option>
+                    <option value="Mexican">Mexican</option>
+                    <option value="American">American</option>
+                    <option value="Japanese">Japanese</option>
+                    <!-- Add more cuisines as needed -->
+                </select>
+            </div>
+
+            <!-- Difficulty Dropdown -->
+            <div class="mt-4">
+                <label for="difficulty" class="mb-2 block text-lg font-semibold text-gray-700">Difficulty</label>
+                <select id="difficulty" class="w-full rounded border border-gray-300 px-3 py-2 text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    <option value="" disabled selected>Select Difficulty</option>
+                    <option value="EASY">Easy</option>
+                    <option value="MEDIUM">Medium</option>
+                    <option value="HARD">Hard</option>
+                </select>
+            </div>
+
+            <!-- Cook Time -->
+            <div class="mt-4">
+                <label for="cookTime" class="mb-2 block text-lg font-semibold text-gray-700">Cook Time (in minutes)</label>
+                <input type="number" id="cookTime" class="w-full rounded border border-gray-300 px-3 py-2 text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Enter cook time in minutes" step="0.1" min="0" required>
+            </div>
+
+            <!-- Serving -->
+            <div class="mt-4">
+                <label for="serving" class="mb-2 block text-lg font-semibold text-gray-700">Servings</label>
+                <input type="number" id="serving" class="w-full rounded border border-gray-300 px-3 py-2 text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Enter number of servings" min="1" required>
+            </div>
+
+            <!-- Ingredient Section -->
+            <div class="mt-4" id="ingredientsSection">
+                <button type="button" id="addIngredientButton" class="mt-4 rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600">Add Ingredient</button>
+                <!-- Dynamic Ingredient Dropdowns will be added here -->
+            </div>
+
+
+            
+
+            <!-- Steps Section -->
+            <div id="stepsContainer" class="space-y-4">
+                
+            </div>
+
+            <!-- Add Step Button -->
+            <button type="button" id="addStepButton" class="mt-4 rounded bg-green-500 px-4 py-2 text-white hover:bg-green-600">Add Step</button>
+        
+            <div id="preview-btn" class="mt-5 flex cursor-pointer items-center justify-center rounded-md bg-green-400 px-4 py-2 text-center text-xl font-semibold">Preview ></div>
+        </div>
+    </div>
+
+    <!-- Preview Section -->
+    <div class="w-1/2 rounded-lg bg-white p-8 shadow-lg" id="recipePreview">
+        <h1 class="mb-6 text-center text-4xl font-bold text-gray-800">Recipe Preview</h1>
+
+        <!-- Cover Image -->
+        <div class="mb-6 flex justify-center">
+            <img id="coverImagePreviewPreview" src="" alt="Cover Image" class="h-auto w-full rounded-lg object-cover shadow-md" />
+        </div>
+
+        <!-- Title -->
+        <h2 id="recipeTitle" class="mb-4 text-center text-3xl font-semibold text-gray-800"></h2>
+
+        <!-- Description -->
+        <p id="recipeDescription" class="mb-6 text-center text-gray-600"></p>
+
+        <!-- Details (Cuisine, Difficulty, Cook Time, Servings) -->
+        <div class="mb-6 flex justify-center gap-3">
+            <span id="recipeCuisine" class="h-9 min-w-12 rounded-lg bg-blue-200 px-4 py-2 text-sm font-semibold text-blue-800"></span>
+            <span id="recipeDifficulty" class="h-9 min-w-12 rounded-lg bg-red-200 px-4 py-2 text-sm font-semibold text-red-800"></span>
+            <span id="recipeCookTime" class="h-9 min-w-12 rounded-lg bg-green-200 px-4 py-2 text-sm font-semibold text-green-800"></span>
+            <span id="recipeServings" class="h-9 min-w-12 rounded-lg bg-purple-200 px-4 py-2 text-sm font-semibold text-purple-800"></span>
+        </div>
+
+        <!-- Ingredients List -->
+        <h3 class="mb-2 text-xl font-semibold text-gray-700">Ingredients</h3>
+        <div id="ingredientsList" class="grid-cols-1 mb-6 grid gap-3 text-gray-600"></div>
+
+        <!-- Steps List -->
+        <h3 class="mb-2 text-xl font-semibold text-gray-700">Steps</h3>
+        <div id="stepsList" class="space-y-4 text-gray-600"></div>
+        
+        <button id="save-recipe-button" class="rounded-lg bg-blue-500 px-4 py-2 text-lg font-semibold text-white">Save Recipe</button>
+    </div>
+
+
+
+</div>
+
+@section Scripts {
+    <script src="https://upload-widget.cloudinary.com/latest/global/all.js" type="text/javascript"></script>  
+    <script src="~/js/recipe-editor.js"></script>
+}

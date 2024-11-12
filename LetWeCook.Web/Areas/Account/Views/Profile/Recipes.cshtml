@@ -1,0 +1,38 @@
+﻿@model List<LetWeCook.Services.DTOs.RecipeDTO>
+
+@{
+    Layout = "_ProfileLayout";
+}
+
+<div class="container mx-auto p-6">
+    <h1 class="mb-6 text-3xl font-bold">My Recipes</h1>
+
+    <div class="mb-4">
+        <a href="@Url.Action("Index", "Recipe", new { area = "Editor" })" class="rounded-md bg-green-500 px-4 py-2 text-white hover:bg-green-600">
+            Add New Recipe
+        </a>
+    </div>
+
+    @if (Model != null && Model.Any())  // Check if the recipe list is not null and contains items
+    {
+        <!-- Recipe list (dynamic, based on List<RecipeDTO>) -->
+        <div class="grid-cols-1 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            @foreach (var recipe in Model)
+            {
+                <div class="overflow-hidden rounded-md bg-white shadow-lg transition duration-300 hover:shadow-xl">
+                    <img src="@recipe.RecipeCoverImage.Url" alt="@recipe.Title" class="h-48 w-full object-cover">
+                    <div class="p-4">
+                        <h2 class="mb-2 text-xl font-semibold">@recipe.Title</h2>
+                        <p class="mb-4 text-gray-600">@recipe.Description</p>
+                        <a href="@Url.Action("Details", "Recipe", new { id = recipe.Id })" class="text-blue-500 hover:underline">View Details</a>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <!-- No recipes message if list is empty -->
+        <p class="text-gray-600">You haven't added any recipes yet. Start by adding one!</p>
+    }
+</div>
