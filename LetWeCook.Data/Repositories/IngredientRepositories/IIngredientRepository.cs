@@ -7,7 +7,7 @@ namespace LetWeCook.Data.Repositories.IngredientRepositories
     {
         Task<Result<Ingredient>> CreateIngredientAsync(Ingredient ingredient, CancellationToken cancellationToken);
         Task<Result<List<Ingredient>>> GetAllIngredientsWithCoverImageAndSectionsAsync(CancellationToken cancellationToken);
-        Task<Result<Ingredient?>> GetInredientWithCoverImageAndSectionByIdAsync(Guid id, CancellationToken cancellationToken);
+        Task<Result<Ingredient>> GetInredientWithCoverImageAndSectionByIdAsync(Guid id, CancellationToken cancellationToken);
         Task<Result<List<Ingredient>>> GetAllIngredientsNameAndIdAsync(CancellationToken cancellationToken);
         Task<Result<List<Ingredient>>> GetIngredientsByIdsAsync(List<Guid> ids, CancellationToken cancellationToken);
 

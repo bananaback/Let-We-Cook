@@ -64,6 +64,7 @@ namespace LetWeCook.Services.AuthenticationServices
             {
                 UserName = username,
                 Email = email,
+                DateJoined = DateTime.UtcNow
             };
 
             IdentityResult result;
@@ -227,7 +228,7 @@ namespace LetWeCook.Services.AuthenticationServices
 
         private async Task<ExternalLoginResult> CreateNewUserAsync(string email, ExternalLoginInfo info)
         {
-            var newUser = new ApplicationUser { UserName = email, Email = email };
+            var newUser = new ApplicationUser { UserName = email, Email = email, DateJoined = DateTime.UtcNow };
             var createUserResult = await _userManager.CreateAsync(newUser);
 
             if (!createUserResult.Succeeded)

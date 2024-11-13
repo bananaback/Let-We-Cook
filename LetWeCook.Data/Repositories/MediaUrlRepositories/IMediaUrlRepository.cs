@@ -8,7 +8,7 @@ namespace LetWeCook.Data.Repositories.MediaUrlRepositories
         Task<Result> DeleteMediaUrlAsync(Guid mediaUrlId, CancellationToken cancellationToken);
 
         Task<Result<MediaUrl>> CreateMediaUrlAsync(MediaUrl mediaUrl, CancellationToken cancellationToken);
-        Task<Result<MediaUrl?>> GetMediaUrlById(Guid id, CancellationToken cancellationToken);
+        Task<Result<MediaUrl>> GetMediaUrlById(Guid id, CancellationToken cancellationToken);
         Task<Result<List<MediaUrl>>> GetMediaUrlByIdList(List<Guid> idList, CancellationToken cancellationToken);
     }
 }

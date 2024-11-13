@@ -43,7 +43,7 @@ namespace LetWeCook.Data.Repositories.IngredientRepositories
             return Result<List<Ingredient>>.Success(ingredients, "Retrieved all ingredients successfully.");
         }
 
-        public async Task<Result<Ingredient?>> GetInredientWithCoverImageAndSectionByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task<Result<Ingredient>> GetInredientWithCoverImageAndSectionByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -53,11 +53,19 @@ namespace LetWeCook.Data.Repositories.IngredientRepositories
                .Where(i => i.Id == id)
                .FirstOrDefaultAsync(cancellationToken);
 
-                return Result<Ingredient?>.Success(ingredient, "Retrieve ingredient success (maybe null if not found).");
+                if (ingredient == null)
+                {
+                    return Result<Ingredient>.Failure(
+                        $"Failed to retrieve ingredient with id {id}",
+                        ErrorCode.IngredientNotFound);
+
+                }
+
+                return Result<Ingredient>.Success(ingredient, "Retrieve ingredient success.");
             }
             catch (Exception ex)
             {
-                return Result<Ingredient?>.Failure("Failed to retrieve ingredient", ErrorCode.IngredientRetrievalFailed, ex);
+                return Result<Ingredient>.Failure("Failed to retrieve ingredient", ErrorCode.IngredientRetrievalFailed, ex);
             }
         }
 

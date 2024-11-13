@@ -24,6 +24,10 @@ namespace LetWeCook.Data.Configurations
                 .HasColumnName("balance")
                 .HasColumnType("decimal(18,2)");
 
+            builder.Property(u => u.DateJoined)
+                .HasColumnName("date_joined");
+
+
 
             builder.HasMany(u => u.ShoppingLists)
                 .WithOne(sl => sl.User)

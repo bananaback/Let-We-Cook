@@ -11,6 +11,7 @@ namespace LetWeCook.Data
         public DbSet<MediaUrl> MediaUrls { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
+        public DbSet<UserProfile> UserProfiles { get; set; }
 
         public LetWeCookDbContext(DbContextOptions<LetWeCookDbContext> options) : base(options)
         {

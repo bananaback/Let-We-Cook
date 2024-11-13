@@ -6,6 +6,7 @@ namespace LetWeCook.Data.Entities
 	{
 		public bool IsRemoved { get; set; }
 		public decimal Balance { get; set; }
+		public DateTime DateJoined {  get; set; }
 
 		public UserProfile? UserProfile { get; set; }
 		public List<ShoppingList> ShoppingLists { get; set; } = new List<ShoppingList>();

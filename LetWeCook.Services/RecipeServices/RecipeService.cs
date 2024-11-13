@@ -33,16 +33,16 @@ namespace LetWeCook.Services.RecipeServices
 
         public async Task<Result<RecipeDTO>> CreateRecipeAsync(string userId, RecipeDTO recipeDTO, CancellationToken cancellationToken)
         {
-            Result<MediaUrl?> getCoverImageUrlResult = await _mediaUrlRepository.GetMediaUrlById(recipeDTO.RecipeCoverImage.Id, cancellationToken);
+            Result<MediaUrl> getCoverImageUrlResult = await _mediaUrlRepository.GetMediaUrlById(recipeDTO.RecipeCoverImage.Id, cancellationToken);
 
-            if (!getCoverImageUrlResult.IsSuccess || getCoverImageUrlResult.Data == null)
+            if (!getCoverImageUrlResult.IsSuccess)
             {
                 return Result<RecipeDTO>.Failure(
                     "Failed to create recipe because media url for cover image not found",
                     ErrorCode.RecipeCreationFailed, getCoverImageUrlResult.Exception);
             }
 
-            MediaUrl coverImageMediaUrl = getCoverImageUrlResult.Data;
+            MediaUrl coverImageMediaUrl = getCoverImageUrlResult.Data!;
 
             ApplicationUser? user = await _userManager.FindByIdAsync(userId);
             if (user == null)

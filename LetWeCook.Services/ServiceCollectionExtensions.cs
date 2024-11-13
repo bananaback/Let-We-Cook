@@ -3,11 +3,13 @@ using LetWeCook.Data;
 using LetWeCook.Data.Entities;
 using LetWeCook.Data.Repositories.IngredientRepositories;
 using LetWeCook.Data.Repositories.MediaUrlRepositories;
+using LetWeCook.Data.Repositories.ProfileRepositories;
 using LetWeCook.Data.Repositories.RecipeRepositories;
 using LetWeCook.Data.Repositories.UnitOfWork;
 using LetWeCook.Services.FileStorageServices;
 using LetWeCook.Services.IngredientServices;
 using LetWeCook.Services.MediaUrlServices;
+using LetWeCook.Services.ProfileServices;
 using LetWeCook.Services.RecipeServices;
 using LetWeCook.Web.Models.Configs;
 using Microsoft.AspNetCore.Identity;
@@ -42,6 +44,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IIngredientRepository, IngredientRepository>();
         services.AddScoped<IMediaUrlRepository, MediaUrlRepository>();
         services.AddScoped<IRecipeRepository, RecipeRepository>();
+        services.AddScoped<IProfileRepository, ProfileRepository>();
 
         Cloudinary cloudinary = new Cloudinary(appSettings.CloudinaryUrl);
         cloudinary.Api.Secure = true;
@@ -51,6 +54,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IIngredientService, IngredientService>();
         services.AddScoped<IRecipeService, RecipeService>();
         services.AddScoped<IMediaUrlService, MediaUrlService>();
+        services.AddScoped<IProfileService, ProfileService>();
 
     }
 }
