@@ -33,6 +33,7 @@ namespace LetWeCook.Data.Repositories.RecipeRepositories
             {
                 List<Recipe> recipes = await _context.Recipes
                     .Include(r => r.RecipeCoverImage)
+                    .Include(r => r.CreatedBy)
                     .Where(r => r.CreatedBy.Id == userId)
                     .ToListAsync();
                 return Result<List<Recipe>>.Success(recipes, "Retrieve recipes successfully.");

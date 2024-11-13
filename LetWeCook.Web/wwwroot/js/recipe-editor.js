@@ -239,16 +239,38 @@
                 contentType: 'application/json',
                 data: JSON.stringify(backendRequestData), // Ensure backendRequestData is properly structured
                 success: function (response) {
-                    console.log('Recipe created successfully:', response);
+                    $('#recipe-details-btn').attr("href", `/Cooking/Recipe/${response.id}`);
+                    showSuccessMessage();
                 },
                 error: function (xhr, status, error) {
-                    console.error('Error creating recipe:', xhr.responseText);
+                    showErrorMessage('Error creating recipe: ' + xhr.responseText);
                 }
             });
 
         }
+    });
+
+    showSuccessMessage("Welcome to our recipe editor! Happy editing :)");
+    $('.buttons').fadeOut();
+
+    $('#success-message-close-btn').on('click', function () {
+        $('.notification-area').fadeOut();
     })
 });
+
+function showSuccessMessage(message = "We've created your recipe successfully!") {
+    $('.notification-area').fadeIn();
+    $('.buttons').fadeIn();
+    $('.noti-message').text(message);
+    $('.notification-area').addClass('bg-green-500').removeClass('bg-red-500');
+}
+
+function showErrorMessage(message = "Failed to create your recipe due to error: ") {
+    $('.notification-area').fadeIn();
+    $('.buttons').fadeOut();
+    $('.noti-message').text(message);
+    $('.notification-area').removeClass('bg-green-500').addClass('bg-red-500');
+}
 
 function prepareRecipeDataForBackend(recipeData) {
     return {
