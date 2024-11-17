@@ -3,12 +3,6 @@ using LetWeCook.Common.Results;
 using LetWeCook.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace LetWeCook.Data.Repositories.ProfileRepositories
 {
@@ -39,7 +33,7 @@ namespace LetWeCook.Data.Repositories.ProfileRepositories
 
         public async Task<Result<UserProfile>> GetUserProfileByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
         {
-            
+
             try
             {
                 var profile = await _context.UserProfiles
@@ -61,8 +55,13 @@ namespace LetWeCook.Data.Repositories.ProfileRepositories
                 return Result<UserProfile>.Failure(
                     "Retrieve user profile failed",
                     ErrorCode.UserProfileRetrievalFailed,
-                    ex) ;
+                    ex);
             }
+        }
+
+        public void UpdateUserProfile(UserProfile profile)
+        {
+            _context.UserProfiles.Update(profile);
         }
     }
 }

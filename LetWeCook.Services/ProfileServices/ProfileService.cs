@@ -1,17 +1,12 @@
-﻿using CloudinaryDotNet.Actions;
-using LetWeCook.Common.Enums;
+﻿using LetWeCook.Common.Enums;
 using LetWeCook.Common.Results;
 using LetWeCook.Data.Entities;
+using LetWeCook.Data.Enums;
 using LetWeCook.Data.Repositories.ProfileRepositories;
 using LetWeCook.Data.Repositories.UnitOfWork;
 using LetWeCook.Services.DTOs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LetWeCook.Services.ProfileServices
 {
@@ -40,7 +35,7 @@ namespace LetWeCook.Services.ProfileServices
 
             }
             var getUserProfileResult = await _profileRepository.GetUserProfileByUserIdAsync(userId, cancellationToken);
-            
+
             if (!getUserProfileResult.IsSuccess)
             {
                 if (getUserProfileResult.ErrorCode == ErrorCode.UserProfileNotFound)
@@ -78,7 +73,7 @@ namespace LetWeCook.Services.ProfileServices
                         UserId = userId,
                         UserName = user.UserName ?? string.Empty,
                     }, "Create user profile successfully.");
-                } 
+                }
                 else
                 {
                     return Result<ProfileDTO>.Failure("Failed to get user profile", ErrorCode.UserProfileRetrievalFailed, getUserProfileResult.Exception);
@@ -100,6 +95,35 @@ namespace LetWeCook.Services.ProfileServices
                 Age = existingProfile.Age,
                 Address = existingProfile.Address
             }, "Retrieve user profile successfully.");
+        }
+
+        public async Task<Result<ProfileDTO>> UpdateUserProfileAsync(ProfileDTO profileDTO, CancellationToken cancellationToken = default)
+        {
+
+            var getExistingUserProfileResult = await _profileRepository.GetUserProfileByUserIdAsync(profileDTO.UserId, cancellationToken);
+            if (!getExistingUserProfileResult.IsSuccess)
+            {
+                return Result<ProfileDTO>.Failure($"Failed to retrieve user profile with user id {profileDTO.UserId.ToString()}", ErrorCode.UserProfileRetrievalFailed, getExistingUserProfileResult.Exception);
+            }
+
+            var oldProfile = getExistingUserProfileResult.Data!;
+
+            oldProfile.PhoneNumber = profileDTO.PhoneNumber;
+            oldProfile.FirstName = profileDTO.FirstName;
+            oldProfile.LastName = profileDTO.LastName;
+            oldProfile.Age = profileDTO.Age;
+            oldProfile.Gender = (GenderEnum)Enum.Parse(typeof(GenderEnum), profileDTO.Gender);
+            oldProfile.Address = profileDTO.Address;
+
+            _profileRepository.UpdateUserProfile(oldProfile);
+
+            var saveChangesResult = await _unitOfWork.SaveChangesAsync(cancellationToken);
+            if (saveChangesResult <= 0) // Check if no changes were saved
+            {
+                return Result<ProfileDTO>.Failure("Failed to save changes to the database after profile update.", ErrorCode.UserProfileSaveFailed);
+            }
+
+            return Result<ProfileDTO>.Success(profileDTO, "Updated user profile successfully.");
         }
     }
 }

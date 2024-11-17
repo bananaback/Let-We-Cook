@@ -33,13 +33,14 @@ namespace LetWeCook.Web.Areas.Account.Controllers
             _logger.LogInformation($"{getProfileResult.Message}\n{getProfileResult.Data}\n{getProfileResult.Exception?.Message}");
             var profileDTO = getProfileResult.Data;
 
-            
+
             if (!getProfileResult.IsSuccess)
             {
                 return View("ProfileError");
             }
 
-            return View(new ProfileViewModel{
+            return View(new ProfileViewModel
+            {
                 Username = profileDTO!.UserName,
                 Email = profileDTO.Email,
                 DateJoined = profileDTO.DateJoined,
@@ -51,6 +52,52 @@ namespace LetWeCook.Web.Areas.Account.Controllers
                 Address = profileDTO.Address,
             });
         }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Index(ProfileViewModel model, CancellationToken cancellationToken = default)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            string userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "";
+
+            Guid userIdGuid;
+            bool isValid = Guid.TryParse(userIdString, out userIdGuid);
+
+            if (!isValid)
+            {
+                return View("ProfileError");
+            }
+
+
+            var profileDTO = new ProfileDTO
+            {
+                UserId = userIdGuid,
+                PhoneNumber = model.PhoneNumber,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Age = model.Age,
+                Gender = model.Gender,
+                Address = model.Address,
+            };
+
+            var updateProfileResult = await _profileService.UpdateUserProfileAsync(profileDTO, cancellationToken);
+
+            if (!updateProfileResult.IsSuccess)
+            {
+                ModelState.AddModelError(string.Empty, updateProfileResult.Message);
+                return View(model);
+            }
+
+            _logger.LogInformation("User profile updated successfully.");
+            ViewData["SuccessMessage"] = "Profile updated successfully!";
+            return View(model);
+        }
+
 
         [Authorize]
         public async Task<IActionResult> Recipes(CancellationToken cancellationToken = default)

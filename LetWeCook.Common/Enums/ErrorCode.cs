@@ -19,6 +19,7 @@
         RecipeNotFound,
         UserProfileRetrievalFailed,
         UserProfileCreationFailed,
+        UserProfileSaveFailed,
         UserProfileNotFound,
         DatabaseSaveFailed,
         InvalidBase64Image,
