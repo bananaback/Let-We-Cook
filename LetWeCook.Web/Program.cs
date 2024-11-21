@@ -142,6 +142,11 @@ using (var scope = app.Services.CreateScope())
     try
     {
         await DataSeeder.SeedRolesAsync(services);
+
+        // Export ingredients to file
+        var applicationLifetime = services.GetRequiredService<IHostApplicationLifetime>();
+        await DataSeeder.ExportIngredientsToFile(app.Services, "ingredients.json", applicationLifetime.ApplicationStopping);
+        await DataSeeder.ParseJsonAndLogAsync("ingredients.json", applicationLifetime.ApplicationStopping);
     }
     catch (Exception ex)
     {

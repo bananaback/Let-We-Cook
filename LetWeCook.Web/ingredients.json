@@ -1,0 +1,262 @@
+[
+  {
+    "id": "461034c5-f1d7-4174-a1a8-08dd09cb1670",
+    "name": "Chicken meat",
+    "description": "A versatile protein used in a wide range of cuisines and recipes.",
+    "coverImageUrl": {
+      "id": "fa039f8b-0346-4899-a88c-82eab218050e",
+      "url": "https://res.cloudinary.com/dxclyqubm/image/upload/v1732152356/srqo01jy8cab2eqxlorj.jpg"
+    },
+    "ingredientSections": [
+      {
+        "id": "52b1857e-c85a-4a63-aa87-c3732a2c9fe2",
+        "textContent": "Can be grilled, roasted, boiled, or fried.",
+        "order": 0
+      },
+      {
+        "id": "0a61aa18-77e1-44c6-9414-1a986d1255dd",
+        "textContent": "Popular in soups, stews, and as a filling for wraps or sandwiches.",
+        "order": 1
+      },
+      {
+        "id": "f908e5c9-5b2a-49d1-8e00-4f1a592d5d00",
+        "textContent": "A lean protein source rich in essential nutrients.",
+        "order": 2
+      }
+    ]
+  },
+  {
+    "id": "c2f1f30e-156c-45e3-a1ad-08dd09cb1670",
+    "name": "Egg",
+    "description": "A protein-rich food used in both cooking and baking.",
+    "coverImageUrl": {
+      "id": "69887eed-aa7f-4dfb-ab54-1a1a02e20d14",
+      "url": "https://res.cloudinary.com/dxclyqubm/image/upload/v1732152572/j8pkqok7ibcx3epvxuqd.jpg"
+    },
+    "ingredientSections": [
+      {
+        "id": "34ff2552-8f4b-45fa-8001-a7180b5836a0",
+        "textContent": "Can be boiled, fried, poached, or used as a binder in recipes.",
+        "order": 0
+      },
+      {
+        "id": "d800a69e-b956-43a8-99ff-ce26ba4820e0",
+        "textContent": "A key ingredient in dishes like omelets, cakes, and custards.",
+        "order": 1
+      },
+      {
+        "id": "b004e178-70ee-48b6-ae2a-110f4d0a2dee",
+        "textContent": "Offers versatility in both savory and sweet dishes.",
+        "order": 2
+      }
+    ]
+  },
+  {
+    "id": "b0bd4a6d-87b7-4d61-a1ac-08dd09cb1670",
+    "name": "Flour",
+    "description": "A powder made by grinding grains, used in baking and cooking.",
+    "coverImageUrl": {
+      "id": "7d122c56-fc6f-4834-86a9-c1880fcaac4a",
+      "url": "https://res.cloudinary.com/dxclyqubm/image/upload/v1732152530/tcgcnfs2l040cwx5ajwt.jpg"
+    },
+    "ingredientSections": [
+      {
+        "id": "224d5bfc-a378-41a0-bf1c-d8975ffc1623",
+        "textContent": "Types include all-purpose, whole wheat, and gluten-free.",
+        "order": 0
+      },
+      {
+        "id": "ebbb4f4b-42fe-47dc-a4c2-2f6f04fcc863",
+        "textContent": "Essential for bread, pastries, and thickening sauces.",
+        "order": 1
+      },
+      {
+        "id": "ed2eb3d2-b272-4ccd-b674-e5c6196ce564",
+        "textContent": "Common in both savory and sweet recipes.",
+        "order": 2
+      }
+    ]
+  },
+  {
+    "id": "b1034c99-1e29-4a72-a1a6-08dd09cb1670",
+    "name": "Garlic",
+    "description": "A pungent bulb that adds depth and flavor to dishes, known for its health benefits.",
+    "coverImageUrl": {
+      "id": "0d349b51-3ec4-440b-9436-56cf7b056922",
+      "url": "https://res.cloudinary.com/dxclyqubm/image/upload/v1732152252/tyapgl6qzssert8lrgi2.jpg"
+    },
+    "ingredientSections": [
+      {
+        "id": "0a283f64-c11a-4130-a646-11e791690f0b",
+        "textContent": "Can be used minced, roasted, or whole for varying intensities of flavor.",
+        "order": 0
+      },
+      {
+        "id": "06ff5384-0323-4cee-ac6d-4e40fe09bf0a",
+        "textContent": "A staple in Asian, European, and Middle Eastern cooking.",
+        "order": 1
+      },
+      {
+        "id": "a221ecb6-0766-4179-83cc-46578d30d672",
+        "textContent": "Known to have antimicrobial and anti-inflammatory properties.",
+        "order": 2
+      }
+    ]
+  },
+  {
+    "id": "b22a9106-bb34-4ee0-a1ae-08dd09cb1670",
+    "name": "Milk",
+    "description": "A liquid dairy product used in a wide range of recipes.",
+    "coverImageUrl": {
+      "id": "d4c213ed-3ae9-4bf6-8742-dc109302a70c",
+      "url": "https://res.cloudinary.com/dxclyqubm/image/upload/v1732152607/hnjcnydw88gewk8cqrxo.webp"
+    },
+    "ingredientSections": [
+      {
+        "id": "9bbe101b-5ae0-414a-9959-b47fc3480e2e",
+        "textContent": "Can be consumed directly or used in sauces, soups, and desserts.",
+        "order": 0
+      },
+      {
+        "id": "662ed8d8-69be-4c56-a538-5640ee40fcca",
+        "textContent": "Available in different types like whole, skimmed, and plant-based alternatives.",
+        "order": 1
+      },
+      {
+        "id": "94c22857-bf76-4608-a506-91327007dd97",
+        "textContent": "Essential for baking, smoothies, and creamy dishes.",
+        "order": 2
+      }
+    ]
+  },
+  {
+    "id": "22890da0-eba5-4e63-a1ab-08dd09cb1670",
+    "name": "Olive oil",
+    "description": "A healthy fat extracted from olives, used for cooking and dressing.",
+    "coverImageUrl": {
+      "id": "430c0483-f38e-4e55-9e38-f343c4e8a41b",
+      "url": "https://res.cloudinary.com/dxclyqubm/image/upload/v1732152487/sq8fv494a18j1yqrryit.jpg"
+    },
+    "ingredientSections": [
+      {
+        "id": "b155e276-16b9-48f3-bca0-334adcec7525",
+        "textContent": "Commonly used in frying, baking, and salad dressings.",
+        "order": 0
+      },
+      {
+        "id": "9a216e14-f685-47c9-a92b-f50ce80a3177",
+        "textContent": "Integral to Mediterranean and Middle Eastern cuisines.",
+        "order": 1
+      },
+      {
+        "id": "13f0930d-1db7-4984-a61e-c785e89a24ff",
+        "textContent": "Rich in monounsaturated fats and antioxidants.",
+        "order": 2
+      }
+    ]
+  },
+  {
+    "id": "ae52d504-20d6-4e30-a1a7-08dd09cb1670",
+    "name": "Onion",
+    "description": "A flavorful vegetable used as a base ingredient in countless dishes worldwide.",
+    "coverImageUrl": {
+      "id": "c4808cc6-45ff-44ec-823a-33bb4f435c70",
+      "url": "https://res.cloudinary.com/dxclyqubm/image/upload/v1732152307/fwmpac09qvecfupbg379.jpg"
+    },
+    "ingredientSections": [
+      {
+        "id": "875fdce6-0ab8-4218-88ab-cadb44885693",
+        "textContent": "Available in several varieties like red, white, and yellow.",
+        "order": 0
+      },
+      {
+        "id": "575d49fa-bae4-42bd-9073-60d557781e97",
+        "textContent": "Can be used raw in salads or caramelized for a sweet taste.",
+        "order": 1
+      },
+      {
+        "id": "2f9d5770-d265-42cf-8855-1531e8d14d5a",
+        "textContent": "Often paired with garlic for a complementary flavor profile.",
+        "order": 2
+      }
+    ]
+  },
+  {
+    "id": "5f1bc13d-9e4b-42b3-a1a9-08dd09cb1670",
+    "name": "Rice",
+    "description": "A staple grain that serves as a base for many dishes.",
+    "coverImageUrl": {
+      "id": "5625cb5c-63b7-4e95-9649-61238f4af532",
+      "url": "https://res.cloudinary.com/dxclyqubm/image/upload/v1732152397/b7bmkfgwjy2wqzipcinl.jpg"
+    },
+    "ingredientSections": [
+      {
+        "id": "c52016f0-7929-45b8-9ccd-fe260bbae267",
+        "textContent": "Comes in varieties like basmati, jasmine, and brown rice.",
+        "order": 0
+      },
+      {
+        "id": "cbcb8741-af30-46c0-b976-694df6c4df36",
+        "textContent": "Essential for Asian, Indian, and Latin American cuisines.",
+        "order": 1
+      },
+      {
+        "id": "cdd2f957-a241-481d-9bf0-b64ddcc441cd",
+        "textContent": "Used in both savory dishes like biryanis and desserts like rice pudding.",
+        "order": 2
+      }
+    ]
+  },
+  {
+    "id": "0a4c5988-c20c-4974-a1aa-08dd09cb1670",
+    "name": "Salt",
+    "description": "A universal seasoning essential for enhancing flavors.",
+    "coverImageUrl": {
+      "id": "b5dfac31-4cb7-44f3-95ff-e0d4fd4b9a47",
+      "url": "https://res.cloudinary.com/dxclyqubm/image/upload/v1732152439/g0pexckzgx7azq04e91s.jpg"
+    },
+    "ingredientSections": [
+      {
+        "id": "8f829f32-1b96-4211-bf8d-06df2182e3ec",
+        "textContent": "Used in cooking and baking for taste and preservation.",
+        "order": 0
+      },
+      {
+        "id": "314a11ca-cff7-4d67-954f-a60b0e3d1bd5",
+        "textContent": "Available in various forms like table salt, sea salt, and kosher salt.",
+        "order": 1
+      },
+      {
+        "id": "de64df33-b31e-4e00-b81f-6b26f20a9b4c",
+        "textContent": "Plays a role in brining, curing, and seasoning.",
+        "order": 2
+      }
+    ]
+  },
+  {
+    "id": "b665432f-dbcc-43b6-a1a5-08dd09cb1670",
+    "name": "Tomato",
+    "description": "A juicy, red fruit often used as a vegetable, rich in vitamins A, C, and antioxidants.",
+    "coverImageUrl": {
+      "id": "81932645-48f9-4167-bb2e-8acf53b9ea54",
+      "url": "https://res.cloudinary.com/dxclyqubm/image/upload/v1732152200/arzdqg61exidgv6fqgrh.jpg"
+    },
+    "ingredientSections": [
+      {
+        "id": "daf89c7e-3fce-461d-bf5b-57ea8366a4b9",
+        "textContent": "Commonly used in salads, sauces, and soups for its tangy flavor.",
+        "order": 0
+      },
+      {
+        "id": "57a6af8c-d603-410a-aed3-266954de8e5b",
+        "textContent": "Available in various forms like fresh, canned, or pureed.",
+        "order": 1
+      },
+      {
+        "id": "d33328bd-fd9a-4db1-aafc-35048a23ee8b",
+        "textContent": "Essential for Mediterranean, Italian, and Indian cuisines.",
+        "order": 2
+      }
+    ]
+  }
+]

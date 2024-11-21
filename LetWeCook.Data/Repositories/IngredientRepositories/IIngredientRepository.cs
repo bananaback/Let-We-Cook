@@ -10,6 +10,7 @@ namespace LetWeCook.Data.Repositories.IngredientRepositories
         Task<Result<Ingredient>> GetInredientWithCoverImageAndSectionByIdAsync(Guid id, CancellationToken cancellationToken);
         Task<Result<List<Ingredient>>> GetAllIngredientsNameAndIdAsync(CancellationToken cancellationToken);
         Task<Result<List<Ingredient>>> GetIngredientsByIdsAsync(List<Guid> ids, CancellationToken cancellationToken);
+        Task<Result<List<Ingredient>>> GetIngredientsForDataExporter(CancellationToken cancellationToken);
 
     }
 }

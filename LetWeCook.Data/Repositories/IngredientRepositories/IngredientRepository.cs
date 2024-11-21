@@ -84,5 +84,16 @@ namespace LetWeCook.Data.Repositories.IngredientRepositories
                 return Result<List<Ingredient>>.Failure("Failed to retrieve ingredients by IDs", ErrorCode.IngredientRetrievalFailed, ex);
             }
         }
+    
+        public async Task<Result<List<Ingredient>>> GetIngredientsForDataExporter(CancellationToken cancellationToken)
+        {
+            List<Ingredient> ingredients = await _context.Ingredients
+                .Include(i => i.CoverImageUrl)                 // Eagerly load CoverImageUrl
+                .Include(i => i.IngredientSections)            // Eagerly load IngredientSections
+                .OrderBy(i => i.Name)
+                .ToListAsync(cancellationToken);
+
+            return Result<List<Ingredient>>.Success(ingredients, "Retrieved all ingredients for data exporter successfully.");
+        }
     }
 }
