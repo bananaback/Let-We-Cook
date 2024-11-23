@@ -51,7 +51,7 @@ namespace LetWeCook.Data.Repositories.MediaUrlRepositories
             }
         }
 
-        public async Task<Result<MediaUrl>> GetMediaUrlById(Guid id, CancellationToken cancellationToken = default)
+        public async Task<Result<MediaUrl>> GetMediaUrlByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             try
             {

@@ -19,7 +19,7 @@
         <div class="grid-cols-1 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             @foreach (var recipe in Model)
             {
-                <div class="overflow-hidden rounded-md bg-white shadow-lg transition duration-300 hover:shadow-xl">
+                <div class="cursor-pointer overflow-hidden rounded-md bg-white shadow-lg transition duration-300 hover:shadow-xl">
                     <img src="@recipe.RecipeCoverImage.Url" alt="@recipe.Title" class="h-48 w-full object-cover">
                     <div class="p-4">
                         <h2 class="mb-2 text-xl font-semibold">@recipe.Title</h2>

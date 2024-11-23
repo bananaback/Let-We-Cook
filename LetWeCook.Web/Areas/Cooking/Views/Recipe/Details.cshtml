@@ -1,4 +1,7 @@
-﻿<div class="min-h-screen bg-gray-100 p-8">
+﻿@model LetWeCook.Services.DTOs.RecipeDTO
+
+
+<div class="min-h-screen bg-gray-100 p-8">
     <!-- Back Button -->
     <a href="https://localhost:7157/Cooking/Recipe/" class="mb-4 inline-block rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300">
         Back to Recipes
@@ -9,7 +12,7 @@
         <div class="w-full max-w-3xl">
             <!-- Recipe Header Section -->
             <div class="rounded-lg bg-white p-6 shadow-lg">
-                <h1 class="text-4xl font-bold text-gray-800">Grilled Salmon with Avocado Salsa</h1>
+                <h1 class="text-4xl font-bold text-gray-800">@Model.Title</h1>
 
                 <!-- Recipe Tags -->
                 <div class="mt-4 flex flex-wrap space-x-2">
@@ -21,14 +24,14 @@
 
                 <!-- Recipe Image -->
                 <div class="mt-6">
-                    <img src="https://gimmedelicious.com/wp-content/uploads/2021/09/Grilled-Salmon-with-avocado-Salsa-sq-750x750.jpg" alt="Grilled Salmon" class="h-64 w-full rounded-lg object-cover shadow-md">
+                    <img src="@Model.RecipeCoverImage.Url" alt="@Model.RecipeCoverImage.Alt" class="h-64 w-full rounded-lg object-cover shadow-md">
                 </div>
 
                 <!-- Recipe Description -->
                 <div class="mt-6">
                     <h2 class="text-2xl font-semibold text-gray-800">Description</h2>
                     <p class="mt-2 text-gray-700">
-                        Enjoy this flavorful grilled salmon topped with a fresh avocado salsa, perfect for a light and healthy meal. This dish combines smoky, char-grilled salmon with the creamy texture of avocado and a hint of lime.
+                        @Model.Description
                     </p>
                 </div>
 
@@ -36,21 +39,56 @@
                 <div class="mt-6">
                     <h2 class="text-2xl font-semibold text-gray-800">Ingredients</h2>
                     <ul class="mt-2 list-disc space-y-1 pl-5 text-gray-700">
-                        <li>2 salmon fillets</li>
-                        <li>1 tablespoon olive oil</li>
-                        <li>Salt and black pepper to taste</li>
-                        <li>1 avocado, diced</li>
-                        <li>1/2 red onion, finely chopped</li>
-                        <li>Juice of 1 lime</li>
-                        <li>Fresh cilantro, chopped</li>
+                        @if (Model.RecipeIngredientDTOs != null && Model.RecipeIngredientDTOs.Any())
+                        {
+                            foreach (var ingredient in Model.RecipeIngredientDTOs)
+                            {
+                                <li>
+                                    <!-- Wrap each ingredient in an anchor tag with hover effect and link to the details page of that ingredient -->
+                                    <a href="@Url.Action("Details", "Ingredient", new { area = "Cooking", id = ingredient.IngredientId })"
+                                       class="block rounded-lg p-2 transition-all duration-300 hover:bg-teal-100 hover:text-teal-700">
+                                        @ingredient.IngredientName - @ingredient.Quantity @ingredient.Unit
+                                    </a>
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            <li>No ingredients available</li>
+                        }
                     </ul>
                 </div>
+
+
 
                 <!-- Cooking Steps Section -->
                 <div class="mt-6">
                     <h2 class="text-3xl font-semibold text-gray-800">Cooking Steps</h2>
+                    @if (Model.StepDTOs != null && Model.StepDTOs.Any())
+                    {
+                        @foreach (var step in Model.StepDTOs.OrderBy(s => s.Order))
+                        {
+                            <!-- Step @step.Order -->
+                            <div class="mt-6 flex items-start space-x-4">
+                                @if (!string.IsNullOrEmpty(step.ImageUrl))
+                                {
+                                    <img src="@step.ImageUrl" alt="Step @step.Order Image" class="h-32 w-32 rounded-lg object-cover shadow-md">
+                                }
+                                <div>
+                                    <h3 class="text-xl font-semibold text-gray-800">Step @step.Order</h3>
+                                    <p class="mt-1 text-gray-700">
+                                        @step.Text
+                                    </p>
+                                </div>
+                            </div>
+                        }
 
-                    <!-- Step 1 -->
+                    }
+                    else
+                    {
+                        <div>No steps available</div>
+                    }
+                    <!--
                     <div class="mt-6 flex items-start space-x-4">
                         <img src="https://th.bing.com/th/id/R.207a1a57511b1c5af9dfe56c5479a985?rik=Um6VrhurDbnWdA&pid=ImgRaw&r=0" alt="Step 1 Image" class="h-32 w-32 rounded-lg object-cover shadow-md">
                         <div>
@@ -61,7 +99,6 @@
                         </div>
                     </div>
 
-                    <!-- Step 2 -->
                     <div class="mt-6 flex items-start space-x-4">
                         <img src="https://spoton-prod-websites-user-assets.s3.amazonaws.com/static/uploads/JosMHq4RF2OhqNETj2gU_green%20frog-6.jpg" alt="Step 2 Image" class="h-32 w-32 rounded-lg object-cover shadow-md">
                         <div>
@@ -72,7 +109,6 @@
                         </div>
                     </div>
 
-                    <!-- Step 3 -->
                     <div class="mt-6 flex items-start space-x-4">
                         <img src="https://th.bing.com/th/id/OIP.QRe6V3MOtovUeH1ou6Q0ggAAAA?rs=1&pid=ImgDetMain" alt="Step 3 Image" class="h-32 w-32 rounded-lg object-cover shadow-md">
                         <div>
@@ -83,7 +119,6 @@
                         </div>
                     </div>
 
-                    <!-- Step 4 -->
                     <div class="mt-6 flex items-start space-x-4">
                         <img src="https://www.yummyhealthyeasy.com/wp-content/uploads/2018/06/Spicy-Grilled-Salmon-Avocado-Salsa-Yummy-Healthy-Easy-1-1-683x1024.jpg" alt="Step 4 Image" class="h-32 w-32 rounded-lg object-cover shadow-md">
                         <div>
@@ -93,6 +128,7 @@
                             </p>
                         </div>
                     </div>
+                    -->
                 </div>
             </div>
 
@@ -132,33 +168,7 @@
 
         </div>
 
-        <!-- Sidebar for Recommended Recipes -->
-        <div class="w-80 rounded-lg bg-white p-6 shadow-lg">
-            <h2 class="text-2xl font-semibold text-gray-800">Recipes You May Like</h2>
-            <div class="mt-6 space-y-4">
-                <!-- Mock Recipe Cards -->
-                <div class="cursor-pointer overflow-hidden rounded-lg bg-gray-50 shadow transition-transform duration-300 hover:scale-105">
-                    <img src="https://th.bing.com/th/id/OIP.LzbvMmKys54tSxgfX53_RQAAAA?rs=1&pid=ImgDetMain" alt="Recipe 1" class="h-24 w-full object-cover">
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold text-gray-800">Chicken Alfredo</h3>
-                        <p class="text-sm text-gray-600">20 mins | Easy</p>
-                    </div>
-                </div>
-                <div class="cursor-pointer overflow-hidden rounded-lg bg-gray-50 shadow transition-transform duration-300 hover:scale-105">
-                    <img src="https://th.bing.com/th/id/OIP.nDpvLIZehTIhZX3GnBaKBQHaLH?rs=1&pid=ImgDetMain" alt="Recipe 2" class="h-24 w-full object-cover">
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold text-gray-800">Taco Salad</h3>
-                        <p class="text-sm text-gray-600">30 mins | Medium</p>
-                    </div>
-                </div>
-                <div class="cursor-pointer overflow-hidden rounded-lg bg-gray-50 shadow transition-transform duration-300 hover:scale-105">
-                    <img src="https://th.bing.com/th/id/OIP.cM0v1ACbOfkOT8AqmeapmAHaKz?rs=1&pid=ImgDetMain" alt="Recipe 3" class="h-24 w-full object-cover">
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold text-gray-800">Beef Stir Fry</h3>
-                        <p class="text-sm text-gray-600">25 mins | Hard</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @await Component.InvokeAsync("RandomRecipesSidebar", new { count = 3 })
+
     </div>
 </div>

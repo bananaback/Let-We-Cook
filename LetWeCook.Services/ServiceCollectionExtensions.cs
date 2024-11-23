@@ -2,6 +2,7 @@
 using LetWeCook.Data;
 using LetWeCook.Data.Entities;
 using LetWeCook.Data.Repositories.IngredientRepositories;
+using LetWeCook.Data.Repositories.IngredientSectionRepositories;
 using LetWeCook.Data.Repositories.MediaUrlRepositories;
 using LetWeCook.Data.Repositories.ProfileRepositories;
 using LetWeCook.Data.Repositories.RecipeRepositories;
@@ -42,9 +43,12 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IIngredientRepository, IngredientRepository>();
+        services.AddScoped<IIngredientSectionRepository, IngredientSectionRepository>();
+
         services.AddScoped<IMediaUrlRepository, MediaUrlRepository>();
         services.AddScoped<IRecipeRepository, RecipeRepository>();
         services.AddScoped<IProfileRepository, ProfileRepository>();
+
 
         Cloudinary cloudinary = new Cloudinary(appSettings.CloudinaryUrl);
         cloudinary.Api.Secure = true;

@@ -84,7 +84,7 @@ namespace LetWeCook.Data.Repositories.IngredientRepositories
                 return Result<List<Ingredient>>.Failure("Failed to retrieve ingredients by IDs", ErrorCode.IngredientRetrievalFailed, ex);
             }
         }
-    
+
         public async Task<Result<List<Ingredient>>> GetIngredientsForDataExporter(CancellationToken cancellationToken)
         {
             List<Ingredient> ingredients = await _context.Ingredients
@@ -94,6 +94,30 @@ namespace LetWeCook.Data.Repositories.IngredientRepositories
                 .ToListAsync(cancellationToken);
 
             return Result<List<Ingredient>>.Success(ingredients, "Retrieved all ingredients for data exporter successfully.");
+        }
+
+        public async Task<Result<Ingredient>> GetIngredientByIdAsync(Guid id, CancellationToken cancellationToken)
+        {
+            try
+            {
+                Ingredient? ingredient = await _context.Ingredients
+               .Where(i => i.Id == id)
+               .FirstOrDefaultAsync(cancellationToken);
+
+                if (ingredient == null)
+                {
+                    return Result<Ingredient>.Failure(
+                        $"Failed to retrieve ingredient with id {id}",
+                        ErrorCode.IngredientNotFound);
+
+                }
+
+                return Result<Ingredient>.Success(ingredient, "Retrieve ingredient success.");
+            }
+            catch (Exception ex)
+            {
+                return Result<Ingredient>.Failure("Failed to retrieve ingredient", ErrorCode.IngredientRetrievalFailed, ex);
+            }
         }
     }
 }

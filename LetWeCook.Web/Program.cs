@@ -145,8 +145,8 @@ using (var scope = app.Services.CreateScope())
 
         // Export ingredients to file
         var applicationLifetime = services.GetRequiredService<IHostApplicationLifetime>();
-        await DataSeeder.ExportIngredientsToFile(app.Services, "ingredients.json", applicationLifetime.ApplicationStopping);
-        await DataSeeder.ParseJsonAndLogAsync("ingredients.json", applicationLifetime.ApplicationStopping);
+        //await DataSeeder.ExportIngredientsToFile(app.Services, "ingredients.json", applicationLifetime.ApplicationStopping);
+        // await DataSeeder.ParseJsonAndSeedDatabase(app.Services, "ingredients.json", applicationLifetime.ApplicationStopping);
     }
     catch (Exception ex)
     {

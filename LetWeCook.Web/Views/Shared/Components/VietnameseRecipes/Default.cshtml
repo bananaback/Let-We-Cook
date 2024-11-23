@@ -1,0 +1,34 @@
+﻿@using LetWeCook.Services.DTOs
+@model List<RecipeDTO>
+
+<div class="vietnamese-recipes rounded-lg bg-green-50 px-6 py-8 shadow-lg">
+    <h2 class="font-cursive mb-6 text-center text-3xl font-semibold text-teal-600">Vietnamese Recipes</h2>
+
+    <!-- Add Vietnamese pattern background -->
+    <div class="relative rounded-lg bg-cover bg-center" style="background-image: url('https://wallpaperaccess.com/full/46204.jpg'); padding: 2rem;">
+        <ul class="grid-cols-1 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            @foreach (var recipe in Model)
+            {
+                <!-- Wrap the entire card in an anchor tag for routing -->
+                <li class="transform rounded-lg bg-white bg-opacity-50 p-6 shadow-lg transition-transform hover:scale-105 hover:shadow-xl">
+                    <a href="@Url.Action("Details", "Recipe", new { area = "Cooking", id = recipe.Id })" class="block">
+                        <!-- Recipe Image -->
+                        <img class="mb-4 h-48 w-full rounded-t-lg object-cover" src="@recipe.RecipeCoverImage.Url" alt="@recipe.RecipeCoverImage.Alt" />
+
+                        <!-- Recipe Title -->
+                        <h3 class="mb-2 text-xl font-semibold text-gray-800">@recipe.Title</h3>
+
+                        <!-- Recipe Description -->
+                        <p class="mb-4 text-base text-black">@recipe.Description</p>
+
+                        <!-- Additional Info (Cooking time, servings) -->
+                        <div class="flex items-center justify-between text-sm text-black">
+                            <span><i class="fas fa-clock text-teal-500"></i> @recipe.CookTimeInMinutes minutes</span>
+                            <span><i class="fas fa-utensils text-teal-500"></i> @recipe.Serving people</span>
+                        </div>
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+</div>

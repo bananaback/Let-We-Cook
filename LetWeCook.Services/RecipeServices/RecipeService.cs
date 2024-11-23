@@ -1,4 +1,5 @@
-﻿using LetWeCook.Common.Enums;
+﻿using LetWeCook.Common;
+using LetWeCook.Common.Enums;
 using LetWeCook.Common.Results;
 using LetWeCook.Data.Entities;
 using LetWeCook.Data.Enums;
@@ -13,6 +14,8 @@ namespace LetWeCook.Services.RecipeServices
 {
     public class RecipeService : IRecipeService
     {
+        private const int MaxLevenshteinDistance = 10; // Adjust as needed for fuzzy tolerance
+
         private readonly IRecipeRepository _recipeRepository;
         private readonly IIngredientRepository _ingredientRepository;
         private readonly IMediaUrlRepository _mediaUrlRepository;
@@ -33,7 +36,7 @@ namespace LetWeCook.Services.RecipeServices
 
         public async Task<Result<RecipeDTO>> CreateRecipeAsync(string userId, RecipeDTO recipeDTO, CancellationToken cancellationToken)
         {
-            Result<MediaUrl> getCoverImageUrlResult = await _mediaUrlRepository.GetMediaUrlById(recipeDTO.RecipeCoverImage.Id, cancellationToken);
+            Result<MediaUrl> getCoverImageUrlResult = await _mediaUrlRepository.GetMediaUrlByIdAsync(recipeDTO.RecipeCoverImage.Id, cancellationToken);
 
             if (!getCoverImageUrlResult.IsSuccess)
             {
@@ -242,5 +245,361 @@ namespace LetWeCook.Services.RecipeServices
                 }).ToList()
             );
         }
+
+        public async Task<Result<List<RecipeDTO>>> GetNewestRecipesAsync(int count, CancellationToken cancellationToken = default)
+        {
+            Result<List<Recipe>> result = await _recipeRepository.GetNewestRecipesAsync(count, cancellationToken);
+
+            if (!result.IsSuccess)
+            {
+                return Result<List<RecipeDTO>>.Failure(
+                    "Failed to retrieve newest recipes",
+                    ErrorCode.RecipeRetrievalFailed,
+                    result.Exception);
+            }
+
+            return Result<List<RecipeDTO>>.Success(
+                result.Data!.Select(r => new RecipeDTO
+                {
+                    Id = r.Id,
+                    Title = r.Title,
+                    Description = r.Description,
+                    Cuisine = r.Cuisine,
+                    Difficulty = r.Difficulty.ToString(),
+                    CookTimeInMinutes = r.CookTimeInMinutes,
+                    Serving = r.Serving,
+                    RecipeCoverImage = new MediaUrlDTO
+                    {
+                        Id = r.RecipeCoverImage!.Id,
+                        Url = r.RecipeCoverImage.Url,
+                        Alt = r.RecipeCoverImage.Alt
+                    },
+                    DateCreated = r.DateCreated,
+                }).ToList()
+            );
+        }
+
+
+        public async Task<Result<List<RecipeDTO>>> GetRandomRecipesAsync(int count, CancellationToken cancellationToken = default)
+        {
+            Result<List<Recipe>> result = await _recipeRepository.GetRandomRecipesAsync(count, cancellationToken);
+
+            if (!result.IsSuccess)
+            {
+                return Result<List<RecipeDTO>>.Failure(
+                    "Failed to retrieve random recipes",
+                    ErrorCode.RecipeRetrievalFailed,
+                    result.Exception);
+            }
+
+            return Result<List<RecipeDTO>>.Success(
+                result.Data!.Select(r => new RecipeDTO
+                {
+                    Id = r.Id,
+                    Title = r.Title,
+                    Description = r.Description,
+                    Cuisine = r.Cuisine,
+                    Difficulty = r.Difficulty.ToString(),
+                    CookTimeInMinutes = r.CookTimeInMinutes,
+                    Serving = r.Serving,
+                    RecipeCoverImage = new MediaUrlDTO
+                    {
+                        Id = r.RecipeCoverImage!.Id,
+                        Url = r.RecipeCoverImage.Url,
+                        Alt = r.RecipeCoverImage.Alt
+                    },
+                    DateCreated = r.DateCreated,
+                }).ToList()
+            );
+        }
+
+
+        public async Task<Result<RecipeDTO>> GetRecipeByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        {
+            Result<Recipe> result = await _recipeRepository.GetRecipeWithCoverImageAndIngredientsAndStepsByRecipeIdAsync(id, cancellationToken);
+
+            if (!result.IsSuccess)
+            {
+                return Result<RecipeDTO>.Failure($"Retrieve recipe with id: {id} failed.", ErrorCode.RecipeRetrievalFailed, result.Exception);
+            }
+
+            Recipe r = result.Data!;
+
+            return Result<RecipeDTO>.Success(new RecipeDTO
+            {
+                Id = r.Id,
+                Title = r.Title,
+                Description = r.Description,
+                Cuisine = r.Cuisine,
+                Difficulty = r.Difficulty.ToString(),
+                CookTimeInMinutes = r.CookTimeInMinutes,
+                Serving = r.Serving,
+                CreatedBy = r.CreatedBy.Id,
+                RecipeCoverImage = new MediaUrlDTO
+                {
+                    Id = r.RecipeCoverImage!.Id,
+                    Url = r.RecipeCoverImage.Url,
+                    Alt = r.RecipeCoverImage.Alt
+                },
+                RecipeIngredientDTOs = r.RecipeIngredients.Select(ri => new RecipeIngredientDTO
+                {
+                    IngredientId = ri.Ingredient.Id,
+                    IngredientName = ri.Ingredient.Name,
+                    Quantity = ri.Quantity,
+                    Unit = ri.Unit.ToString()
+                }).ToList(),
+                StepDTOs = r.RecipeSteps.Select(rs =>
+                {
+                    StepDTO stepDTO = new StepDTO
+                    {
+                        Id = rs.Id,
+                        Text = rs.Instruction,
+                        Order = rs.StepNumber,
+
+                    };
+
+                    if (rs.RecipeStepMedias.Count != 0)
+                    {
+                        MediaUrl mediaUrl = rs.RecipeStepMedias[0].MediaUrl;
+                        if (mediaUrl.Url.EndsWith(".mp4"))
+                        {
+                            stepDTO.VideoUrl = mediaUrl.Url;
+                            stepDTO.VideoId = mediaUrl.Id.ToString();
+                        }
+                        else
+                        {
+                            stepDTO.ImageUrl = mediaUrl.Url;
+                            stepDTO.ImageId = mediaUrl.Id.ToString();
+                        }
+                    }
+
+                    return stepDTO;
+                }).ToList(),
+                DateCreated = r.DateCreated,
+            });
+        }
+
+        public async Task<Result<List<RecipeDTO>>> GetRecipesByCuisineAsync(string cuisine, int count, CancellationToken cancellationToken = default)
+        {
+            Result<List<Recipe>> result = await _recipeRepository.GetRecipesByCuisineAsync(cuisine, count, cancellationToken);
+
+            if (!result.IsSuccess)
+            {
+                return Result<List<RecipeDTO>>.Failure(
+                    "Failed to retrieve recipes by cuisine",
+                    ErrorCode.RecipeRetrievalFailed,
+                    result.Exception);
+            }
+
+            return Result<List<RecipeDTO>>.Success(
+                result.Data!.Select(r => new RecipeDTO
+                {
+                    Id = r.Id,
+                    Title = r.Title,
+                    Description = r.Description,
+                    Cuisine = r.Cuisine,
+                    Difficulty = r.Difficulty.ToString(),
+                    CookTimeInMinutes = r.CookTimeInMinutes,
+                    Serving = r.Serving,
+                    RecipeCoverImage = new MediaUrlDTO
+                    {
+                        Id = r.RecipeCoverImage!.Id,
+                        Url = r.RecipeCoverImage.Url,
+                        Alt = r.RecipeCoverImage.Alt
+                    },
+                    DateCreated = r.DateCreated,
+                }).ToList()
+            );
+        }
+
+
+        public async Task<Result<List<RecipeDTO>>> GetRecipesByDifficultyAsync(string difficulty, int count, CancellationToken cancellationToken = default)
+        {
+            Result<List<Recipe>> result = await _recipeRepository.GetRecipesByDifficultyAsync(difficulty, count, cancellationToken);
+
+            if (!result.IsSuccess)
+            {
+                return Result<List<RecipeDTO>>.Failure(
+                    "Failed to retrieve recipes by difficulty",
+                    ErrorCode.RecipeRetrievalFailed,
+                    result.Exception);
+            }
+
+            return Result<List<RecipeDTO>>.Success(
+                result.Data!.Select(r => new RecipeDTO
+                {
+                    Id = r.Id,
+                    Title = r.Title,
+                    Description = r.Description,
+                    Cuisine = r.Cuisine,
+                    Difficulty = r.Difficulty.ToString(),
+                    CookTimeInMinutes = r.CookTimeInMinutes,
+                    Serving = r.Serving,
+                    CreatedBy = r.CreatedBy.Id,
+                    RecipeCoverImage = new MediaUrlDTO
+                    {
+                        Id = r.RecipeCoverImage!.Id,
+                        Url = r.RecipeCoverImage.Url,
+                        Alt = r.RecipeCoverImage.Alt
+                    },
+                    DateCreated = r.DateCreated,
+                }).ToList()
+            );
+        }
+
+
+        public async Task<Result<List<RecipeDTO>>> GetTrendingRecipesAsync(int count, CancellationToken cancellationToken = default)
+        {
+            Result<List<Recipe>> result = await _recipeRepository.GetTrendingRecipesAsync(count, cancellationToken);
+
+            if (!result.IsSuccess)
+            {
+                return Result<List<RecipeDTO>>.Failure(
+                    "Failed to retrieve trending recipes",
+                    ErrorCode.RecipeRetrievalFailed,
+                    result.Exception);
+            }
+
+            return Result<List<RecipeDTO>>.Success(
+                result.Data!.Select(r => new RecipeDTO
+                {
+                    Id = r.Id,
+                    Title = r.Title,
+                    Description = r.Description,
+                    Cuisine = r.Cuisine,
+                    Difficulty = r.Difficulty.ToString(),
+                    CookTimeInMinutes = r.CookTimeInMinutes,
+                    Serving = r.Serving,
+                    CreatedBy = r.CreatedBy.Id,
+                    RecipeCoverImage = new MediaUrlDTO
+                    {
+                        Id = r.RecipeCoverImage!.Id,
+                        Url = r.RecipeCoverImage.Url,
+                        Alt = r.RecipeCoverImage.Alt
+                    },
+                    DateCreated = r.DateCreated,
+                }).ToList()
+            );
+        }
+
+
+        public async Task<Result<PaginatedResult<RecipeDTO>>> SearchRecipesAsync(
+            string searchTerm = "",
+            string cuisine = "",
+            string difficulty = "",
+            int cookTime = 0,
+            int servings = 0,
+            string sortBy = "",
+            int itemsPerPage = 10,
+            int currentPage = 1,
+            CancellationToken cancellationToken = default)
+        {
+            var recipesResult = await _recipeRepository.GetAllRecipes(cancellationToken);
+
+            if (!recipesResult.IsSuccess)
+            {
+                return Result<PaginatedResult<RecipeDTO>>.Failure("Failed to retrieve recipes", ErrorCode.RecipeRetrievalFailed, recipesResult.Exception);
+            }
+
+            List<Recipe> recipes = recipesResult.Data!;
+
+            // Apply fuzzy search using Levenshtein distance
+            var filteredRecipes = string.IsNullOrEmpty(searchTerm)
+                ? recipes
+                : recipes!
+                    .Where(i => i.Title.LevenshteinDistance(searchTerm) <= MaxLevenshteinDistance)
+                    .ToList();
+
+            // Apply additional filters
+            if (!string.IsNullOrEmpty(cuisine))
+            {
+                filteredRecipes = filteredRecipes
+                    .Where(r => r.Cuisine.Equals(cuisine, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+            }
+
+            if (!string.IsNullOrEmpty(difficulty))
+            {
+                filteredRecipes = filteredRecipes
+                    .Where(r => r.Difficulty.ToString().Equals(difficulty, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+            }
+
+            if (cookTime > 0)
+            {
+                filteredRecipes = filteredRecipes
+                    .Where(r => r.CookTimeInMinutes <= cookTime)
+                    .ToList();
+            }
+
+            if (servings > 0)
+            {
+                filteredRecipes = filteredRecipes
+                    .Where(r => Math.Abs(r.Serving - servings) <= 3)
+                    .ToList();
+            }
+
+            int totalItems = filteredRecipes.Count;
+
+            var pagedRecipes = filteredRecipes
+                .Skip((currentPage - 1) * itemsPerPage)
+                .Take(itemsPerPage)
+                .Select(r => new RecipeDTO
+                {
+                    Id = r.Id,
+                    Title = r.Title,
+                    Description = r.Description,
+                    Cuisine = r.Cuisine,
+                    Difficulty = r.Difficulty.ToString(),
+                    CookTimeInMinutes = r.CookTimeInMinutes,
+                    Serving = r.Serving,
+                    CreatedBy = r.CreatedBy.Id,
+                    RecipeCoverImage = new MediaUrlDTO
+                    {
+                        Id = r.RecipeCoverImage!.Id,
+                        Url = r.RecipeCoverImage.Url,
+                        Alt = r.RecipeCoverImage.Alt
+                    },
+                    RecipeIngredientDTOs = r.RecipeIngredients.Select(ri => new RecipeIngredientDTO
+                    {
+                        IngredientId = ri.Ingredient.Id,
+                        IngredientName = ri.Ingredient.Name,
+                        Quantity = ri.Quantity,
+                        Unit = ri.Unit.ToString()
+                    }).ToList(),
+                    StepDTOs = r.RecipeSteps.Select(rs =>
+                    {
+                        StepDTO stepDTO = new StepDTO
+                        {
+                            Id = rs.Id,
+                            Text = rs.Instruction,
+                            Order = rs.StepNumber,
+                        };
+
+                        if (rs.RecipeStepMedias.Count != 0)
+                        {
+                            MediaUrl mediaUrl = rs.RecipeStepMedias[0].MediaUrl;
+                            if (mediaUrl.Url.EndsWith(".mp4"))
+                            {
+                                stepDTO.VideoUrl = mediaUrl.Url;
+                                stepDTO.VideoId = mediaUrl.Id.ToString();
+                            }
+                            else
+                            {
+                                stepDTO.ImageUrl = mediaUrl.Url;
+                                stepDTO.ImageId = mediaUrl.Id.ToString();
+                            }
+                        }
+
+                        return stepDTO;
+                    }).ToList(),
+                    DateCreated = r.DateCreated,
+                })
+                .ToList();
+
+            var paginatedResult = new PaginatedResult<RecipeDTO>(pagedRecipes, currentPage, itemsPerPage, totalItems);
+            return Result<PaginatedResult<RecipeDTO>>.Success(paginatedResult, "Retrieve ingredients successfully.");
+        }
+
     }
 }

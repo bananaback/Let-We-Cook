@@ -14,6 +14,7 @@
         IngredientCreationFailed,
         IngredientRetrievalFailed,
         IngredientNotFound,
+        IngredientSectionRetrievalFailed,
         RecipeRetrievalFailed,
         RecipeCreationFailed,
         RecipeNotFound,

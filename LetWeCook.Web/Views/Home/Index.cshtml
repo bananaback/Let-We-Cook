@@ -6,6 +6,7 @@
     pictureUrl = User.FindFirst("picture")?.Value;
 }
 
+
 <div class="bg-green-500 p-4 font-semibold text-white">
     Welcome to LetWeCook! Your go-to place for delicious recipes and cooking tips.
 
@@ -26,9 +27,9 @@
 <div class="flex w-full flex-col items-center justify-center">
     <div class="header-bar flex w-full flex-row items-center justify-between">
         <div class="nav-bar flex flex-row items-center justify-center gap-x-4 py-4">
-            <div class="flex h-11 w-36 cursor-pointer items-center justify-center rounded-[20px] border-[#FF2600] text-center text-xl font-medium text-[#575757] hover:border-2">
+            <a href ="@Url.Action("Index", "Recipe", new { area = "Cooking" })" class="flex h-11 w-36 cursor-pointer items-center justify-center rounded-[20px] border-[#FF2600] text-center text-xl font-medium text-[#575757] hover:border-2">
                 Recipes
-            </div>
+            </a>
             <div class="flex h-11 w-36 cursor-pointer items-center justify-center rounded-[20px] border-[#FF2600] text-center text-xl font-medium text-[#575757] hover:border-2">
                 About
             </div>
@@ -121,6 +122,9 @@
         </div>
     </div>
 
+    @await Component.InvokeAsync("NewestRecipes", new { count = 3 })
+    @await Component.InvokeAsync("VietnameseRecipes", new { count = 3 })
+    @await Component.InvokeAsync("RandomRecipes", new { count = 3 })
 
 </div>
 

@@ -1,13 +1,13 @@
 ﻿using LetWeCook.Common.Enums;
 using LetWeCook.Data.Entities;
 using LetWeCook.Data.Repositories.IngredientRepositories;
+using LetWeCook.Data.Repositories.IngredientSectionRepositories;
+using LetWeCook.Data.Repositories.MediaUrlRepositories;
+using LetWeCook.Data.Repositories.UnitOfWork;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using System.Net.Http.Json;
 using System.Text.Json;
-using System.Text.Json.Nodes;
-using System.Text.Json.Serialization;
 
 namespace LetWeCook.Data
 {
@@ -102,30 +102,94 @@ namespace LetWeCook.Data
             // Deserialize the JSON into a list of Ingredient objects
             var ingredients = JsonConvert.DeserializeObject<List<Ingredient>>(jsonData);
 
-            // Assuming you have a DbContext to interact with the database
-            using (var dbContext = new LetWeCookDbContext()) // Replace with your actual DbContext
+            foreach (var ingredient in ingredients)
             {
-                foreach (var ingredient in ingredients)
+                Console.WriteLine(ingredient.Id);
+                Console.WriteLine(ingredient.Name);
+                Console.WriteLine(ingredient.Description);
+                Console.WriteLine(ingredient.CoverImageUrl?.Id);
+                Console.WriteLine(ingredient.CoverImageUrl?.Url);
+                for (int i = 0; i < ingredient.IngredientSections.Count; i++)
                 {
-                    // Check if the ingredient already exists in the database
-                    var existingIngredient = await dbContext.Ingredients
-                        .FirstOrDefaultAsync(i => i.Name == ingredient.Name, cancellationToken); // Assuming Name is unique
-
-                    if (existingIngredient == null)
-                    {
-                        // If not found, add it to the database
-                        dbContext.Ingredients.Add(ingredient);
-                        await dbContext.SaveChangesAsync(cancellationToken); // Save changes to the DB
-                        Console.WriteLine($"Ingredient '{ingredient.Name}' added to the database.");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Ingredient '{ingredient.Name}' already exists in the database.");
-                    }
+                    var ingredientSection = ingredient.IngredientSections[i];
+                    Console.WriteLine($"\t{ingredientSection.Id}");
+                    Console.WriteLine($"\t{ingredientSection.Ingredient?.Name}");
+                    Console.WriteLine($"\t{ingredientSection.MediaUrl?.Url}");
+                    Console.WriteLine($"\t{ingredientSection.TextContent}");
+                    Console.WriteLine($"\t{ingredientSection.Order}");
                 }
+
             }
         }
 
+        public static async Task ParseJsonAndSeedDatabase(IServiceProvider serviceProvider, string filePath, CancellationToken cancellationToken)
+        {
+            // Read the JSON file into a string
+            var jsonData = await File.ReadAllTextAsync(filePath, cancellationToken);
+
+            // Deserialize the JSON into a list of Ingredient objects
+            var ingredients = JsonConvert.DeserializeObject<List<Ingredient>>(jsonData);
+
+            try
+            {
+                using var scope = serviceProvider.CreateScope();
+                var ingredientRepository = scope.ServiceProvider.GetRequiredService<IIngredientRepository>();
+                var ingredientSectionRepository = scope.ServiceProvider.GetRequiredService<IIngredientSectionRepository>();
+
+                var mediaUrlRepository = scope.ServiceProvider.GetRequiredService<IMediaUrlRepository>();
+                var unitOfWork = scope.ServiceProvider.GetService<IUnitOfWork>();
+
+                foreach (var ingredient in ingredients)
+                {
+                    //Console.WriteLine(ingredient.Id);
+                    var getExistingIngredientResult = await ingredientRepository.GetIngredientByIdAsync(ingredient.Id, cancellationToken);
+
+                    if (getExistingIngredientResult.IsSuccess)
+                    {
+                        continue;
+                    }
+
+                    var getExistingOverImageResult = await mediaUrlRepository.GetMediaUrlByIdAsync(ingredient.CoverImageUrl.Id, cancellationToken);
+
+                    if (!getExistingIngredientResult.IsSuccess)
+                    {
+                        MediaUrl coverImageMediaUrl = new MediaUrl
+                        {
+                            Id = ingredient.CoverImageUrl.Id,
+                            Url = ingredient.CoverImageUrl.Url,
+                            Alt = ingredient.CoverImageUrl.Url
+                        };
+                        await mediaUrlRepository.CreateMediaUrlAsync(coverImageMediaUrl, cancellationToken);
+                    }
+
+                    Console.WriteLine(ingredient.Name);
+                    Console.WriteLine(ingredient.Description);
+                    //Console.WriteLine(ingredient.CoverImageUrl?.Id);
+                    //Console.WriteLine(ingredient.CoverImageUrl?.Url);
+                    for (int i = 0; i < ingredient.IngredientSections.Count; i++)
+                    {
+                        var ingredientSection = ingredient.IngredientSections[i];
+
+                        var getIngredientSectionResult = await ingredientSectionRepository.GetIngredientSectionByIdAsync(ingredientSection.Id, cancellationToken);
+
+                        if (!getIngredientSectionResult.IsSuccess)
+                        {
+
+                        }
+                        //Console.WriteLine($"\t{ingredientSection.Id}");
+                        Console.WriteLine($"\t{ingredientSection.Ingredient?.Name}");
+                        Console.WriteLine($"\t{ingredientSection.MediaUrl?.Url}");
+                        Console.WriteLine($"\t{ingredientSection.TextContent}");
+                        Console.WriteLine($"\t{ingredientSection.Order}");
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while seeding ingredients to db: {ex.Message}");
+            }
+        }
 
 
         public static async Task SeedDataAsync(IServiceProvider serviceProvider)

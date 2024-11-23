@@ -2,6 +2,7 @@
 using LetWeCook.Services.DTOs;
 using LetWeCook.Services.RecipeServices;
 using LetWeCook.Web.Areas.Cooking.Models.Requests;
+using LetWeCook.Web.Areas.Cooking.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -16,15 +17,48 @@ namespace LetWeCook.Web.Areas.Cooking.Controllers
         {
             _recipeService = recipeService;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchTerm = "", string cuisine = "", string difficulty = "", int cookTime = 0, int servings = 0, string sortBy = "", int itemsPerPage = 10, int currentPage = 1, CancellationToken cancellationToken = default)
         {
-            return View();
+            RecipeViewModel model = new RecipeViewModel
+            {
+                CurrentPage = currentPage,
+                ItemsPerPage = itemsPerPage,
+                SearchTerm = searchTerm,
+                Cuisine = cuisine,
+                Difficulty = difficulty,
+                CookTime = cookTime,
+                Servings = servings,
+                SortBy = sortBy
+
+            };
+
+            var result = await _recipeService.SearchRecipesAsync(searchTerm, cuisine, difficulty, cookTime, servings, sortBy, itemsPerPage, currentPage, cancellationToken);
+
+            if (result.IsSuccess && result.Data != null)
+            {
+                model.Recipes = result.Data.Items;
+                model.TotalPages = (int)Math.Ceiling((double)result.Data.TotalItems / itemsPerPage);
+            }
+            else
+            {
+                model.TotalPages = 1;
+            }
+
+            return View(model);
         }
 
         [HttpGet]
         public async Task<IActionResult> Details(Guid id, CancellationToken cancellationToken = default)
         {
-            return View();
+            Result<RecipeDTO> result = await _recipeService.GetRecipeByIdAsync(id, cancellationToken);
+
+            if (!result.IsSuccess)
+            {
+                return View("Error", result.Message);
+            }
+
+
+            return View(result.Data);
         }
 
         [HttpPost]
