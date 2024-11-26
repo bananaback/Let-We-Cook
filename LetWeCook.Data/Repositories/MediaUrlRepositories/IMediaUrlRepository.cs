@@ -1,14 +1,13 @@
-﻿using LetWeCook.Common.Results;
-using LetWeCook.Data.Entities;
+﻿using LetWeCook.Data.Entities;
 
 namespace LetWeCook.Data.Repositories.MediaUrlRepositories
 {
     public interface IMediaUrlRepository
     {
-        Task<Result> DeleteMediaUrlAsync(Guid mediaUrlId, CancellationToken cancellationToken);
+        Task DeleteMediaUrlByIdAsync(Guid mediaUrlId, CancellationToken cancellationToken);
 
-        Task<Result<MediaUrl>> CreateMediaUrlAsync(MediaUrl mediaUrl, CancellationToken cancellationToken);
-        Task<Result<MediaUrl>> GetMediaUrlByIdAsync(Guid id, CancellationToken cancellationToken);
-        Task<Result<List<MediaUrl>>> GetMediaUrlByIdList(List<Guid> idList, CancellationToken cancellationToken);
+        Task<MediaUrl> AddMediaUrlAsync(MediaUrl mediaUrl, CancellationToken cancellationToken);
+        Task<MediaUrl?> GetMediaUrlByIdAsync(Guid id, CancellationToken cancellationToken);
+        Task<List<MediaUrl>> GetMediaUrlsByIdsAsync(List<Guid> idList, CancellationToken cancellationToken);
     }
 }

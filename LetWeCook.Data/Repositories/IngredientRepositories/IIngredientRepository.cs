@@ -1,17 +1,16 @@
-﻿using LetWeCook.Common.Results;
-using LetWeCook.Data.Entities;
+﻿using LetWeCook.Data.Entities;
 
 namespace LetWeCook.Data.Repositories.IngredientRepositories
 {
     public interface IIngredientRepository
     {
-        Task<Result<Ingredient>> CreateIngredientAsync(Ingredient ingredient, CancellationToken cancellationToken);
-        Task<Result<List<Ingredient>>> GetAllIngredientsWithCoverImageAndSectionsAsync(CancellationToken cancellationToken);
-        Task<Result<Ingredient>> GetInredientWithCoverImageAndSectionByIdAsync(Guid id, CancellationToken cancellationToken);
-        Task<Result<List<Ingredient>>> GetAllIngredientsNameAndIdAsync(CancellationToken cancellationToken);
-        Task<Result<List<Ingredient>>> GetIngredientsByIdsAsync(List<Guid> ids, CancellationToken cancellationToken);
-        Task<Result<List<Ingredient>>> GetIngredientsForDataExporter(CancellationToken cancellationToken);
-        Task<Result<Ingredient>> GetIngredientByIdAsync(Guid id, CancellationToken cancellationToken);
+        Task<Ingredient> CreateIngredientAsync(Ingredient ingredient, CancellationToken cancellationToken);
+        Task<List<Ingredient>> GetIngredientsWithDetailsAsync(CancellationToken cancellationToken);
+        Task<Ingredient?> GetIngredientWithDetailsByIdAsync(Guid id, CancellationToken cancellationToken);
+        Task<List<Ingredient>> GetAllIngredientIdsAndNamesAsync(CancellationToken cancellationToken);
+        Task<List<Ingredient>> GetIngredientsByIdsAsync(List<Guid> ids, CancellationToken cancellationToken);
+        Task<List<Ingredient>> GetIngredientsForExportAsync(CancellationToken cancellationToken);
+        Task<Ingredient?> GetIngredientByIdAsync(Guid id, CancellationToken cancellationToken);
 
     }
 }
