@@ -1,5 +1,5 @@
-﻿using LetWeCook.Common.Results;
-using LetWeCook.Services.DTOs;
+﻿using LetWeCook.Services.DTOs;
+using LetWeCook.Services.Exceptions;
 using LetWeCook.Services.IngredientServices;
 using LetWeCook.Web.Areas.Cooking.Models.Requests;
 using LetWeCook.Web.Areas.Cooking.Models.ViewModels;
@@ -31,17 +31,11 @@ namespace LetWeCook.Web.Areas.Cooking.Controllers
                 ItemsPerPage = itemsPerPage
             };
 
-            var result = await _ingredientService.SearchIngredientsAsync(search, page, itemsPerPage, cancellationToken);
+            var paginatedRecipes = await _ingredientService.SearchIngredientsAsync(search, page, itemsPerPage, cancellationToken);
 
-            if (result.IsSuccess && result.Data != null)
-            {
-                model.Ingredients = result.Data.Items;
-                model.TotalPages = (int)Math.Ceiling((double)result.Data.TotalItems / itemsPerPage);
-            }
-            else
-            {
-                model.TotalPages = 1;
-            }
+
+            model.Ingredients = paginatedRecipes.Items;
+            model.TotalPages = (int)Math.Ceiling((double)paginatedRecipes.TotalItems / itemsPerPage);
 
             return View(model);
         }
@@ -63,48 +57,37 @@ namespace LetWeCook.Web.Areas.Cooking.Controllers
             {
                 IngredientName = request.IngredientName,
                 IngredientDescription = request.IngredientDescription,
-                CoverImageBase64 = request.CoverImageBase64,
+                CoverImageUrl = request.CoverImageUrl,
                 RawFrameDTOs = request.RawFrameDTOs
             };
 
-            Result<IngredientDTO> result = await _ingredientService.CreateIngredientAsync(rawIngredientDto, cancellationToken);
-
-            if (result.IsSuccess)
+            try
             {
+                IngredientDTO ingredientDTO = await _ingredientService.CreateIngredientAsync(rawIngredientDto, cancellationToken);
                 return Ok(new
                 {
                     Message = "Ingredient created successfully",
-                    Ingredient = result.Data
+                    Ingredient = ingredientDTO
                 });
             }
-            else
+            catch (IngredientCreationException ex)
             {
-                return BadRequest(new ErrorResponse($"{result.Message} {result.Exception}"));
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(ex.Message));
             }
         }
 
         [HttpGet]
         public async Task<IActionResult> Details(Guid id, CancellationToken cancellationToken = default)
         {
-            Result<IngredientDTO> result = await _ingredientService.GetIngredientByIdAsync(id, cancellationToken);
-
-            if (!result.IsSuccess)
-            {
-                return View("Error", result.Message);
-            }
-
-            if (result.Data == null)
-            {
-                return View("Error", "Ingredient with the specified ID was not found.");
-            }
+            IngredientDTO ingredient = await _ingredientService.GetIngredientByIdAsync(id, cancellationToken);
 
             var ingredientDetailsViewModel = new IngredientDetailsViewModel
             {
-                Id = result.Data.Id,
-                IngredientName = result.Data.IngredientName,
-                IngredientDescription = result.Data.IngredientDescription,
-                CoverImageUrl = result.Data.CoverImageUrl,
-                Frames = result.Data.Frames
+                Id = ingredient.Id,
+                IngredientName = ingredient.IngredientName,
+                IngredientDescription = ingredient.IngredientDescription,
+                CoverImageUrl = ingredient.CoverImageUrl,
+                Frames = ingredient.Frames
             };
 
             return View(ingredientDetailsViewModel);

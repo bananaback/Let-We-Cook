@@ -1,5 +1,4 @@
-﻿using LetWeCook.Common.Results;
-using LetWeCook.Services.DTOs;
+﻿using LetWeCook.Services.DTOs;
 using LetWeCook.Services.ProfileServices;
 using LetWeCook.Services.RecipeServices;
 using LetWeCook.Web.Areas.Account.Models.ViewModels;
@@ -28,16 +27,7 @@ namespace LetWeCook.Web.Areas.Account.Controllers
         {
             string userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "";
 
-            var getProfileResult = await _profileService.GetUserProfileAsync(userIdString, cancellationToken);
-
-            _logger.LogInformation($"{getProfileResult.Message}\n{getProfileResult.Data}\n{getProfileResult.Exception?.Message}");
-            var profileDTO = getProfileResult.Data;
-
-
-            if (!getProfileResult.IsSuccess)
-            {
-                return View("ProfileError");
-            }
+            var profileDTO = await _profileService.GetUserProfileAsync(userIdString, cancellationToken);
 
             return View(new ProfileViewModel
             {
@@ -85,15 +75,8 @@ namespace LetWeCook.Web.Areas.Account.Controllers
                 Address = model.Address,
             };
 
-            var updateProfileResult = await _profileService.UpdateUserProfileAsync(profileDTO, cancellationToken);
+            var updatedProfile = await _profileService.UpdateUserProfileAsync(profileDTO, cancellationToken);
 
-            if (!updateProfileResult.IsSuccess)
-            {
-                ModelState.AddModelError(string.Empty, updateProfileResult.Message);
-                return View(model);
-            }
-
-            _logger.LogInformation("User profile updated successfully.");
             ViewData["SuccessMessage"] = "Profile updated successfully!";
             return View(model);
         }
@@ -109,17 +92,9 @@ namespace LetWeCook.Web.Areas.Account.Controllers
                 return Unauthorized();
             }
 
-            Result<List<RecipeDTO>> result = await _recipeService.GetAllRecipeOverviewByUserIdAsync(userId, cancellationToken);
+            List<RecipeDTO> recipes = await _recipeService.GetAllRecipeOverviewByUserIdAsync(userId, cancellationToken);
 
-            if (!result.IsSuccess)
-            {
-                // Log the error, or take appropriate action
-                TempData["ErrorMessage"] = "There was an issue fetching your recipes. Please try again later.";
-
-                return View("Error");
-            }
-
-            return View(result.Data);
+            return View(recipes);
         }
 
     }

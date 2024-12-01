@@ -1,647 +1,293 @@
-﻿let defaultStyleSchema = {
-    blueButton: {
-        normalButton: {
-            background: "bg-gray-800",
-            text: "text-blue-400",
-            hoverBackground: "hover:bg-blue-400",
-            hoverText: "hover:text-white"
+﻿$(document).ready(function () {
+    // Cloudinary Upload Widget
+    const mediaWidget = cloudinary.createUploadWidget(
+        {
+            cloudName: "dxclyqubm", // Replace with your Cloudinary cloud name
+            uploadPreset: "letwecook_preset", // Replace with your upload preset
+            sources: ["local", "url", "camera"],
+            multiple: false,
+            cropping: true,
+            maxFileSize: 2000000, // 2MB limit
+            clientAllowedFormats: ["jpg", "jpeg", "png", "mp4", "mov", "avi"],
+            resourceType: "auto", // Automatically detect resource type (image or video)
         },
-        selectedButton: {
-            background: "bg-blue-400",
-            text: "text-white",
-            hoverBackground: "hover:bg-blue-400",
-            hoverText: "hover:text-white"
-        }
-    },
-    redButton: {
-        normalButton: {
-            background: "bg-gray-800",
-            text: "text-red-400",
-            hoverBackground: "hover:bg-red-400",
-            hoverText: "hover:text-white"
-        },
-        selectedButton: {
-            background: "bg-gray-800",
-            text: "text-white",
-            hoverBackground: "hover:bg-red-400",
-            hoverText: "hover:text-white"
-        }
-    },
-    greenButton: {
-        normalButton: {
-            background: "bg-gray-800",
-            text: "text-green-400",
-            hoverBackground: "hover:bg-green-400",
-            hoverText: "hover:text-white"
-        },
-        selectedButton: {
-            background: "bg-gray-800",
-            text: "text-white",
-            hoverBackground: "hover:bg-green-400",
-            hoverText: "hover:text-white"
-        }
-    },
-    yellowButton: {
-        normalButton: {
-            background: "bg-gray-800",
-            text: "text-yellow-400",
-            hoverBackground: "hover:bg-yellow-400",
-            hoverText: "hover:text-white"
-        },
-        selectedButton: {
-            background: "bg-gray-800",
-            text: "text-white",
-            hoverBackground: "hover:bg-yellow-400",
-            hoverText: "hover:text-white"
-        }
-    }
-};
-
-let frames = [];
-
-let $editorContent = $('#editor-content');
-
-function createFrameObject() {
-    return {
-        contentType: "text",
-        textContent: "",
-        imageContent: ""
-    }
-}
-
-function addNewFrameObjectToArray(frames) {
-    frames.push(createFrameObject());
-}
-
-// -- Underlying data ^
-
-
-function addNewFrameDOM() {
-    let $frameElement = $('<div></div>');
-
-    $frameElement.addClass("frame flex flex-col rounded-lg h-96 w-full bg-gray-800 items-center justify-start");
-
-    $frameElement.append(createControlBar());
-
-    $frameElement.append(createTextInputContainer());
-
-    $frameElement.append(createImageInputContainer());
-
-    $editorContent.append($frameElement);
-}
-
-function createNewFrameDOM() {
-    let $frameElement = $('<div></div>');
-
-    $frameElement.addClass("frame flex flex-col rounded-lg h-96 w-full bg-gray-800 items-center justify-start");
-
-    $frameElement.append(createControlBar());
-
-    $frameElement.append(createTextInputContainer());
-
-    $frameElement.append(createImageInputContainer());
-
-    return $frameElement;
-}
-
-function createControlBar() {
-    let $controlBar = $('<div></div>');
-    $controlBar.addClass("control-bar flex flex-col items-center justify-start w-full");
-
-    let $contentRelatedButtonBar = $('<div></div>');
-    $contentRelatedButtonBar.addClass("flex flex-row items-center justify-start w-full");
-
-    let $switchToTextBtn = createControlBarButton("blueButton", "switch-text-btn", "Text", true);
-    let $switchToImageBtn = createControlBarButton("blueButton", "switch-image-btn", "Image", false);
-
-    $switchToTextBtn.on('click', () => handleSwitchToText($controlBar));
-    $switchToImageBtn.on('click', () => handleSwitchToImage($controlBar));
-
-    $contentRelatedButtonBar.append($switchToTextBtn);
-    $contentRelatedButtonBar.append($switchToImageBtn);
-
-    let $layoutRelatedButtonBar = $('<div></div>');
-    $layoutRelatedButtonBar.addClass("flex flex-row items-center justify-start w-full");
-
-    let $removeFrameBtn = createControlBarButton("redButton", "remove-frame-btn", "Remove Frame", false);
-    let $addFrameAboveBtn = createControlBarButton("greenButton", "add-frame-above-btn", "Add Frame Above", false);
-    let $addFrameBelowBtn = createControlBarButton("greenButton", "add-frame-below-btn", "Add Frame Below", false);
-    let $moveFrameUp = createControlBarButton("yellowButton", "move-frame-up-btn", "Move Frame Up", false);
-    let $moveFrameDown = createControlBarButton("yellowButton", "move-frame-down-btn", "Move Frame Down", false);
-
-    $removeFrameBtn.on('click', () => handleRemoveFrame($controlBar));
-    $addFrameAboveBtn.on('click', () => handleAddFrameAbove($controlBar));
-    $addFrameBelowBtn.on('click', () => handleAddFrameBelow($controlBar));
-    $moveFrameUp.on('click', () => handleMoveFrameUp($controlBar));
-    $moveFrameDown.on('click', () => handleMoveFrameDown($controlBar));
-
-
-    // Append all buttons to the control bar
-    $layoutRelatedButtonBar.append($removeFrameBtn);
-    $layoutRelatedButtonBar.append($addFrameAboveBtn);
-    $layoutRelatedButtonBar.append($addFrameBelowBtn);
-    $layoutRelatedButtonBar.append($moveFrameUp);
-    $layoutRelatedButtonBar.append($moveFrameDown);
-
-    $controlBar.append($contentRelatedButtonBar);
-    $controlBar.append($layoutRelatedButtonBar);
-
-
-    return $controlBar;
-}
-
-// Handler for removing the frame
-function handleRemoveFrame($controlBar) {
-    // Find the corresponding frame
-    let $frame = $controlBar.closest('.frame');
-
-    let frameIndex = getFrameIndex($controlBar);
-    frames.splice(frameIndex, 1);
-
-    // Remove the frame from the DOM
-    $frame.remove();
-}
-
-// Handler for adding a frame above the current one
-function handleAddFrameAbove($controlBar) {
-    // Find the corresponding frame
-    let $frame = $controlBar.closest('.frame');
-
-    // Find the current frame index
-    let frameIndex = getFrameIndex($controlBar);
-
-    // Create a new frame element
-    let $newFrame = createNewFrameDOM();
-
-    // Insert the new frame in the underlying array (insert before the current one)
-    frames.splice(frameIndex, 0, createFrameObject()); // Adjust based on how you manage frame objects
-
-    // Check if $frame exists and insert new frame above it
-    if ($frame.length) {
-        $newFrame.insertBefore($frame); // Properly insert the new frame before the current one
-    } else {
-        // If $frame is not found, append to the container as a fallback
-        $editorContent.append($newFrame);
-    }
-}
-
-// Handler for moving a frame up
-function handleMoveFrameUp($controlBar) {
-    // Find the corresponding frame
-    let $frame = $controlBar.closest('.frame');
-
-    // Find the current frame index
-    let frameIndex = getFrameIndex($controlBar);
-
-    // If it's the first frame, we can't move it up
-    if (frameIndex === 0) {
-        return; // No action if it's the first frame
-    }
-
-    // Find the previous frame in the DOM
-    let $previousFrame = $frame.prev('.frame');
-
-    // Swap the frames in the underlying array
-    let temp = frames[frameIndex];
-    frames[frameIndex] = frames[frameIndex - 1];
-    frames[frameIndex - 1] = temp;
-
-    // Move the current frame up in the DOM
-    if ($previousFrame.length) {
-        $frame.insertBefore($previousFrame);
-    }
-}
-
-// Handler for moving a frame down
-function handleMoveFrameDown($controlBar) {
-    // Find the corresponding frame
-    let $frame = $controlBar.closest('.frame');
-
-    // Find the current frame index
-    let frameIndex = getFrameIndex($controlBar);
-
-    // If it's the last frame, we can't move it down
-    if (frameIndex === frames.length - 1) {
-        return; // No action if it's the last frame
-    }
-
-    // Find the next frame in the DOM
-    let $nextFrame = $frame.next('.frame');
-
-    // Swap the frames in the underlying array
-    let temp = frames[frameIndex];
-    frames[frameIndex] = frames[frameIndex + 1];
-    frames[frameIndex + 1] = temp;
-
-    // Move the current frame down in the DOM
-    if ($nextFrame.length) {
-        $frame.insertAfter($nextFrame);
-    }
-}
-
-
-// Handler for adding a frame below the current one
-function handleAddFrameBelow($controlBar) {
-    // Find the corresponding frame
-    let $frame = $controlBar.closest('.frame');
-
-    // Find the current frame index
-    let frameIndex = getFrameIndex($controlBar);
-
-    // Create a new frame element
-    let $newFrame = createNewFrameDOM();
-
-    // Insert the new frame in the underlying array (insert after the current one)
-    frames.splice(frameIndex + 1, 0, createFrameObject()); // Adjust based on how you manage frame objects
-
-    // Check if $frame exists and insert new frame below it
-    if ($frame.length) {
-        $newFrame.insertAfter($frame); // Properly insert the new frame after the current one
-    } else {
-        // If $frame is not found, append to the container as a fallback
-        $editorContent.append($newFrame);
-    }
-}
-
-
-function handleSwitchToText($controlBar) {
-    let $frame = $controlBar.closest('.frame');
-    let $imageInputContainer = $frame.find('.image-input-container');
-    let $textInputContainer = $frame.find('.text-input-container');
-
-    let $switchToTextBtn = $controlBar.find('.switch-text-btn');
-    let $switchToImageBtn = $controlBar.find('.switch-image-btn');
-
-    styleButton("blueButton", $switchToTextBtn, true);
-    styleButton("blueButton", $switchToImageBtn, false);
-
-    $imageInputContainer.addClass("hidden");
-    $textInputContainer.removeClass("hidden");
-
-    // Update the underlying frame's contentType
-    let frameIndex = getFrameIndex($controlBar);
-    frames[frameIndex].contentType = "text"; // Set content type to "text"
-}
-
-function handleSwitchToImage($controlBar) {
-    let $frame = $controlBar.closest('.frame');
-    let $imageInputContainer = $frame.find('.image-input-container');
-    let $textInputContainer = $frame.find('.text-input-container');
-
-    let $switchToTextBtn = $controlBar.find('.switch-text-btn');
-    let $switchToImageBtn = $controlBar.find('.switch-image-btn');
-
-    styleButton("blueButton", $switchToTextBtn, false);
-    styleButton("blueButton", $switchToImageBtn, true);
-
-    $imageInputContainer.removeClass("hidden");
-    $textInputContainer.addClass("hidden");
-
-    // Update the underlying frame's contentType
-    let frameIndex = getFrameIndex($controlBar);
-    frames[frameIndex].contentType = "image"; // Set content type to "image"
-}
-
-function createControlBarButton(colorKey, buttonNameClass, buttonName, isSelected) {
-    let $button = $(`<div class=>${buttonName}</div>`);
-    $button.addClass(buttonNameClass)
-
-    $button.addClass("bg-gray-800 py-2 font-semibold flex text-sm flex-row items-center justify-center px-4 h-12 cursor-pointer text-center");
-
-    styleButton(colorKey, $button, isSelected);
-
-    return $button;
-}
-
-function styleButton(colorKey, buttonElement, isSelected) {
-    // Clear all previous classes
-    buttonElement.removeClass(defaultStyleSchema[colorKey].normalButton.background);
-    buttonElement.removeClass(defaultStyleSchema[colorKey].normalButton.hoverBackground);
-    buttonElement.removeClass(defaultStyleSchema[colorKey].normalButton.text);
-    buttonElement.removeClass(defaultStyleSchema[colorKey].normalButton.hoverText);
-    buttonElement.removeClass(defaultStyleSchema[colorKey].selectedButton.background);
-    buttonElement.removeClass(defaultStyleSchema[colorKey].selectedButton.hoverBackground);
-    buttonElement.removeClass(defaultStyleSchema[colorKey].selectedButton.text);
-    buttonElement.removeClass(defaultStyleSchema[colorKey].selectedButton.hoverText);
-
-    // Add the correct classes based on selection state
-    if (isSelected) {
-        buttonElement.addClass(defaultStyleSchema[colorKey].selectedButton.background);
-        buttonElement.addClass(defaultStyleSchema[colorKey].selectedButton.hoverBackground);
-        buttonElement.addClass(defaultStyleSchema[colorKey].selectedButton.text);
-        buttonElement.addClass(defaultStyleSchema[colorKey].selectedButton.hoverText);
-    } else {
-        buttonElement.addClass(defaultStyleSchema[colorKey].normalButton.background);
-        buttonElement.addClass(defaultStyleSchema[colorKey].normalButton.hoverBackground);
-        buttonElement.addClass(defaultStyleSchema[colorKey].normalButton.text);
-        buttonElement.addClass(defaultStyleSchema[colorKey].normalButton.hoverText);
-    }
-}
-
-function createTextInputContainer() {
-    let $textInputContainer = $('<div></div>');
-    $textInputContainer.addClass("text-input-container flex flex-row items-center justify-center w-full h-full");
-
-    let $textInput = $('<textarea></textarea>');
-    $textInput.addClass("w-full h-60 mx-6 rounded-lg p-4");
-
-    // Add event listener for the textarea to update the underlying content
-    $textInput.on('input', function () {
-        // Get the index of the frame (assuming you can access the input's context)
-        let frameIndex = getFrameIndex(this);
-        updateFrameTextContent(frameIndex, $(this).val()); // Update the underlying content
-    });
-
-    $textInputContainer.append($textInput);
-
-    return $textInputContainer;
-}
-
-function updateFrameTextContent(frameIndex, contentString) {
-    frames[frameIndex].textContent = contentString; // Update the underlying data with the new content
-}
-
-
-function createImageInputContainer() {
-    let $imageInputContainer = $('<div></div>');
-    $imageInputContainer.addClass('image-input-container hidden flex flex-col w-full h-full items-center justify-start rounded-lg shadow-lg');
-
-    let $imageLabel = $('<label>Click here to upload an image!</label>');
-    $imageLabel.addClass('text-lg underline cursor-pointer font-medium text-white py-4');
-
-    let $imageInput = $('<input type="file" accept="image/*">'); // Removed id
-    $imageInput.addClass('hidden');
-
-    let $previewImage = $('<img class="image-preview" alt="image-preview">');
-    $previewImage.addClass("w-48 h-48 hidden");
-
-    // Append label and input to the container
-    $imageInputContainer.append($imageLabel);
-    $imageInputContainer.append($imageInput);
-    $imageInputContainer.append($previewImage);
-
-    // Attach event listener for image input change
-    $imageInput.on('change', function () {
-        handleImageInputChange(this, $previewImage);
-    });
-
-    // Attach click event to the label to trigger the input click
-    $imageLabel.on('click', function () {
-        $imageInput.click();
-    });
-
-    return $imageInputContainer;
-}
-
-function handleImageInputChange(input, $previewImage) {
-    let frameIndex = getFrameIndex(input);
-
-    // Check for valid frame index and input files
-    if (frameIndex === -1 || !input.files || !input.files[0]) {
-        return;
-    }
-
-    let file = input.files[0];
-    let reader = new FileReader();
-
-    // This function is called when the file is read
-    reader.onload = function (e) {
-        let base64String = e.target.result; // Get Base64 string from reader
-        updateFrameImageContent(frameIndex, base64String); // Update the frame content string
-        updateImagePreview($previewImage, base64String); // Update the image preview
-    };
-
-    // Start reading the file as a Data URL (Base64)
-    reader.readAsDataURL(file);
-}
-
-
-function getFrameIndex(input) {
-    let $frame = input.closest('.frame'); // Find the closest .frame ancestor
-    let frameIndex = -1;
-
-    // Loop through all .frame elements to find the index
-    $editorContent.find('.frame').each(function (index) {
-        if ($(this).is($frame)) { // Compare the current frame with the one we found
-            frameIndex = index; // Update the index if it matches
-            return false; // Break the loop
-        }
-    });
-
-    return frameIndex; // Return the found index or -1 if not found
-}
-
-
-function updateFrameImageContent(frameIndex, base64String) {
-    frames[frameIndex].imageContent = base64String; // Update underlying data
-}
-
-function updateImagePreview($previewImage, base64String) {
-    $previewImage.attr('src', base64String);  // Set the image src to the Base64 string
-    $previewImage.removeClass('hidden');      // Make the image visible
-}
-
-// -- DOM related code ^
-
-function attachAddNewFrameButtonClickHandler() {
-    let addNewFrameButton = $('#add-new-frame-btn').on('click', function () {
-        addNewFrameObjectToArray(frames);
-        addNewFrameDOM();
-    });
-}
-
-function populatePreview() {
-    var ingredientName = $('#ingredient-name').val();
-    var ingredientDescription = $('#ingredient-description').val();
-    var $previewContainer = $('#preview-container');
-
-    // Clear any previous preview content
-    $previewContainer.empty();
-
-    // Create elements for name and description
-    var $nameElement = $('<h2></h2>').addClass('pt-4 text-center w-full text-2xl font-semibold mb-4').text(ingredientName);
-    var $descriptionElement = $('<p></p>').addClass('text-center w-full text-base mb-4').text(ingredientDescription);
-
-    // Append name and description to the preview container
-    $previewContainer.append($nameElement);
-    $previewContainer.append($descriptionElement);
-
-    // Get the image preview source
-    var $imagePreview = $('#image-preview');
-    if ($imagePreview.attr('src')) {
-        var $imageElement = $('<img>').addClass('h-64 w-64 rounded-md border border-gray-300 object-cover mb-4').attr('src', $imagePreview.attr('src'));
-        $previewContainer.append($imageElement);
-    }
-
-    // Render frames content from the frames array
-    frames.forEach(function (frame) {
-        if (frame.contentType === 'text') {
-            // Render text content
-            var $textElement = $('<p></p>').addClass('text-center w-full text-base mb-4').text(frame.textContent);
-            $previewContainer.append($textElement);
-        } else if (frame.contentType === 'image' && frame.imageContent) {
-            // Render image content
-            var $frameImageElement = $('<img>').addClass('w-96 rounded-md border border-gray-300 object-cover mb-4').attr('src', frame.imageContent);
-            $previewContainer.append($frameImageElement);
-        }
-    });
-}
-
-function saveIngredient() {
-    if (!validateIngredientInput()) {
-        return; // Stop the function if validation fails
-    }
-
-    showLoadingScreen();
-
-    // Collecting data from input fields
-    var ingredientName = $('#ingredient-name').val();
-    var ingredientDescription = $('#ingredient-description').val();
-    var coverImageBase64 = $('#image-preview').attr('src'); // Assuming it's base64 image
-
-    // Collect frames data and add `order` based on index in the array
-    var framesData = frames.map(function (frame, index) {
-        return {
-            contentType: frame.contentType,
-            imageContent: frame.imageContent || "", // Handle empty image content
-            textContent: frame.textContent || "",  // Handle empty text content
-            order: index // Set `order` based on the frame's index
-        };
-    });
-
-    // Create the request object matching CreateIngredientRequest
-    var requestData = {
-        ingredientName: ingredientName,
-        ingredientDescription: ingredientDescription,
-        coverImageBase64: coverImageBase64 || "",
-        rawFrameDTOs: framesData
-    };
-
-    // Sending the Ajax POST request
-    $.ajax({
-        url: '/Cooking/Ingredient/CreateIngredient',  // The endpoint URL
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(requestData),
-        success: function (response, status, xhr) {
-            if (xhr.status === 200) {
-                setTimeout(() => {
-                    hideLoadingScreen();
-                    setMessageTitle("Information");
-                    setMessageContent("Ingredient saved successfully.");
-                    showMessageBox();
-                }, 1000);
-            } else {
-                showErrorMessage("Failed to save ingredient. Please try again.");
+        (error, result) => {
+            if (!error && result.event === "success") {
+                const targetPreviewArea = mediaWidget.targetPreviewArea;
+                const resourceType = result.info.resource_type;
+                const publicUrl = result.info.secure_url;
+
+                // Set the preview content based on file type
+                if (targetPreviewArea) {
+                    if (resourceType === "image") {
+                        if (targetPreviewArea.hasClass('cover-image-preview')) {
+                            targetPreviewArea.html(
+                                `<div class="preview-image-container w-full h-60 rounded-lg border-2 border-gray-500 bg-white overflow-hidden">
+                                <img src="${publicUrl}" alt="Uploaded Image" class="w-full h-full object-cover" />
+                            </div>
+                            <button type="button" class="px-2 py remove-image-btn text-red-500 hover:text-red-700">Remove Image</button>`
+                            );
+                        } else {
+                            targetPreviewArea.html(
+                                `<div class="preview-image-container w-full h-32 rounded-lg border-2 border-gray-500 bg-gray-800 overflow-hidden">
+                                <img src="${publicUrl}" alt="Uploaded Image" class="w-full h-full object-contain" />
+                            </div>
+                            <button type="button" class="px-2 py remove-image-btn text-red-500 hover:text-red-700">Remove Image</button>`
+                            );
+                        }
+                        
+                    } else if (resourceType === "video") {
+                        targetPreviewArea.html(
+                            `<video controls class="w-full rounded-lg shadow-sm">
+                                <source src="${publicUrl}" type="video/${result.info.format}" />
+                                Your browser does not support this video.
+                            </video>`
+                        );
+                    }
+                    // Hide the "Choose File" button after upload
+                    mediaWidget.targetPreviewArea.siblings(".open-cloudinary-btn").hide();
+                }
             }
-        },
-        error: function (xhr, status, error) {
-            var errorMessage = xhr.responseJSON && xhr.responseJSON.message
-                ? xhr.responseJSON.message
-                : "An error occurred while saving the ingredient. Please try again.";
-
-            showErrorMessage(errorMessage);
-            console.error('Error saving ingredient:', error);
         }
+    );
+
+    // Function to create a sub-description item
+    const createSubDescriptionItem = (mode = "text") => {
+        const isTextMode = mode === "text";
+
+        return $(`
+            <div class="sub-description-item rounded-lg shadow bg-white overflow-hidden w-full" w-full data-mode="${mode}">
+                <!-- Header -->
+                <div class="sub-description-header flex items-center justify-between bg-gray-100 px-4 py-2 cursor-grab">
+                    <span class="text-gray-700 font-semibold">Sub Description</span>
+                    <button type="button" class="remove-item-btn text-red-500 hover:text-red-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Content Area -->
+                <div class="content-area h-full flex items-start justify-between p-4 gap-4">
+                    <!-- Text Mode -->
+                    <div class="w-full h-36 text-mode ${isTextMode ? '' : 'hidden'}">
+                        <textarea class="w-full h-36 flex-1 rounded-md border-gray-300 bg-gray-50 shadow-sm focus:ring-emerald-500 focus:border-emerald-500 sm:text-lg px-4 py-3" placeholder="Enter sub-description text"></textarea>
+                    </div>
+                    <!-- Image Mode -->
+                    <div class="image-mode h-36 ${isTextMode ? 'hidden' : ''}">
+                        <button type="button" class="open-cloudinary-btn text-sm font-semibold text-emerald-600 bg-emerald-50 px-4 py-2 rounded hover:bg-emerald-100 focus:ring-2 focus:ring-emerald-500">
+                            Choose File
+                        </button>
+                        <div class="preview-area flex-1 text-sm text-gray-500"></div>
+                    </div>
+                    <button type="button" class="toggle-mode-btn text-sm font-semibold text-emerald-600 bg-emerald-50 px-4 py-2 rounded hover:bg-emerald-100 focus:ring-2 focus:ring-emerald-500">
+                        ${isTextMode ? "Switch to Image" : "Switch to Text"}
+                    </button>
+                </div>
+            </div>
+        `);
+    };
+
+    // Add Sub Description Item
+    $("#add-sub-desc-btn").on("click", function () {
+        const newSubDescription = createSubDescriptionItem();
+        newSubDescription
+            .css({ opacity: 0, transform: "translateY(-10px)" }) // Initial state for animation
+            .appendTo("#sub-desc-container")
+            .animate({ opacity: 1, transform: "translateY(0)" }, 300); // Smooth animation
     });
-}
 
-function validateIngredientInput() {
-    var ingredientName = $('#ingredient-name').val();
-    var ingredientDescription = $('#ingredient-description').val();
-    var coverImageBase64 = $('#image-preview').attr('src');
+    // Open Cloudinary Widget and assign target preview area
+    $(document).on("click", ".open-cloudinary-btn", function () {
+        mediaWidget.targetPreviewArea = $(this).siblings(".preview-area"); // Set the target preview area
+        mediaWidget.open(); // Open the widget
+    });
 
-    var errors = []; // Array to store error messages
+    // Toggle between Text and Image mode
+    $(document).on("click", ".toggle-mode-btn", function () {
+        const subDescriptionItem = $(this).closest(".sub-description-item");
+        const currentMode = subDescriptionItem.data("mode");
+        const newMode = currentMode === "text" ? "image" : "text";
 
-    if (!ingredientName) {
-        errors.push("Ingredient name is required.");
+        // Update the mode in the DOM
+        subDescriptionItem.data("mode", newMode);
+
+        // Toggle visibility based on mode
+        subDescriptionItem.find(".text-mode").toggleClass("hidden", newMode !== "text");
+        subDescriptionItem.find(".image-mode").toggleClass("hidden", newMode !== "image");
+
+        // Update the button text
+        $(this).text(newMode === "text" ? "Switch to Image" : "Switch to Text");
+    });
+
+    // Remove Sub Description Item
+    $(document).on("click", ".remove-item-btn", function () {
+        const subDescriptionItem = $(this).closest(".sub-description-item");
+        const previewArea = subDescriptionItem.find(".preview-area");
+
+        // Restore the "Choose File" button before removal if the preview exists
+        if (previewArea.find("img").length > 0 || previewArea.find("video").length > 0) {
+            subDescriptionItem.find(".open-cloudinary-btn").show();
+        }
+
+        // Remove the item with animation
+        subDescriptionItem.animate(
+            { opacity: 0, height: 0, marginBottom: 0 },
+            300,
+            function () {
+                $(this).remove();
+            }
+        );
+    });
+
+    // Remove image
+    $(document).on("click", ".remove-image-btn", function () {
+        const previewArea = $(this).closest(".preview-area");
+        
+
+        previewArea.siblings(".open-cloudinary-btn").show();
+        previewArea.empty();
+
+    });
+
+
+    // Make Sub Descriptions sortable
+    $("#sub-desc-container").sortable({
+        revert: true,  // Enable revert effect
+        scroll: false,  // Enable default scrolling behavior
+    });
+
+    // Function to validate the input fields (Name, Description, Cover Image URL)
+    function validateInput(ingredientName, ingredientDescription, coverImageUrl) {
+        // Check if ingredient name, description, and cover image URL are valid
+        if (!ingredientName || ingredientName.trim() === "") {
+            Toastify({
+                text: "Ingredient name is required.",
+                duration: 3000,
+                backgroundColor: "red",
+                close: true
+            }).showToast();
+            return false;
+        }
+        if (!ingredientDescription || ingredientDescription.trim() === "") {
+            Toastify({
+                text: "Ingredient description is required.",
+                duration: 3000,
+                backgroundColor: "red",
+                close: true
+            }).showToast();
+            return false;
+        }
+        if (!coverImageUrl) {
+            Toastify({
+                text: "Cover image is required.",
+                duration: 3000,
+                backgroundColor: "red",
+                close: true
+            }).showToast();
+            return false;
+        }
+        return true;
     }
 
-    if (!ingredientDescription) {
-        errors.push("Ingredient description is required.");
-    }
+    $('#save-ingredient-btn').on('click', function () {
+        var ingredientName = $('#ingredient-name').val();
+        var ingredientDescription = $('#ingredient-description').val();
 
-    if (!coverImageBase64) {
-        errors.push("Cover image is required.");
-    }
+        // Get the URL of the cover image
+        var coverImageUrl = $('.cover-image-preview').find('.preview-image-container').find('img').attr('src');
 
-    if (errors.length > 0) {
-        // Join errors with a new line and show as a single message
-        showErrorMessage(errors.join("\n"));
-        return false;
-    }
+        // Validate the inputs
+        if (!validateInput(ingredientName, ingredientDescription, coverImageUrl)) {
+            return; // Stop the process if validation fails
+        }
 
-    return true; // All required fields are provided
-}
+        // Initialize an empty array to store the sub-description objects
+        var subDescriptionData = [];
 
-function showErrorMessage(message) {
-    hideLoadingScreen();
-    setMessageTitle("Error");
-    setMessageContent(message);
-    showMessageBox();
-}
+        // Loop through each sub-description item
+        $("#sub-desc-container .sub-description-item").each(function (index) {
+            var mode = $(this).data("mode"); // Get the mode (text or image)
+            var contentType = mode === "text" ? "text" : "image"; // Determine content type
 
-
-
-function setMessageTitle(message) {
-    $('#message-box-title').text(message);
-}
-
-function setMessageContent(message) {
-    $('#message-box-content').text(message);
-}
-
-function showMessageBox() {
-    $('#message-box').removeClass('opacity-0').addClass('opacity-100');
-    $('#message-box').removeClass('h-0').addClass('h-72');
-    $('#title-container').removeClass('hidden').addClass('flex');
-    $('#content-container').removeClass('hidden').addClass('flex');
-}
-
-function hideMessageBox() {
-    $('#message-box').addClass('opacity-0').removeClass('opacity-100');
-    $('#message-box').addClass('h-0').removeClass('h-72');
-    $('#title-container').addClass('hidden').removeClass('flex');
-    $('#content-container').addClass('hidden').removeClass('flex');
-}
-
-function showLoadingScreen() {
-    $('#loading-screen').removeClass('hidden').addClass('flex');
-}
-
-function hideLoadingScreen() {
-    $('#loading-screen').addClass('hidden').removeClass('flex');
-}
-
-$(document).ready(function () {
-
-    attachAddNewFrameButtonClickHandler();
-
-    // Image input change event to update the preview image
-    $('#ingredient-image').on('change', function () {
-        var input = this;
-        var file = input.files[0];
-
-        if (file) {
-            var reader = new FileReader();
-            reader.onload = function (e) {
-                $('#image-preview').attr('src', e.target.result);
+            var subDescriptionObj = {
+                contentType: contentType,
+                imageContent: "", // Default empty string for image content
+                textContent: "",  // Default empty string for text content
+                order: index + 1 // Set order based on index (1-based)
             };
-            reader.readAsDataURL(file);
-        }
+
+            // Capture content based on the mode
+            if (contentType === "image") {
+                var imageUrl = $(this).find(".preview-area img").attr('src') || "";
+                subDescriptionObj.imageContent = imageUrl; // Store the image URL
+            } else {
+                var textContent = $(this).find(".text-mode textarea").val() || "";
+                subDescriptionObj.textContent = textContent; // Store the text content
+            }
+
+            // Push the object to the array
+            subDescriptionData.push(subDescriptionObj);
+        });
+
+        // Log the ingredient data and the list of sub-description objects
+        console.log("Ingredient Name:", ingredientName);
+        console.log("Ingredient Description:", ingredientDescription);
+        console.log("Cover Image URL:", coverImageUrl);
+        console.log("Sub Description Data:", subDescriptionData);
+
+        // Create the request object matching CreateIngredientRequest
+        var requestData = {
+            ingredientName: ingredientName,
+            ingredientDescription: ingredientDescription,
+            coverImageUrl: coverImageUrl || "",
+            rawFrameDTOs: subDescriptionData
+        };
+
+        // Sending the Ajax POST request
+        $.ajax({
+            url: '/Cooking/Ingredient/CreateIngredient',  // The endpoint URL
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(requestData),
+            success: function (response, status, xhr) {
+                if (xhr.status === 200) {
+                    // Show success notification with Toastify
+                    Toastify({
+                        text: "Ingredient saved successfully.",
+                        duration: 3000,
+                        backgroundColor: "green", // Success color
+                        close: true
+                    }).showToast();
+                } else {
+                    // Show error notification with Toastify
+                    Toastify({
+                        text: "Failed to save ingredient: " + response.errorMessage + ". Please try again.",
+                        duration: 3000,
+                        backgroundColor: "red", // Error color
+                        close: true
+                    }).showToast();
+                }
+            },
+            error: function (xhr, status, error) {
+                var errorMessage = xhr.responseJSON && xhr.responseJSON.message
+                    ? xhr.responseJSON.message
+                    : "An error occurred while saving the ingredient. Please try again.";
+
+                // Show error notification with Toastify
+                Toastify({
+                    text: errorMessage,
+                    duration: 3000,
+                    backgroundColor: "red", // Error color
+                    close: true
+                }).showToast();
+
+                console.error('Error saving ingredient:', error);
+            }
+        });
+
     });
 
-    $('#preview-btn').on('click', function () {
-        populatePreview();
-    });
-
-    $('#save-btn').on('click', function () {
-        saveIngredient();
-    });
-
-
-    $('#message-box-close-btn').on('click', function () {
-        hideMessageBox();
-    });
+    
 
 });

@@ -1,20 +1,89 @@
 ﻿<div class="relative h-full min-h-screen w-full">
-    <div id="loading-screen" class="absolute hidden flex h-full w-full flex-col items-center justify-center bg-gray-800 opacity-50">
+
+    <!-- Overlay -->
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+      <!-- Widget -->
+      <div class="relative w-full max-w-4xl space-y-6 rounded-lg bg-white p-6 shadow-lg">
+        <!-- Close Button -->
+        <button
+          class="absolute right-4 top-4 text-gray-600 hover:text-gray-900 focus:outline-none"
+          aria-label="Close"
+        >
+          ✕
+        </button>
+
+        <!-- Search Bar -->
+        <div class="flex items-center space-x-4">
+          <input
+            type="text"
+            placeholder="Search for ingredients..."
+            class="flex-1 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <button
+            class="rounded-lg bg-blue-500 px-6 py-2 font-medium text-white shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            Search
+          </button>
+        </div>
+
+        <!-- Ingredient Cards -->
+        <div class="grid-cols-3 grid gap-6">
+          <!-- Example Card -->
+          <div class="space-y-2 rounded-lg bg-gray-100 p-4 text-center shadow transition-shadow hover:shadow-lg">
+            <img
+              src="https://via.placeholder.com/150"
+              alt="Ingredient Image"
+              class="mx-auto h-20 w-20 rounded-full"
+            />
+            <p class="font-medium text-gray-700">Ingredient Name</p>
+          </div>
+          <!-- Add more cards dynamically -->
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex items-center justify-center space-x-2">
+          <button
+            class="rounded-lg bg-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
+          >
+            Previous
+          </button>
+          <div class="font-medium text-gray-600">Page 1 of 10</div>
+          <button
+            class="rounded-lg bg-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
+          >
+            Next
+          </button>
+        </div>
+
+        <!-- Choose Button -->
+        <div class="flex justify-end">
+          <button
+            class="rounded-lg bg-green-500 px-6 py-3 font-medium text-white shadow hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
+          >
+            Choose
+          </button>
+        </div>
+      </div>
+    </div>
+
+
+
+    <div id="loading-screen" class="absolute flex hidden h-full w-full flex-col items-center justify-center bg-gray-800 opacity-50">
         <svg class="h-24 w-24 animate-spin fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M480-80q-82 0-155-31.5t-127.5-86Q143-252 111.5-325T80-480q0-83 31.5-155.5t86-127Q252-817 325-848.5T480-880q17 0 28.5 11.5T520-840q0 17-11.5 28.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160q133 0 226.5-93.5T800-480q0-17 11.5-28.5T840-520q17 0 28.5 11.5T880-480q0 82-31.5 155t-86 127.5q-54.5 54.5-127 86T480-80Z" /></svg>
         <div class="text-center font-semibold text-white">
             We're processing your request...
         </div>
     </div>
     
-    <div class="sticky top-0 notification-area bg-green-500 h-16 w-full flex flex-row items-center justify-center">
-        <div class="noti-message text-white font-semibold w-full px-8">
+    <div class="notification-area sticky top-0 flex h-16 w-full flex-row items-center justify-center bg-green-500">
+        <div class="noti-message w-full px-8 font-semibold text-white">
             We've created your recipe successfully!
         </div>
-        <div class="buttons flex flex-row items-center justify-center gap-x-6 pr-4 h-full">
-            <a href="/" id="recipe-detail-btn" class="border-2 border-orange-500 hover:border-white cursor-pointer bg-orange-500 text-sm text-center font-semibold text-white h-9 py-2 w-36 flex items-center justify-center px-4 rounded-lg">
+        <div class="buttons flex h-full flex-row items-center justify-center gap-x-6 pr-4">
+            <a href="/" id="recipe-detail-btn" class="border-2 flex h-9 w-36 cursor-pointer items-center justify-center rounded-lg border-orange-500 bg-orange-500 px-4 py-2 text-center text-sm font-semibold text-white hover:border-white">
                 View Details
             </a>
-            <a href="/Editor/Recipe" class="hover:border-white cursor-pointer bg-white text-green-500 border-2 border-green-500 text-sm text-center font-semibold h-9 py-2 w-36 flex items-center justify-center px-4 rounded-lg">
+            <a href="/Editor/Recipe" class="border-2 flex h-9 w-36 cursor-pointer items-center justify-center rounded-lg border-green-500 bg-white px-4 py-2 text-center text-sm font-semibold text-green-500 hover:border-white">
                 New Recipe
             </a>
             

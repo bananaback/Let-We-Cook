@@ -12,13 +12,7 @@ namespace LetWeCook.Data.Repositories.RecipeRepositories
             _context = context;
         }
 
-        /// <summary>
-        /// Asynchronously creates a new recipe in the database.
-        /// </summary>
-        /// <param name="recipe">The recipe to be created.</param>
-        /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-        /// <returns>The created recipe.</returns>
-        /// <exception cref="OperationCanceledException">Thrown if the operation is canceled via the cancellation token.</exception>
+
         public async Task<Recipe> CreateRecipeAsync(Recipe recipe, CancellationToken cancellationToken = default)
         {
             // Add the recipe to the Recipes DbSet asynchronously
@@ -29,14 +23,7 @@ namespace LetWeCook.Data.Repositories.RecipeRepositories
         }
 
 
-        /// <summary>
-        /// Asynchronously retrieves a list of recipe overviews for a specific user by their user ID.
-        /// </summary>
-        /// <param name="userId">The user ID whose recipes are to be retrieved.</param>
-        /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-        /// <returns>A list of recipes associated with the specified user.</returns>
-        /// <exception cref="ArgumentNullException">Thrown if the <paramref name="userId"/> is null or queryable source is null.</exception>
-        /// <exception cref="OperationCanceledException">Thrown if the operation is canceled via the cancellation token.</exception>
+
         public async Task<List<Recipe>> GetRecipeOverviewByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
         {
             // Validate the userId to prevent passing a null GUID
@@ -55,13 +42,7 @@ namespace LetWeCook.Data.Repositories.RecipeRepositories
             return recipes;
         }
 
-        /// <summary>
-        /// Asynchronously retrieves a list of all recipes with their associated cover image, creator, ingredients, and recipe steps.
-        /// </summary>
-        /// <param name="cancellationToken">A token to monitor for cancellation requests during the operation.</param>
-        /// <returns>A list of recipes with detailed related information such as cover image, ingredients, and steps.</returns>
-        /// <exception cref="ArgumentNullException">Thrown if the <paramref name="cancellationToken"/> is null or queryable source is null.</exception>
-        /// <exception cref="OperationCanceledException">Thrown if the operation is canceled via the cancellation token.</exception>
+
         public async Task<List<Recipe>> GetAllRecipesAsync(CancellationToken cancellationToken = default)
         {
             // Use AsSplitQuery() to split the query into multiple queries, one for each navigation property
@@ -80,14 +61,7 @@ namespace LetWeCook.Data.Repositories.RecipeRepositories
 
 
 
-        /// <summary>
-        /// Retrieves the newest recipes, ordered by the most recent creation date.
-        /// </summary>
-        /// <param name="count">The number of recipes to retrieve.</param>
-        /// <param name="cancellationToken">A token that can be used to cancel the operation.</param>
-        /// <returns>A list of the newest recipes.</returns>
-        /// <exception cref="ArgumentNullException">Thrown if the <paramref name="cancellationToken"/> is null or queryable source is null.</exception>
-        /// <exception cref="OperationCanceledException">Thrown if the operation is cancelled via the <paramref name="cancellationToken"/>.</exception>
+
         public async Task<List<Recipe>> GetNewestRecipesAsync(int count, CancellationToken cancellationToken = default)
         {
             // Validate count to prevent invalid inputs
@@ -106,15 +80,7 @@ namespace LetWeCook.Data.Repositories.RecipeRepositories
             return newestRecipes;
         }
 
-        /// <summary>
-        /// Retrieves a random selection of recipes, based on the specified count.
-        /// </summary>
-        /// <param name="count">The number of random recipes to retrieve. Must be greater than zero.</param>
-        /// <param name="cancellationToken">A token that can be used to cancel the operation.</param>
-        /// <returns>A list of random recipes.</returns>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="count"/> is less than or equal to zero.</exception>
-        /// <exception cref="ArgumentNullException">Thrown if the <paramref name="cancellationToken"/> is null.</exception>
-        /// <exception cref="OperationCanceledException">Thrown if the operation is cancelled via the <paramref name="cancellationToken"/>.</exception>
+
         public async Task<List<Recipe>> GetRandomRecipesAsync(int count, CancellationToken cancellationToken = default)
         {
             if (count <= 0)
@@ -132,17 +98,7 @@ namespace LetWeCook.Data.Repositories.RecipeRepositories
             return randomRecipes;
         }
 
-        /// <summary>
-        /// Retrieves a list of recipes filtered by the specified cuisine.
-        /// </summary>
-        /// <param name="cuisine">The cuisine type to filter recipes by. Cannot be null or empty.</param>
-        /// <param name="count">The number of recipes to retrieve. Must be greater than zero.</param>
-        /// <param name="cancellationToken">A token that can be used to cancel the operation.</param>
-        /// <returns>A list of recipes filtered by the specified cuisine.</returns>
-        /// <exception cref="ArgumentNullException">Thrown if the <paramref name="cuisine"/> is null or empty.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="count"/> is less than or equal to zero.</exception>
-        /// <exception cref="ArgumentNullException">Thrown if the <paramref name="cancellationToken"/> is null.</exception>
-        /// <exception cref="OperationCanceledException">Thrown if the operation is cancelled via the <paramref name="cancellationToken"/>.</exception>
+
         public async Task<List<Recipe>> GetRecipesByCuisineAsync(string cuisine, int count, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrEmpty(cuisine))
@@ -167,17 +123,7 @@ namespace LetWeCook.Data.Repositories.RecipeRepositories
 
 
 
-        /// <summary>
-        /// Retrieves a list of recipes filtered by the specified difficulty level.
-        /// </summary>
-        /// <param name="difficulty">The difficulty level to filter recipes by. Must match a valid value in <see cref="DifficultyEnum"/>.</param>
-        /// <param name="count">The number of recipes to retrieve. Must be greater than zero.</param>
-        /// <param name="cancellationToken">A token that can be used to cancel the operation.</param>
-        /// <returns>A list of recipes filtered by the specified difficulty level.</returns>
-        /// <exception cref="ArgumentNullException">Thrown if the <paramref name="difficulty"/> is null or empty.</exception>
-        /// <exception cref="ArgumentException">Thrown if the <paramref name="difficulty"/> is not a valid value in <see cref="DifficultyEnum"/>.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="count"/> is less than or equal to zero.</exception>
-        /// <exception cref="OperationCanceledException">Thrown if the operation is cancelled via the <paramref name="cancellationToken"/>.</exception>
+
         public async Task<List<Recipe>> GetRecipesByDifficultyAsync(string difficulty, int count, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrEmpty(difficulty))
@@ -210,16 +156,6 @@ namespace LetWeCook.Data.Repositories.RecipeRepositories
         }
 
 
-        /// <summary>
-        /// Retrieves the detailed information of a recipe by its ID.
-        /// </summary>
-        /// <param name="recipeId">The unique identifier of the recipe to retrieve.</param>
-        /// <param name="cancellationToken">A token that can be used to cancel the operation.</param>
-        /// <returns>
-        /// The detailed recipe if found, or <c>null</c> if no recipe with the specified ID exists.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">Thrown if the <paramref name="cancellationToken"/> is null or queryable source is null..</exception>
-        /// <exception cref="OperationCanceledException">Thrown if the operation is cancelled via the <paramref name="cancellationToken"/>.</exception>
         public async Task<Recipe?> GetRecipeDetailsByIdAsync(Guid recipeId, CancellationToken cancellationToken = default)
         {
             // Check for cancellation
@@ -244,6 +180,17 @@ namespace LetWeCook.Data.Repositories.RecipeRepositories
         public Task<List<Recipe>> GetTrendingRecipesAsync(int count, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<List<Recipe>> GetRecipeOverviewsAsync(CancellationToken cancellationToken)
+        {
+            // Asynchronously fetch recipes created by the specified user, including their cover image and creator information
+            List<Recipe> recipes = await _context.Recipes
+                .Include(r => r.RecipeCoverImage)  // Eagerly load the RecipeCoverImage navigation property
+                .Include(r => r.CreatedBy)        // Eagerly load the CreatedBy navigation property
+                .ToListAsync(cancellationToken);  // Execute the query asynchronously with cancellation support
+
+            return recipes;
         }
     }
 }

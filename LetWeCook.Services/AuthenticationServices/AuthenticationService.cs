@@ -1,6 +1,6 @@
 ﻿using LetWeCook.Common.Enums;
-using LetWeCook.Common.Results;
 using LetWeCook.Data.Entities;
+using LetWeCook.Services.Exceptions;
 using LetWeCook.Services.Models.Results;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
@@ -133,33 +133,21 @@ namespace LetWeCook.Services.AuthenticationServices
             return result;
         }
 
-        public async Task<Result> ConfirmEmailAsync(string userId, string code)
+        public async Task ConfirmEmailAsync(string userId, string code)
         {
-            try
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
             {
-                var user = await _userManager.FindByIdAsync(userId);
-                if (user == null)
-                {
-                    return Result.Failure("User not found", ErrorCode.UserNotFound);
-                }
-
-                var identityResult = await _userManager.ConfirmEmailAsync(user, code);
-
-                if (identityResult.Succeeded)
-                {
-                    return Result.Success("Email confirmed successfully");
-                }
-                else
-                {
-                    // Return failure with error code and error details from IdentityResult
-                    var errorMessage = string.Join("; ", identityResult.Errors.Select(e => e.Description));
-                    return Result.Failure($"Email confirmation failed: {errorMessage}", ErrorCode.EmailConfirmationFailed);
-                }
+                throw new UserNotFoundException($"User with id {userId} not found.");
             }
-            catch (Exception ex)
+
+            var identityResult = await _userManager.ConfirmEmailAsync(user, code);
+
+            if (!identityResult.Succeeded)
             {
-                // Handle unexpected exceptions
-                return Result.Failure("An error occurred during email confirmation", ErrorCode.EmailConfirmationException, ex);
+                var errorMessage = string.Join("; ", identityResult.Errors.Select(e => e.Description));
+                throw new EmailConfirmationException($"Email confirmation failed: {errorMessage}");
             }
         }
 

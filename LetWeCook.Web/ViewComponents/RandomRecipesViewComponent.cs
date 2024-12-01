@@ -16,16 +16,9 @@ namespace LetWeCook.Web.ViewComponents
         // The method that handles the logic of getting the newest recipes
         public async Task<IViewComponentResult> InvokeAsync(int count = 5, CancellationToken cancellationToken = default)
         {
-            var result = await _recipeService.GetRandomRecipesAsync(count, cancellationToken);
-
-            // If the service fails to fetch recipes, return an error view
-            if (!result.IsSuccess)
-            {
-                return View("Error"); // Handle failure
-            }
-
+            var recipes = await _recipeService.GetRandomRecipesAsync(count, cancellationToken);
             // Return the recipes data to the Default view
-            return View(result.Data);
+            return View(recipes);
         }
     }
 }
