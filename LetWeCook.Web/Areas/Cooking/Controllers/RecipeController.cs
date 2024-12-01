@@ -1,5 +1,4 @@
-﻿using LetWeCook.Common.Results;
-using LetWeCook.Services.DTOs;
+﻿using LetWeCook.Services.DTOs;
 using LetWeCook.Services.RecipeServices;
 using LetWeCook.Web.Areas.Cooking.Models.Requests;
 using LetWeCook.Web.Areas.Cooking.Models.ViewModels;
@@ -32,17 +31,9 @@ namespace LetWeCook.Web.Areas.Cooking.Controllers
 
             };
 
-            var result = await _recipeService.SearchRecipesAsync(searchTerm, cuisine, difficulty, cookTime, servings, sortBy, itemsPerPage, currentPage, cancellationToken);
-
-            if (result.IsSuccess && result.Data != null)
-            {
-                model.Recipes = result.Data.Items;
-                model.TotalPages = (int)Math.Ceiling((double)result.Data.TotalItems / itemsPerPage);
-            }
-            else
-            {
-                model.TotalPages = 1;
-            }
+            var paginatedRecipes = await _recipeService.SearchRecipesAsync(searchTerm, cuisine, difficulty, cookTime, servings, sortBy, itemsPerPage, currentPage, cancellationToken);
+            model.Recipes = paginatedRecipes.Items;
+            model.TotalPages = (int)Math.Ceiling((double)paginatedRecipes.TotalItems / itemsPerPage);
 
             return View(model);
         }
@@ -50,15 +41,10 @@ namespace LetWeCook.Web.Areas.Cooking.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(Guid id, CancellationToken cancellationToken = default)
         {
-            Result<RecipeDTO> result = await _recipeService.GetRecipeByIdAsync(id, cancellationToken);
+            RecipeDTO recipeDTO = await _recipeService.GetRecipeByIdAsync(id, cancellationToken);
 
-            if (!result.IsSuccess)
-            {
-                return View("Error", result.Message);
-            }
+            return View(recipeDTO);
 
-
-            return View(result.Data);
         }
 
         [HttpPost]
@@ -101,6 +87,9 @@ namespace LetWeCook.Web.Areas.Cooking.Controllers
                 StepDTOs = request.StepDTOs
             };
 
+            return Ok();
+
+            /*
             Result<RecipeDTO> createRecipeResult = await _recipeService.CreateRecipeAsync(userIdString, recipeDTO, cancellationToken);
 
             if (!createRecipeResult.IsSuccess)
@@ -118,6 +107,7 @@ namespace LetWeCook.Web.Areas.Cooking.Controllers
                 Message = "Recipe created successfully",
                 Recipe = createRecipeResult.Data
             });
+            */
         }
 
     }

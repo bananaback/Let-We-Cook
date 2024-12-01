@@ -1,81 +1,70 @@
-﻿
+﻿<div class="min-h-screen bg-gray-50 px-4 py-8">
+    <div class="mx-auto max-w-3xl rounded-lg bg-white p-6 shadow-lg">
+        <!-- Header -->
+        <h1 class="mb-6 cursor-pointer text-center text-3xl font-bold text-gray-800 transition hover:text-emerald-600"
+            onclick="window.location.href='/'">
+            Let We Cook
+        </h1>
 
-<div class="relative h-full min-h-screen w-full">
-    <div id="loading-screen" class="absolute hidden h-full w-full flex-col items-center justify-center bg-gray-800 opacity-50">
-        <svg class="h-24 w-24 animate-spin fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M480-80q-82 0-155-31.5t-127.5-86Q143-252 111.5-325T80-480q0-83 31.5-155.5t86-127Q252-817 325-848.5T480-880q17 0 28.5 11.5T520-840q0 17-11.5 28.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160q133 0 226.5-93.5T800-480q0-17 11.5-28.5T840-520q17 0 28.5 11.5T880-480q0 82-31.5 155t-86 127.5q-54.5 54.5-127 86T480-80Z" /></svg>
-        <div class="text-center font-semibold text-white">
-            We're processing your request...
+
+        <!-- Ingredient Name -->
+        <div class="mb-6">
+            <label for="ingredient-name" class="mb-1 block text-sm font-medium text-gray-700">Ingredient Name</label>
+            <input type="text" id="ingredient-name"
+                    class="block w-full rounded-md border-gray-300 bg-gray-50 px-4 py-3 shadow-sm focus:ring-emerald-500 focus:border-emerald-500 sm:text-lg"
+                    placeholder="Enter ingredient name" />
         </div>
-    </div>
 
-    <div id="message-box" class="border-2 -translate-x-1/2 -translate-y-1/2 opacity-0 absolute left-1/2 top-1/2 flex h-0 w-1/4 flex-col items-start justify-center rounded-lg bg-white transition-all">
-        <div id="title-container" class="text-md relative hidden w-full flex-row items-center justify-between rounded-t-lg bg-green-500 py-2 pl-4 text-left font-semibold text-white">
-            <div id="message-box-title">
-                Information
+        <!-- Ingredient Description -->
+        <div class="mb-6">
+            <label for="ingredient-description" class="mb-1 block text-sm font-medium text-gray-700">Ingredient Description</label>
+            <input type="text" id="ingredient-description"
+                    class="block w-full rounded-md border-gray-300 bg-gray-50 px-4 py-3 shadow-sm focus:ring-emerald-500 focus:border-emerald-500 sm:text-lg"
+                    placeholder="Enter ingredient description" />
+        </div>
+
+        <!-- Cover Image -->
+        <div class="mb-6">
+            <label for="cover-image" class="mb-1 block text-sm font-medium text-gray-700">Cover Image</label>
+            <button
+                    type="button"
+                    class="open-cloudinary-btn block w-full rounded bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-600 hover:bg-emerald-100 focus:ring-2 focus:ring-emerald-500">
+                Upload Cover Image
+            </button>
+            <input type="hidden" id="cover-image-url" name="cover-image-url" />
+            <div class="cover-image-preview preview-area flex-1 text-sm text-gray-500"></div>
+        </div>
+
+        <div class="py hidden px-2"></div>
+
+
+        <div class="mb-6">
+            <div id="sub-desc-container" class="flex w-full flex-col items-center justify-start gap-y-4">
+                <!-- Sub-description items will be dynamically added here -->
             </div>
-            <div id="message-box-close-btn" class="mr-4">
-                <svg class="h-8 w-8 fill-white hover:fill-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" /></svg>
-            </div>
+            <button id="add-sub-desc-btn"
+                    type="button"
+                    class="border-2 w-full rounded-md border-dashed border-emerald-600 py-4 text-lg font-semibold text-emerald-600 hover:bg-emerald-50 hover:border-emerald-700 hover:text-emerald-700 focus:outline-none">
+                + Add Sub Description
+            </button>
         </div>
-        <div id="content-container" class="relative hidden h-full w-full items-center justify-center text-lg font-semibold">
-            <div id="message-box-content" class="px-4 text-center">
-                Save ingredient successfully.
-            </div>
-        </div>
-    </div>
 
 
-    <div class="relative py-4 text-center text-3xl font-semibold">
-        Ingredient Editor
-        <div class="text-black px-4 absolute top-1/2 -translate-y-1/2">
-            <a href="/">Let We Cook</a>
-        </div>
-    </div>
 
-    <div class="flex w-full items-center justify-between bg-gray-800 p-4 text-white">
-        <button id="add-new-frame-btn" class="border-2 rounded border-blue-700 bg-blue-500 px-4 py-2 font-bold text-white hover:border-white hover:bg-blue-700">Add new frame</button>
 
+        <!-- Submit Button -->
         <div>
-            <button id="preview-btn" class="border-2 m-2 rounded-lg border-blue-500 bg-blue-400 px-4 py-2 text-white hover:border-white">Preview</button>
-
-            <button id="save-btn" class="border-2 rounded-lg border-green-700 bg-green-500 px-4 py-2 font-bold text-white hover:border-white">Save</button>
-        </div>
-    </div>
-
-    <div class="flex flex-row items-start justify-center">
-        <div class="flex-1 p-2">
-            <div class="basic-info">
-                <label for="ingredient-name" class="font-semibold">Ingredient Name</label>
-                <input type="text" id="ingredient-name" class="border-2 mb-4 mt-1 w-full rounded-md border-gray-300 p-2" placeholder="Enter ingredient name" />
-
-                <label for="ingredient-image" class="font-semibold">Ingredient Image</label>
-                <div class="flex flex-row items-center justify-center gap-x-8">
-                    <img id="image-preview" class="h-32 w-32 rounded-md border border-gray-300 object-cover" alt="Image preview" />
-
-                    <input type="file" id="ingredient-image" class="border-2 mb-4 mt-1 w-3/4 cursor-pointer rounded-md border-gray-300 p-2" accept="image/*" />
-                </div>
-
-                <label for="ingredient-description" class="font-semibold">Ingredient Description</label>
-                <textarea id="ingredient-description" class="border-2 mb-4 mt-1 w-full rounded-md border-gray-300 p-2 px-4" rows="5" placeholder="Enter a description for the ingredient"></textarea>
-            </div>
-
-            <div id="editor-content" class="flex flex-col items-center justify-center gap-y-4">
-                <!-- Frames will be dynamically added here -->
-            </div>
-
-            <div class="hidden bg-white text-blue-400 hover:bg-blue-400 hover:text-white"></div>
-
-            <div class="mx-6 hidden h-60 bg-blue-400 p-4 text-white hover:bg-white hover:text-blue-400"></div>
-
-
-        </div>
-        <div class="flex-1 flex flex-col items-center justify-start">
-            <div id="preview-container" class="flex w-full flex-col items-center justify-start">
-            </div>
+            <button id="save-ingredient-btn"
+                    class="inline-flex w-full justify-center rounded-md border border-transparent bg-emerald-600 px-6 py-3 text-lg font-medium text-white shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
+                Save Ingredient
+            </button>
         </div>
     </div>
 </div>
 
+
 @section Scripts {
+
+    <script src="https://upload-widget.cloudinary.com/latest/global/all.js" type="text/javascript"></script>  
     <script src="~/js/ingredient-editor.js"></script>
 }

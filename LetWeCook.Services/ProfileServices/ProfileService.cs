@@ -1,10 +1,9 @@
-﻿using LetWeCook.Common.Enums;
-using LetWeCook.Common.Results;
-using LetWeCook.Data.Entities;
+﻿using LetWeCook.Data.Entities;
 using LetWeCook.Data.Enums;
 using LetWeCook.Data.Repositories.ProfileRepositories;
 using LetWeCook.Data.Repositories.UnitOfWork;
 using LetWeCook.Services.DTOs;
+using LetWeCook.Services.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
@@ -27,86 +26,79 @@ namespace LetWeCook.Services.ProfileServices
             _logger = logger;
         }
 
-        public async Task<Result<ProfileDTO>> GetUserProfileAsync(string userIdString, CancellationToken cancellationToken = default)
+        public async Task<ProfileDTO> GetUserProfileAsync(string userIdString, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrEmpty(userIdString) || !Guid.TryParse(userIdString, out Guid userId))
             {
-                return Result<ProfileDTO>.Failure("Invalid user id guid", ErrorCode.UserNotFound);
+                throw new UserProfileRetrievalException($"Invalid user id guid: {userIdString}");
 
             }
-            var getUserProfileResult = await _profileRepository.GetUserProfileByUserIdAsync(userId, cancellationToken);
 
-            if (!getUserProfileResult.IsSuccess)
+            try
             {
-                if (getUserProfileResult.ErrorCode == ErrorCode.UserProfileNotFound)
+                var userProfile = await _profileRepository.GetUserProfileByUserIdAsync(userId, cancellationToken);
+
+                if (userProfile == null)
                 {
                     var user = await _userManager.FindByIdAsync(userIdString);
 
                     if (user == null)
                     {
-                        return Result<ProfileDTO>.Failure($"User with id {userId} not found", ErrorCode.UserNotFound);
+                        throw new UserProfileRetrievalException($"User with id {userId} not found");
                     }
 
-                    var userProfile = new UserProfile
+                    userProfile = new UserProfile
                     {
                         Id = Guid.NewGuid(),
                         User = user
                     };
 
-                    var createUserProfileResult = await _profileRepository.CreateUserProfile(userProfile, cancellationToken);
-
-                    if (!createUserProfileResult.IsSuccess)
-                    {
-                        return Result<ProfileDTO>.Failure("Failed to create user profile", ErrorCode.UserProfileCreationFailed, createUserProfileResult.Exception);
-                    }
+                    await _profileRepository.CreateUserProfile(userProfile, cancellationToken);
 
                     var saveChangesResult = await _unitOfWork.SaveChangesAsync(cancellationToken);
 
                     if (saveChangesResult <= 0) // Check if no changes were saved
                     {
-                        return Result<ProfileDTO>.Failure("Failed to save changes to the database after user profile creation.", ErrorCode.DatabaseSaveFailed);
+                        throw new UserProfileCreationException("Failed to save changes to the database after user profile creation.");
                     }
 
-                    return Result<ProfileDTO>.Success(new ProfileDTO
+                    return new ProfileDTO
                     {
                         Id = userProfile.Id,
                         UserId = userId,
                         UserName = user.UserName ?? string.Empty,
-                    }, "Create user profile successfully.");
+                    };
                 }
-                else
+
+                return new ProfileDTO
                 {
-                    return Result<ProfileDTO>.Failure("Failed to get user profile", ErrorCode.UserProfileRetrievalFailed, getUserProfileResult.Exception);
-                }
+                    Id = userProfile.Id,
+                    UserId = userId,
+                    UserName = userProfile.User.UserName ?? string.Empty,
+                    DateJoined = userProfile.User.DateJoined,
+                    Email = userProfile.User.Email ?? string.Empty,
+                    PhoneNumber = userProfile.PhoneNumber,
+                    FirstName = userProfile.FirstName,
+                    LastName = userProfile.LastName,
+                    Age = userProfile.Age,
+                    Address = userProfile.Address
+                };
+
             }
-
-            var existingProfile = getUserProfileResult.Data!;
-
-            return Result<ProfileDTO>.Success(new ProfileDTO
+            catch (ArgumentNullException ex)
             {
-                Id = existingProfile.Id,
-                UserId = userId,
-                UserName = existingProfile.User.UserName ?? string.Empty,
-                DateJoined = existingProfile.User.DateJoined,
-                Email = existingProfile.User.Email ?? string.Empty,
-                PhoneNumber = existingProfile.PhoneNumber,
-                FirstName = existingProfile.FirstName,
-                LastName = existingProfile.LastName,
-                Age = existingProfile.Age,
-                Address = existingProfile.Address
-            }, "Retrieve user profile successfully.");
+                throw new UserProfileRetrievalException("Failed to retrie user profile", ex);
+            }
         }
 
-        public async Task<Result<ProfileDTO>> UpdateUserProfileAsync(ProfileDTO profileDTO, CancellationToken cancellationToken = default)
+        public async Task<ProfileDTO> UpdateUserProfileAsync(ProfileDTO profileDTO, CancellationToken cancellationToken = default)
         {
 
-            var getExistingUserProfileResult = await _profileRepository.GetUserProfileByUserIdAsync(profileDTO.UserId, cancellationToken);
-            if (!getExistingUserProfileResult.IsSuccess)
+            var oldProfile = await _profileRepository.GetUserProfileByUserIdAsync(profileDTO.UserId, cancellationToken);
+            if (oldProfile == null)
             {
-                return Result<ProfileDTO>.Failure($"Failed to retrieve user profile with user id {profileDTO.UserId.ToString()}", ErrorCode.UserProfileRetrievalFailed, getExistingUserProfileResult.Exception);
+                throw new UserProfileRetrievalException($"Failed to retrieve user profile with user id {profileDTO.UserId.ToString()}");
             }
-
-            var oldProfile = getExistingUserProfileResult.Data!;
 
             oldProfile.PhoneNumber = profileDTO.PhoneNumber;
             oldProfile.FirstName = profileDTO.FirstName;
@@ -115,15 +107,15 @@ namespace LetWeCook.Services.ProfileServices
             oldProfile.Gender = (GenderEnum)Enum.Parse(typeof(GenderEnum), profileDTO.Gender);
             oldProfile.Address = profileDTO.Address;
 
-            _profileRepository.UpdateUserProfile(oldProfile);
+            await _profileRepository.UpdateUserProfile(oldProfile);
 
             var saveChangesResult = await _unitOfWork.SaveChangesAsync(cancellationToken);
             if (saveChangesResult <= 0) // Check if no changes were saved
             {
-                return Result<ProfileDTO>.Failure("Failed to save changes to the database after profile update.", ErrorCode.UserProfileSaveFailed);
+                throw new UserProfileCreationException("Failed to save changes to the database after profile update.");
             }
 
-            return Result<ProfileDTO>.Success(profileDTO, "Updated user profile successfully.");
+            return profileDTO;
         }
     }
 }

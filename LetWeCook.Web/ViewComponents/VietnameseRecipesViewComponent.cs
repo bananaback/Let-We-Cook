@@ -1,5 +1,4 @@
-﻿using LetWeCook.Services.DTOs;
-using LetWeCook.Services.RecipeServices;
+﻿using LetWeCook.Services.RecipeServices;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LetWeCook.Web.ViewComponents
@@ -16,15 +15,10 @@ namespace LetWeCook.Web.ViewComponents
         public async Task<IViewComponentResult> InvokeAsync(int count, CancellationToken cancellationToken)
         {
             // Fetch the Vietnamese recipes using the service
-            var result = await _recipeService.GetRecipesByCuisineAsync("Vietnamese", count, cancellationToken);
-
-            if (result.IsSuccess)
-            {
-                return View(result.Data);  // Pass the data to the view
-            }
+            var recipes = await _recipeService.GetRecipesByCuisineAsync("Vietnamese", count, cancellationToken);
 
             // In case of failure, return an empty list or handle error gracefully
-            return View(new List<RecipeDTO>());
+            return View(recipes);
         }
     }
 }
