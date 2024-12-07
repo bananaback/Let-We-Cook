@@ -1,0 +1,45 @@
+﻿@{
+    Layout = "_ProfileLayout";
+}
+
+@model LetWeCook.Web.Areas.Account.Models.ViewModels.CollectionDetailsViewModel;
+
+<div class="container mx-auto py-8">
+    <!-- Collection Details Header -->
+    <div class="rounded bg-white p-6 shadow">
+        <h1 class="text-2xl font-bold text-gray-800">@Model.CollectionName</h1>
+        <p class="mt-2 text-gray-600">@Model.CollectionDescription</p>
+    </div>
+
+    <!-- Recipes Section -->
+    <div class="mt-8">
+        <h2 class="mb-4 text-xl font-semibold text-gray-700">Recipes in this Collection</h2>
+
+        <div class="grid-cols-2 grid gap-6 md:grid-cols-3 lg:grid-cols-4">
+            @foreach (var recipe in Model.Recipes)
+            {
+                <!-- Add the recipe-card class here -->
+                <div class="recipe-card rounded-lg bg-white p-4 shadow">
+                    <!-- Recipe Cover Image (Clickable Anchor Tag) -->
+                    <a href="/Cooking/Recipe/Details/@recipe.Id" class="aspect-w-1 aspect-h-1 block">
+                        <img src="@recipe.RecipeCoverImage.Url" alt="@recipe.Title" class="h-full w-full rounded-lg object-cover">
+                    </a>
+
+                    <!-- Recipe Title -->
+                    <h3 class="mt-2 truncate text-lg font-medium text-gray-800">@recipe.Title</h3>
+
+                    <!-- Remove Button -->
+                    <button id="remove-recipe-btn" data-collection-id="@Model.CollectionId"
+                            data-recipe-id="@recipe.Id" class="mt-4 w-full rounded bg-red-500 py-2 font-medium text-white transition-all duration-300 hover:bg-red-600">
+                        Remove from Collection
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+                    
+@section Scripts{
+    <script src="~/js/collection-detail.js"></script>
+}

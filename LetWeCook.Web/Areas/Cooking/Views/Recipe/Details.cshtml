@@ -12,7 +12,22 @@
         <div class="w-full max-w-3xl">
             <!-- Recipe Header Section -->
             <div class="rounded-lg bg-white p-6 shadow-lg">
-                <h1 class="text-4xl font-bold text-gray-800">@Model.Title</h1>
+                <!-- Wrap Title and Heart SVG inside a div -->
+                <div class="flex items-center justify-between rounded-lg bg-white p-6 shadow-lg">
+                    <h1 class="text-4xl font-bold text-gray-800">@Model.Title</h1>
+                    
+                    <div class="flex flex-row items-center justify-center gap-x-4">
+                        <svg id="add-to-collection-btn" xmlns="http://www.w3.org/2000/svg" class="heart-icon h-8 w-8 transition-transform duration-300 hover:scale-125 hover:fill-red-500 hover:rotate-12"
+                             viewBox="0 -960 960 960" width="24px">
+                            <path d="M640-121v-120H520v-80h120v-120h80v120h120v80H720v120h-80ZM120-240v-80h80v80h-80Zm160 0v-80h163q-3 21-2.5 40t3.5 40H280ZM120-400v-80h80v80h-80Zm160 0v-80h266q-23 16-41.5 36T472-400H280ZM120-560v-80h80v80h-80Zm160 0v-80h480v80H280ZM120-720v-80h80v80h-80Zm160 0v-80h480v80H280Z" />
+                        </svg>
+                        <svg id="like-recipe-btn" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" class="heart-icon h-8 w-8 transition-all duration-300 hover:scale-125 hover:fill-red-500">
+                            <path d="m480-120-58-52q-101-91-167-157T150-447.5Q111-500 95.5-544T80-634q0-94 63-157t157-63q52 0 99 22t81 62q34-40 81-62t99-22q94 0 157 63t63 157q0 46-15.5 90T810-447.5Q771-395 705-329T538-172l-58 52Zm0-108q96-86 158-147.5t98-107q36-45.5 50-81t14-70.5q0-60-40-100t-100-40q-47 0-87 26.5T518-680h-76q-15-41-55-67.5T300-774q-60 0-100 40t-40 100q0 35 14 70.5t50 81q36 45.5 98 107T480-228Zm0-273Z" />
+                        </svg>
+                    </div>
+                    
+                </div>
+
 
                 <!-- Recipe Tags -->
                 <div class="mt-4 flex flex-wrap space-x-2">
@@ -88,83 +103,82 @@
                     {
                         <div>No steps available</div>
                     }
-                    <!--
-                    <div class="mt-6 flex items-start space-x-4">
-                        <img src="https://th.bing.com/th/id/R.207a1a57511b1c5af9dfe56c5479a985?rik=Um6VrhurDbnWdA&pid=ImgRaw&r=0" alt="Step 1 Image" class="h-32 w-32 rounded-lg object-cover shadow-md">
-                        <div>
-                            <h3 class="text-xl font-semibold text-gray-800">Step 1: Prepare the Salmon</h3>
-                            <p class="mt-1 text-gray-700">
-                                Season the salmon fillets with olive oil, salt, and pepper. Preheat your grill to medium-high heat.
-                            </p>
-                        </div>
-                    </div>
 
-                    <div class="mt-6 flex items-start space-x-4">
-                        <img src="https://spoton-prod-websites-user-assets.s3.amazonaws.com/static/uploads/JosMHq4RF2OhqNETj2gU_green%20frog-6.jpg" alt="Step 2 Image" class="h-32 w-32 rounded-lg object-cover shadow-md">
-                        <div>
-                            <h3 class="text-xl font-semibold text-gray-800">Step 2: Grill the Salmon</h3>
-                            <p class="mt-1 text-gray-700">
-                                Grill the salmon for 4-5 minutes on each side, until cooked through and charred.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="mt-6 flex items-start space-x-4">
-                        <img src="https://th.bing.com/th/id/OIP.QRe6V3MOtovUeH1ou6Q0ggAAAA?rs=1&pid=ImgDetMain" alt="Step 3 Image" class="h-32 w-32 rounded-lg object-cover shadow-md">
-                        <div>
-                            <h3 class="text-xl font-semibold text-gray-800">Step 3: Make the Salsa</h3>
-                            <p class="mt-1 text-gray-700">
-                                In a bowl, combine diced avocado, red onion, lime juice, and cilantro. Mix well and season with salt.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="mt-6 flex items-start space-x-4">
-                        <img src="https://www.yummyhealthyeasy.com/wp-content/uploads/2018/06/Spicy-Grilled-Salmon-Avocado-Salsa-Yummy-Healthy-Easy-1-1-683x1024.jpg" alt="Step 4 Image" class="h-32 w-32 rounded-lg object-cover shadow-md">
-                        <div>
-                            <h3 class="text-xl font-semibold text-gray-800">Step 4: Serve</h3>
-                            <p class="mt-1 text-gray-700">
-                                Top the grilled salmon with the avocado salsa. Serve immediately and enjoy!
-                            </p>
-                        </div>
-                    </div>
-                    -->
                 </div>
             </div>
 
-            <!-- Comments Section -->
-            <div class="mt-8 rounded-lg bg-white p-6 shadow-lg">
-                <h2 class="text-2xl font-semibold text-gray-800">Comments</h2>
+            <div class="container mx-auto py-8">
+                <!-- Add Review Section -->
+                <div class="rounded-lg bg-white p-6 shadow-lg">
+                    <h2 class="mb-6 text-2xl font-semibold text-gray-800">Leave a Review</h2>
 
-                <!-- Comment Box -->
-                <textarea class="mt-4 w-full rounded-lg border-gray-300 p-4 text-gray-700 placeholder-gray-400" placeholder="Leave a comment..."></textarea>
-                <button class="mt-2 rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300">Post Comment</button>
+                    <!-- Star Rating -->
+                    <div id="star-rating" class="mb-6 flex space-x-2">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            <span class="star cursor-pointer text-2xl text-gray-400 hover:text-yellow-500"
+                                  data-rating="@i">&#9733;</span>
+                        }
+                    </div>
 
-                <!-- User Comments -->
-                <div class="mt-6 space-y-6">
-                    <div class="flex items-start space-x-4 border-b pb-4">
-                        <img src="https://th.bing.com/th/id/OIP.57SwJzT-AWYGqTng7C8VQwHaEK?rs=1&pid=ImgDetMain" alt="Avatar" class="h-10 w-10 rounded-full object-cover">
-                        <div>
-                            <h3 class="font-semibold text-gray-800">Emily Johnson</h3>
-                            <p class="text-sm italic text-gray-700">Absolutely delicious! My family loved it. The avocado salsa added a refreshing twist.</p>
+                    <!-- Text Area for Comments -->
+                    <textarea id="review-text"
+                              class="w-full rounded-lg border border-gray-300 p-3 text-lg shadow-sm focus:border-blue-400 focus:ring focus:ring-blue-200"
+                              rows="5"
+                              placeholder="Write your comment here..."></textarea>
+
+                    <!-- Submit Button -->
+                    <button id="submit-review"
+                            class="mt-6 w-full rounded-lg bg-blue-500 px-6 py-3 text-lg font-semibold text-white transition-all duration-300 hover:bg-blue-600">
+                        Submit Review
+                    </button>
+                </div>
+
+                <!-- Other Users' Reviews -->
+                <div class="mt-12">
+                    <h2 class="mb-6 text-2xl font-semibold text-gray-800">Reviews</h2>
+
+                    @foreach (var review in Model.RecipeReviews)
+                    {
+                        <div class="mb-6 rounded-lg border border-gray-300 p-6 shadow-md">
+                            <div class="mb-2 flex items-center justify-between">
+                                <p class="text-lg font-semibold text-gray-800">@review.Username</p>
+                                <p class="text-sm text-gray-500">@review.CreatedDate</p>
+                            </div>
+                            <div class="mb-2 flex items-center">
+                                <div class="text-lg text-yellow-400">
+                                    @for (int i = 1; i <= review.Rating; i++)
+                                    {
+                                        <span>&#9733;</span>
+                                    }
+                                    @for (int i = (int)review.Rating + 1; i <= 5; i++)
+                                    {
+                                        <span class="text-gray-300">&#9733;</span>
+                                    }
+                                </div>
+                            </div>
+                            <p class="mt-2 text-lg text-gray-700">@review.Review</p>
+
+                            <div class="mt-4 w-max rounded-full px-3 py-2 text-xs font-medium text-white"
+                                 style="background-color: @(review.IsPositive ? "#16a34a" : "#dc2626")">
+                                @(review.IsPositive ? "Positive" : "Negative")
+                            </div>
+
+                            <!-- Show delete button if the review belongs to the current user -->
+                            @if (review.Username == User.Identity.Name)
+                            {
+                                <button class="delete-review-btn mt-4 rounded-lg bg-red-500 px-4 py-2 text-sm font-semibold text-white transition-all duration-300 hover:bg-red-600"
+                                        data-review-id="@review.Id">
+                                    Delete
+                                </button>
+                            }
                         </div>
-                    </div>
-                    <div class="flex items-start space-x-4 border-b pb-4">
-                        <img src="https://th.bing.com/th/id/OIP.X0EEBK48Xh-aeH0CcTA7JgAAAA?rs=1&pid=ImgDetMain" alt="Avatar" class="h-10 w-10 rounded-full object-cover">
-                        <div>
-                            <h3 class="font-semibold text-gray-800">Michael Brown</h3>
-                            <p class="text-sm italic text-gray-700">Quick, easy, and healthy. Perfect for a light dinner. Highly recommend!</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start space-x-4 border-b pb-4">
-                        <img src="https://th.bing.com/th/id/R.6f009fcfb536e61d890ba97480780455?rik=I69yjt%2fmk7VJZQ&pid=ImgRaw&r=0" alt="Avatar" class="h-10 w-10 rounded-full object-cover">
-                        <div>
-                            <h3 class="font-semibold text-gray-800">Sophia Lee</h3>
-                            <p class="text-sm italic text-gray-700">Tried this for lunch, and it was fantastic! Will definitely make it again.</p>
-                        </div>
-                    </div>
+                    }
                 </div>
             </div>
+
+
+            
 
         </div>
 
@@ -172,3 +186,22 @@
 
     </div>
 </div>
+
+<div class="col-span-4 hidden">
+</div>
+
+<div id="collectionSelector" data-id="@Model.Id" class="fixed inset-0 z-50 hidden items-center justify-center bg-gray-800 bg-opacity-75">
+    <div class="w-96 rounded-lg bg-white p-6 shadow-lg">
+        <h2 class="mb-4 text-lg font-bold text-gray-800">Select a Collection</h2>
+        <ul id="collectionList" class="space-y-2">
+
+        </ul>
+        <button id="confirmSelection" class="mt-4 rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600">
+            OK
+        </button>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/recipe-detail.js"></script>
+}

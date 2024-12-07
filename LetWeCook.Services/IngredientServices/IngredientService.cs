@@ -195,8 +195,15 @@ namespace LetWeCook.Services.IngredientServices
 
         public async Task<List<IngredientDTO>> GetIngredientsNameAndIdAsync(CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            List<Ingredient> result = await _ingredientRepository.GetAllIngredientIdsAndNamesAsync(cancellationToken);
 
+            List<IngredientDTO> ingredientDTOs = result.Select(i => new IngredientDTO
+            {
+                Id = i.Id,
+                IngredientName = i.Name,
+            }).ToList();
+
+            return ingredientDTOs;
 
         }
     }

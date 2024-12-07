@@ -64,7 +64,7 @@ namespace LetWeCook.Services.AuthenticationServices
             {
                 UserName = username,
                 Email = email,
-                DateJoined = DateTime.UtcNow
+                DateJoined = DateTime.Now
             };
 
             IdentityResult result;

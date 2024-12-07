@@ -14,7 +14,9 @@ namespace LetWeCook.Data
 
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<UserProfile> UserProfiles { get; set; }
-
+        public DbSet<DishCollection> DishCollections { get; set; }
+        public DbSet<CollectionRecipe> CollectionRecipes { get; set; }
+        public DbSet<RecipeReview> RecipeReviews { get; set; }
         public LetWeCookDbContext(DbContextOptions<LetWeCookDbContext> options) : base(options)
         {
 

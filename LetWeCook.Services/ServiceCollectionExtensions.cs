@@ -1,16 +1,21 @@
 ﻿using CloudinaryDotNet;
 using LetWeCook.Data;
 using LetWeCook.Data.Entities;
+using LetWeCook.Data.Repositories.CollectionRecipeRepositories;
+using LetWeCook.Data.Repositories.DishCollectionRepositories;
 using LetWeCook.Data.Repositories.IngredientRepositories;
 using LetWeCook.Data.Repositories.IngredientSectionRepositories;
 using LetWeCook.Data.Repositories.MediaUrlRepositories;
 using LetWeCook.Data.Repositories.ProfileRepositories;
 using LetWeCook.Data.Repositories.RecipeRepositories;
+using LetWeCook.Data.Repositories.RecipeReviewRepositories;
 using LetWeCook.Data.Repositories.UnitOfWork;
+using LetWeCook.Services.DishCollectionServices;
 using LetWeCook.Services.FileStorageServices;
 using LetWeCook.Services.IngredientServices;
 using LetWeCook.Services.MediaUrlServices;
 using LetWeCook.Services.ProfileServices;
+using LetWeCook.Services.RecipeReviewServices;
 using LetWeCook.Services.RecipeServices;
 using LetWeCook.Web.Models.Configs;
 using Microsoft.AspNetCore.Identity;
@@ -48,6 +53,9 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IMediaUrlRepository, MediaUrlRepository>();
         services.AddScoped<IRecipeRepository, RecipeRepository>();
         services.AddScoped<IProfileRepository, ProfileRepository>();
+        services.AddScoped<IDishCollectionRepository, DishCollectionRepository>();
+        services.AddScoped<ICollectionRecipeRepository, CollectionRecipeRepository>();
+        services.AddScoped<IRecipeReviewRepository, RecipeReviewRepository>();
 
 
         Cloudinary cloudinary = new Cloudinary(appSettings.CloudinaryUrl);
@@ -59,6 +67,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IRecipeService, RecipeService>();
         services.AddScoped<IMediaUrlService, MediaUrlService>();
         services.AddScoped<IProfileService, ProfileService>();
+        services.AddScoped<IDishCollectionService, DishCollectionService>();
+        services.AddScoped<IRecipeReviewService, RecipeReviewService>();
 
     }
 }

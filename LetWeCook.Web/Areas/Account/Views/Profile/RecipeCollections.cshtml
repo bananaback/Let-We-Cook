@@ -1,0 +1,46 @@
+﻿@{
+    Layout = "_ProfileLayout";
+}
+
+<div class="w-full bg-gray-50 px-6 py-16">
+    <h1 class="mb-6 text-3xl font-bold text-gray-800">My Recipe Collections</h1>
+    <div id="create-collection-btn" class="border-2 cursor-pointer border-transparent bg-green-500 px-4 py-2 font-semibold text-white hover:border-green-800">
+        Create new collection
+    </div>
+    <!-- Container for Collections -->
+    <div id="recipe-collections" class="space-y-8"></div>
+</div>
+
+<!-- Widget -->
+<div id="manage-collection-widget" class="z-10 fixed inset-0 flex hidden items-center justify-center bg-black bg-opacity-50">
+    <div class="relative w-full max-w-lg rounded-lg bg-white p-4">
+        <h3 class="mb-4 text-lg font-semibold text-gray-700">Create New Collection</h3>
+
+        <!-- Collection Name Input -->
+        <input id="collection-name-input"
+               type="text"
+               placeholder="Enter collection name"
+               class="mb-4 w-full rounded border p-2" />
+
+        <!-- Description Input -->
+        <textarea id="collection-description-input"
+                  placeholder="Enter collection description"
+                  class="mb-4 w-full rounded border p-2" rows="4"></textarea>
+
+        <div class="flex justify-end space-x-2">
+            <button id="cancel-btn" class="rounded bg-gray-500 px-4 py-2 text-white hover:bg-gray-600">Cancel</button>
+            <button id="save-btn" class="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600">Save</button>
+        </div>
+    </div>
+</div>
+
+<!-- Loading screen -->
+<div id="loading-overlay" class="z-20 fixed inset-0 flex h-full w-full flex-col items-center justify-center bg-black bg-opacity-50">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 animate-spin fill-white" viewBox="0 -960 960 960"><path d="M480-80q-82 0-155-31.5t-127.5-86Q143-252 111.5-325T80-480q0-83 31.5-155.5t86-127Q252-817 325-848.5T480-880q17 0 28.5 11.5T520-840q0 17-11.5 28.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160q133 0 226.5-93.5T800-480q0-17 11.5-28.5T840-520q17 0 28.5 11.5T880-480q0 82-31.5 155t-86 127.5q-54.5 54.5-127 86T480-80Z" /></svg>
+    <div class="py-2 font-semibold text-white">Loading...</div>
+    <div class="py-2 font-semibold text-white">Thank you for your patience.</div>
+</div>
+
+@section Scripts {
+    <script src="~/js/recipe-collection.js"></script>
+}
