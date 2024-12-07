@@ -15,6 +15,7 @@ namespace LetWeCook.Data.Repositories.MediaUrlRepositories
         public async Task<MediaUrl> AddMediaUrlAsync(MediaUrl mediaUrl, CancellationToken cancellationToken = default)
         {
             await _context.MediaUrls.AddAsync(mediaUrl, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
             return mediaUrl;
         }
 

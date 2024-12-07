@@ -14,6 +14,7 @@
         public DateTime DateCreated { get; set; }
         public List<RecipeIngredientDTO> RecipeIngredientDTOs { get; set; } = new List<RecipeIngredientDTO>();
         public List<StepDTO> StepDTOs { get; set; } = new List<StepDTO>();
+        public List<RecipeReviewDTO> RecipeReviews { get; set; } = new List<RecipeReviewDTO>();
 
     }
 }

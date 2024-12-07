@@ -1,4 +1,5 @@
-﻿using LetWeCook.Services.DTOs;
+﻿using LetWeCook.Services.DishCollectionServices;
+using LetWeCook.Services.DTOs;
 using LetWeCook.Services.ProfileServices;
 using LetWeCook.Services.RecipeServices;
 using LetWeCook.Web.Areas.Account.Models.ViewModels;
@@ -13,11 +14,13 @@ namespace LetWeCook.Web.Areas.Account.Controllers
     {
         private readonly IRecipeService _recipeService;
         private readonly IProfileService _profileService;
+        private readonly IDishCollectionService _dishCollectionService;
         private readonly ILogger<ProfileController> _logger;
-        public ProfileController(IRecipeService recipeService, IProfileService profileService, ILogger<ProfileController> logger)
+        public ProfileController(IRecipeService recipeService, IProfileService profileService, IDishCollectionService dishCollectionService, ILogger<ProfileController> logger)
         {
             _recipeService = recipeService;
             _profileService = profileService;
+            _dishCollectionService = dishCollectionService;
             _logger = logger;
         }
 
@@ -95,6 +98,44 @@ namespace LetWeCook.Web.Areas.Account.Controllers
             List<RecipeDTO> recipes = await _recipeService.GetAllRecipeOverviewByUserIdAsync(userId, cancellationToken);
 
             return View(recipes);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> RecipeCollections(CancellationToken cancellationToken = default)
+        {
+            return View();
+        }
+
+        [Authorize]
+        public async Task<IActionResult> CollectionDetails(Guid id, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                // Fetch the collection details from the service
+                var dishCollectionDTO = await _dishCollectionService.GetCollectionDetailsByIdAsync(id, cancellationToken);
+
+                if (dishCollectionDTO == null)
+                {
+                    return NotFound("Collection not found."); // Return 404 if the collection does not exist
+                }
+
+                // Map the DTO to the ViewModel
+                var viewModel = new CollectionDetailsViewModel
+                {
+                    CollectionId = dishCollectionDTO.Id,
+                    CollectionName = dishCollectionDTO.Name,
+                    CollectionDescription = dishCollectionDTO.Description,
+                    Recipes = dishCollectionDTO.Recipes
+                };
+
+                // Pass the ViewModel to the view
+                return View(viewModel);
+            }
+            catch (Exception ex)
+            {
+                // Log the error (optional) and return an error response
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
     }

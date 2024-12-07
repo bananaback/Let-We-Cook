@@ -87,27 +87,14 @@ namespace LetWeCook.Web.Areas.Cooking.Controllers
                 StepDTOs = request.StepDTOs
             };
 
-            return Ok();
 
-            /*
-            Result<RecipeDTO> createRecipeResult = await _recipeService.CreateRecipeAsync(userIdString, recipeDTO, cancellationToken);
-
-            if (!createRecipeResult.IsSuccess)
-            {
-                return BadRequest(new
-                {
-                    Message = createRecipeResult.Message,
-                    ErrorCode = createRecipeResult.ErrorCode,
-                    Exception = createRecipeResult.Exception?.Message
-                });
-            }
+            RecipeDTO createRecipeResult = await _recipeService.CreateRecipeAsync(userIdString, recipeDTO, cancellationToken);
 
             return Ok(new
             {
                 Message = "Recipe created successfully",
-                Recipe = createRecipeResult.Data
+                Recipe = createRecipeResult
             });
-            */
         }
 
     }

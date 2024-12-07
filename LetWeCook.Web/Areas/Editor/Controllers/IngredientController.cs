@@ -1,4 +1,5 @@
-﻿using LetWeCook.Services.IngredientServices;
+﻿using LetWeCook.Services.DTOs;
+using LetWeCook.Services.IngredientServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,7 +32,11 @@ namespace LetWeCook.Web.Areas.Editor.Controllers
         [HttpGet]
         public async Task<IActionResult> GetIngredientList(CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            // Call service to get the ingredient names and ids
+            List<IngredientDTO> result = await _ingredientService.GetIngredientsNameAndIdAsync(cancellationToken);
+
+            // Return the result with success status and list of IngredientDTOs
+            return Json(new { isSuccess = true, data = result });
         }
 
     }
