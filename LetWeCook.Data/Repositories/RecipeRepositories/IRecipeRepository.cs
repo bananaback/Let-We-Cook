@@ -101,5 +101,7 @@ namespace LetWeCook.Data.Repositories.RecipeRepositories
         /// <exception cref="OperationCanceledException">Thrown if the operation is cancelled via the <paramref name="cancellationToken"/>.</exception>
         Task<List<Recipe>> GetRecipesByDifficultyAsync(string difficulty, int count, CancellationToken cancellationToken);
         Task<List<Recipe>> GetTrendingRecipesAsync(int count, CancellationToken cancellationToken);
+
+        Task DeleteRecipeAsync(Recipe recipe);
     }
 }

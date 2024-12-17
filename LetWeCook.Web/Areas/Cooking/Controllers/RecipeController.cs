@@ -2,6 +2,7 @@
 using LetWeCook.Services.RecipeServices;
 using LetWeCook.Web.Areas.Cooking.Models.Requests;
 using LetWeCook.Web.Areas.Cooking.Models.ViewModels;
+using LetWeCook.Web.Models.Response;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -38,6 +39,15 @@ namespace LetWeCook.Web.Areas.Cooking.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> UserRecipes(Guid id, CancellationToken cancellationToken = default)
+        {
+
+            List<RecipeDTO> recipes = await _recipeService.GetAllRecipeOverviewByUserIdAsync(id, cancellationToken);
+            ViewData["UserId"] = id;
+
+            return View(recipes);
+        }
+
         [HttpGet]
         public async Task<IActionResult> Details(Guid id, CancellationToken cancellationToken = default)
         {
@@ -45,6 +55,72 @@ namespace LetWeCook.Web.Areas.Cooking.Controllers
 
             return View(recipeDTO);
 
+        }
+
+        [HttpGet("/api/recipes/{id:guid}")]
+        public async Task<IActionResult> RecipeDetails(Guid id, CancellationToken cancellationToken = default)
+        {
+            RecipeDTO recipeDTO = await _recipeService.GetRecipeByIdAsync(id, cancellationToken);
+            return Ok(recipeDTO);
+        }
+
+        [HttpPost("api/recipes/{id:guid}")]
+        public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                await _recipeService.DeleteRecipeByIdAsync(id, cancellationToken);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(ex.Message));
+            }
+        }
+
+        [HttpPut("/api/recipes/{id:guid}")]
+        [Authorize]
+        public async Task<IActionResult> Update(Guid id, [FromBody] EditRecipeRequest request, CancellationToken cancellationToken = default)
+        {
+            if (!ModelState.IsValid)
+            {
+                // Log or return the model state errors for debugging
+                var errors = ModelState.Values.SelectMany(v => v.Errors)
+                                               .Select(e => e.ErrorMessage)
+                                               .ToList();
+
+                return BadRequest(new { Message = "Model binding failed", Errors = errors });
+            }
+
+            string userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "";
+
+            if (string.IsNullOrEmpty(userIdString) || !Guid.TryParse(userIdString, out Guid userId))
+            {
+                return Unauthorized();
+            }
+
+            RecipeDTO recipeDTO = new RecipeDTO
+            {
+                Id = request.Id,
+                Title = request.Title,
+                Description = request.Description,
+                Cuisine = request.Cuisine,
+                Difficulty = request.Difficulty,
+                CookTimeInMinutes = request.CookingTimeInMinutes,
+                Serving = request.Serving,
+                CreatedBy = userId,
+                RecipeCoverImage = new MediaUrlDTO
+                {
+                    Id = Guid.Parse(request.CoverImageId)
+                },
+                DateCreated = DateTime.Now,
+                RecipeIngredientDTOs = request.RecipeIngredientDTOs,
+                StepDTOs = request.StepDTOs
+            };
+
+            var updatedRecipe = await _recipeService.UpdateRecipe(userIdString, recipeDTO, cancellationToken);
+
+            return Ok(updatedRecipe);
         }
 
         [HttpPost]

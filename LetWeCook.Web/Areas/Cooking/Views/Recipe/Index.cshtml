@@ -1,5 +1,8 @@
 ﻿@model LetWeCook.Web.Areas.Cooking.Models.ViewModels.RecipeViewModel
-
+@{
+    // Initialize a random number generator
+    var random = new Random();
+}
 <div class="min-h-screen bg-gray-100 p-8">
     <div class="w-full bg-teal-600 py-4 text-center">
         <a href="/" class="text-4xl font-extrabold text-white transition duration-300 hover:text-teal-200">
@@ -95,6 +98,10 @@
     <div class="grid-cols-1 mt-8 grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         @foreach (var recipe in Model.Recipes)
         {
+            // Generate a random rating between 0 and 5
+            var rating = random.NextDouble() * 5;
+            var roundedRating = Math.Round(rating, 1); // Round to 1 decimal place
+
             <a href="@Url.Action("Details", "Recipe", new { area = "Cooking", id = recipe.Id })" class="cursor-pointer overflow-hidden rounded-lg bg-white shadow-lg transition-transform duration-300 hover:scale-105 hover:shadow-xl">
                 <img src="@recipe.RecipeCoverImage.Url" alt="@recipe.RecipeCoverImage.Alt" class="h-48 w-full object-cover" />
                 <div class="p-4">
@@ -106,6 +113,28 @@
                         <span>Cook Time: @recipe.CookTimeInMinutes mins</span>
                         <span class="mx-2">•</span>
                         <span>Servings: @recipe.Serving</span>
+                    </div>
+                    <!-- Star Rating -->
+                    <div class="mt-2 flex items-center gap-1 text-sm text-yellow-500">
+                        @for (var i = 0; i < (int)roundedRating; i++)
+                        {
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 fill-yellow-500" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.482 4.564a1 1 0 00.95.69h4.769c.969 0 1.371 1.24.588 1.81l-3.857 2.802a1 1 0 00-.364 1.118l1.482 4.564c.3.921-.755 1.688-1.54 1.118l-3.857-2.802a1 1 0 00-1.175 0l-3.857 2.802c-.784.57-1.839-.197-1.54-1.118l1.482-4.564a1 1 0 00-.364-1.118L2.37 9.991c-.783-.57-.38-1.81.588-1.81h4.77a1 1 0 00.95-.69L9.049 2.927z" />
+                            </svg>
+                        }
+                        @if (roundedRating % 1 > 0.5)
+                        {
+                            <!-- Add a half-star for fractional ratings -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 fill-yellow-500" viewBox="0 0 20 20" fill="currentColor">
+                                <defs>
+                                    <clipPath id="halfStar">
+                                        <rect x="0" y="0" width="10" height="20" />
+                                    </clipPath>
+                                </defs>
+                                <path clip-path="url(#halfStar)" d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.482 4.564a1 1 0 00.95.69h4.769c.969 0 1.371 1.24.588 1.81l-3.857 2.802a1 1 0 00-.364 1.118l1.482 4.564c.3.921-.755 1.688-1.54 1.118l-3.857-2.802a1 1 0 00-1.175 0l-3.857 2.802c-.784.57-1.839-.197-1.54-1.118l1.482-4.564a1 1 0 00-.364-1.118L2.37 9.991c-.783-.57-.38-1.81.588-1.81h4.77a1 1 0 00.95-.69L9.049 2.927z" />
+                            </svg>
+                        }
+                        <span class="text-gray-600">(@roundedRating)</span>
                     </div>
                 </div>
             </a>

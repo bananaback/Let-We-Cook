@@ -7,6 +7,8 @@
         Back to Recipes
     </a>
 
+    <div class="hidden" id="author-id">@Model.CreatedBy</div>
+
     <div class="flex justify-center space-x-6">
         <!-- Main Content Area -->
         <div class="w-full max-w-3xl">
@@ -106,6 +108,31 @@
 
                 </div>
             </div>
+
+            <div id="user-bio-card" class="mx-auto my-8 max-w-lg rounded-xl bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100 p-6 shadow-lg">
+                <!-- Profile Info -->
+                <div class="flex items-center space-x-6">
+                    <!-- Profile Picture -->
+                    <img id="author-avatar" src="https://via.placeholder.com/80" alt="Profile Picture" class="border-4 h-24 w-24 rounded-full border-white shadow-md">
+
+                    <!-- Info Section -->
+                    <div class="flex-1">
+                        <h2 id="author-name" class="text-2xl font-bold text-gray-800">Loading...</h2>
+                        <p id="author-details" class="mt-1 text-sm text-gray-600">Fetching details...</p>
+                        <p id="author-contact" class="mt-1 text-sm text-gray-600">Contact: <span class="font-medium text-gray-700">N/A</span></p>
+                    </div>
+                </div>
+
+                <!-- Divider -->
+                <div class="my-4 border-t border-gray-300"></div>
+
+                <!-- Quote Section -->
+                <div id="chef-quote" class="mt-4 text-center">
+                    <p class="text-lg italic text-gray-700">"Cooking is an art, and every dish tells a story."</p>
+                </div>
+            </div>
+
+
 
             <div class="container mx-auto py-8">
                 <!-- Add Review Section -->

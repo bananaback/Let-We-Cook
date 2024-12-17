@@ -19,5 +19,7 @@ namespace LetWeCook.Services.RecipeServices
         Task<List<RecipeDTO>> GetRecipesByDifficultyAsync(string difficulty, int count, CancellationToken cancellationToken);
 
         Task<List<RecipeDTO>> GetTrendingRecipesAsync(int count, CancellationToken cancellationToken);
+        Task DeleteRecipeByIdAsync(Guid id, CancellationToken cancellationToken);
+        Task<RecipeDTO> UpdateRecipe(string userId, RecipeDTO recipeDTO, CancellationToken cancellationToken);
     }
 }

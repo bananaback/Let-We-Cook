@@ -24,6 +24,13 @@ namespace LetWeCook.Web.Areas.Account.Controllers
             _logger = logger;
         }
 
+        [HttpGet("/api/profile/{id:guid}")]
+        public async Task<IActionResult> GetUserBio(Guid id, CancellationToken cancellationToken = default)
+        {
+            return Ok(await _profileService.GetUserProfileAsync(id.ToString(), cancellationToken));
+        }
+
+
         [Authorize]
         [HttpGet]
         public async Task<IActionResult> Index(CancellationToken cancellationToken = default)
