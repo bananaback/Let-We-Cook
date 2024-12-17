@@ -70,9 +70,18 @@ namespace LetWeCook.Services.ProfileServices
                     };
                 }
 
+                var currUser = await _userManager.FindByIdAsync(userIdString);
+                var currentClaims = await _userManager.GetClaimsAsync(currUser!);
+                var existingPictureClaim = currentClaims.FirstOrDefault(c => c.Type == "picture");
+                string avatarUrl = existingPictureClaim?.Value ?? "https://th.bing.com/th/id/OIP.6UhgwprABi3-dz8Qs85FvwHaHa?rs=1&pid=ImgDetMain";
+                ;
+
+
+
                 return new ProfileDTO
                 {
                     Id = userProfile.Id,
+                    AvatarUrl = avatarUrl,
                     UserId = userId,
                     UserName = userProfile.User.UserName ?? string.Empty,
                     DateJoined = userProfile.User.DateJoined,
@@ -81,10 +90,12 @@ namespace LetWeCook.Services.ProfileServices
                     FirstName = userProfile.FirstName,
                     LastName = userProfile.LastName,
                     Age = userProfile.Age,
+                    Gender = userProfile.Gender.ToString(),
                     Address = userProfile.Address
                 };
 
             }
+
             catch (ArgumentNullException ex)
             {
                 throw new UserProfileRetrievalException("Failed to retrie user profile", ex);

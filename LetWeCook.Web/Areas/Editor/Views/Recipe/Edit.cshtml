@@ -1,0 +1,164 @@
+﻿<div class="relative h-full min-h-screen w-full">
+    <div id="loading-screen" class="absolute flex hidden h-full w-full flex-col items-center justify-center bg-gray-800 opacity-50">
+        <svg class="h-24 w-24 animate-spin fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M480-80q-82 0-155-31.5t-127.5-86Q143-252 111.5-325T80-480q0-83 31.5-155.5t86-127Q252-817 325-848.5T480-880q17 0 28.5 11.5T520-840q0 17-11.5 28.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160q133 0 226.5-93.5T800-480q0-17 11.5-28.5T840-520q17 0 28.5 11.5T880-480q0 82-31.5 155t-86 127.5q-54.5 54.5-127 86T480-80Z" /></svg>
+        <div class="text-center font-semibold text-white">
+            We're processing your request...
+        </div>
+    </div>
+
+    <div class="notification-area sticky top-0 flex h-16 w-full flex-row items-center justify-center bg-green-500">
+        <div class="noti-message w-full px-8 font-semibold text-white">
+            We've updated your recipe successfully!
+        </div>
+        <div class="buttons flex h-full flex-row items-center justify-center gap-x-6 pr-4">
+            <a href="/" id="recipe-detail-btn" class="border-2 flex h-9 w-36 cursor-pointer items-center justify-center rounded-lg border-orange-500 bg-orange-500 px-4 py-2 text-center text-sm font-semibold text-white hover:border-white">
+                View Details
+            </a>
+            <a href="/Editor/Recipe" class="border-2 flex h-9 w-36 cursor-pointer items-center justify-center rounded-lg border-green-500 bg-white px-4 py-2 text-center text-sm font-semibold text-green-500 hover:border-white">
+                New Recipe
+            </a>
+
+        </div>
+        <div class="mr-4" id="success-message-close-btn">
+            <svg class="h-8 w-8 fill-white hover:fill-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" /></svg>
+        </div>
+    </div>
+
+    <div class="flex min-h-screen w-full items-start justify-center bg-gray-50 p-5">
+        <!-- Editor Section -->
+        <div class="mr-5 w-1/2 rounded-lg bg-white p-8 shadow-lg">
+            <h1 class="mb-6 text-center text-4xl font-bold text-gray-800">Edit your recipe</h1>
+            <div id="recipe-id" class="hidden">@ViewData["RecipeId"]</div>
+            <div class="">
+                <!-- Recipe Title -->
+                <div>
+                    <label for="title" class="mb-2 block text-lg font-semibold text-gray-700">Recipe Title</label>
+                    <input type="text" id="title" class="w-full rounded border border-gray-300 px-3 py-2 text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Enter the recipe title" required>
+                </div>
+
+                <!-- Description -->
+                <div class="mt-4">
+                    <label for="description" class="mb-2 block text-lg font-semibold text-gray-700">Description</label>
+                    <textarea id="description" class="w-full rounded border border-gray-300 px-3 py-2 text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Enter recipe description" required></textarea>
+                </div>
+
+                <!-- Cover Image Section -->
+                <div class="mt-4 flex w-full flex-col items-start justify-center">
+                    <div class="my-2 block text-lg font-semibold text-gray-700">
+                        Cover Image
+                    </div>
+                    <button data-type="cover" type="button" class="uploadImageButton mt-2 w-1/3 rounded border bg-blue-500 p-2 text-white">Upload Cover Image</button>
+
+                    <!-- Cover Image Preview -->
+                    <img id="coverImagePreview" src="" class="my-4 hidden h-auto w-full rounded-md border object-cover" alt="Cover Image Preview">
+
+                    <div id="coverMediaId" value="" class="hidden"></div>
+
+                    <!-- Info Text -->
+                    <p id="coverImageInfo" class="hidden text-sm text-gray-500">The cover image should be at least 800x600 pixels for best quality.</p>
+                </div>
+
+                <!-- Cuisine Dropdown -->
+                <div class="mt-4">
+                    <label for="cuisine" class="mb-2 block text-lg font-semibold text-gray-700">Cuisine</label>
+                    <select id="cuisine" class="w-full rounded border border-gray-300 px-3 py-2 text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+                        <option value="" disabled selected>Select Cuisine</option>
+                        <option value="Vietnamese">Vietnamese</option>
+                        <option value="Italian">Italian</option>
+                        <option value="Chinese">Chinese</option>
+                        <option value="Indian">Indian</option>
+                        <option value="Mexican">Mexican</option>
+                        <option value="American">American</option>
+                        <option value="Japanese">Japanese</option>
+                        <!-- Add more cuisines as needed -->
+                    </select>
+                </div>
+
+                <!-- Difficulty Dropdown -->
+                <div class="mt-4">
+                    <label for="difficulty" class="mb-2 block text-lg font-semibold text-gray-700">Difficulty</label>
+                    <select id="difficulty" class="w-full rounded border border-gray-300 px-3 py-2 text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+                        <option value="" disabled selected>Select Difficulty</option>
+                        <option value="EASY">Easy</option>
+                        <option value="MEDIUM">Medium</option>
+                        <option value="HARD">Hard</option>
+                    </select>
+                </div>
+
+                <!-- Cook Time -->
+                <div class="mt-4">
+                    <label for="cookTime" class="mb-2 block text-lg font-semibold text-gray-700">Cook Time (in minutes)</label>
+                    <input type="number" id="cookTime" class="w-full rounded border border-gray-300 px-3 py-2 text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Enter cook time in minutes" step="0.1" min="0" required>
+                </div>
+
+                <!-- Serving -->
+                <div class="mt-4">
+                    <label for="serving" class="mb-2 block text-lg font-semibold text-gray-700">Servings</label>
+                    <input type="number" id="serving" class="w-full rounded border border-gray-300 px-3 py-2 text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Enter number of servings" min="1" required>
+                </div>
+
+                <!-- Ingredient Section -->
+                <div class="my-4" id="ingredientsSection">
+                    <button type="button" id="addIngredientButton" class="mt-4 rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600">Add Ingredient</button>
+                    <!-- Dynamic Ingredient Dropdowns will be added here -->
+                </div>
+
+
+
+
+                <!-- Steps Section -->
+                <div id="stepsContainer" class="space-y-4">
+                </div>
+
+                <!-- Add Step Button -->
+                <button type="button" id="addStepButton" class="mt-4 rounded bg-green-500 px-4 py-2 text-white hover:bg-green-600">Add Step</button>
+
+                <div id="preview-btn" class="mt-5 flex cursor-pointer items-center justify-center rounded-md bg-green-400 px-4 py-2 text-center text-xl font-semibold">Preview ></div>
+            </div>
+        </div>
+
+        <!-- Preview Section -->
+        <div class="w-1/2 rounded-lg bg-white p-8 shadow-lg" id="recipePreview">
+            <h1 class="mb-6 text-center text-4xl font-bold text-gray-800">Recipe Preview</h1>
+
+            <!-- Cover Image -->
+            <div class="mb-6 flex justify-center">
+                <img id="coverImagePreviewPreview" src="" alt="Cover Image" class="h-auto w-full rounded-lg object-cover shadow-md" />
+            </div>
+
+            <!-- Title -->
+            <h2 id="recipeTitle" class="mb-4 text-center text-3xl font-semibold text-gray-800"></h2>
+
+            <!-- Description -->
+            <p id="recipeDescription" class="mb-6 text-center text-gray-600"></p>
+
+            <!-- Details (Cuisine, Difficulty, Cook Time, Servings) -->
+            <div class="mb-6 flex justify-center gap-3">
+                <span id="recipeCuisine" class="h-9 min-w-12 rounded-lg bg-blue-200 px-4 py-2 text-sm font-semibold text-blue-800"></span>
+                <span id="recipeDifficulty" class="h-9 min-w-12 rounded-lg bg-red-200 px-4 py-2 text-sm font-semibold text-red-800"></span>
+                <span id="recipeCookTime" class="h-9 min-w-12 rounded-lg bg-green-200 px-4 py-2 text-sm font-semibold text-green-800"></span>
+                <span id="recipeServings" class="h-9 min-w-12 rounded-lg bg-purple-200 px-4 py-2 text-sm font-semibold text-purple-800"></span>
+            </div>
+
+            <!-- Ingredients List -->
+            <h3 class="mb-2 text-xl font-semibold text-gray-700">Ingredients</h3>
+            <div id="ingredientsList" class="grid-cols-1 mb-6 grid gap-3 text-gray-600"></div>
+
+            <!-- Steps List -->
+            <h3 class="mb-2 text-xl font-semibold text-gray-700">Steps</h3>
+            <div id="stepsList" class="space-y-4 pb-4 text-gray-600"></div>
+
+            <button id="save-recipe-button" class="rounded-lg bg-blue-500 px-4 py-2 text-lg font-semibold text-white">Save Recipe</button>
+        </div>
+
+
+
+    </div>
+</div>
+
+
+
+@section Scripts {
+        <script src="https://upload-widget.cloudinary.com/latest/global/all.js" type="text/javascript"></script>
+        <script src="~/js/recipe-edit.js"></script>
+}

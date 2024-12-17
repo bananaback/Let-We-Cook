@@ -194,7 +194,23 @@ namespace LetWeCook.Services.RecipeServices
                 throw new RecipeCreationException("Failed to save recipe changes.", saveEx);
             }
 
+            recipeDTO.Id = createdRecipe.Id;
+
             return recipeDTO;
+        }
+
+        public async Task DeleteRecipeByIdAsync(Guid id, CancellationToken cancellationToken)
+        {
+            Recipe? recipe = await _recipeRepository.GetRecipeDetailsByIdAsync(id, cancellationToken);
+
+            if (recipe == null)
+            {
+                throw new RecipeRetrievalException($"Recipe with id {id} not found.");
+            }
+
+            await _recipeRepository.DeleteRecipeAsync(recipe);
+
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
 
         public async Task<List<RecipeDTO>> GetAllRecipeOverviewByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
@@ -536,5 +552,24 @@ namespace LetWeCook.Services.RecipeServices
 
         }
 
+        public async Task<RecipeDTO> UpdateRecipe(string userId, RecipeDTO recipeDTO, CancellationToken cancellationToken)
+        {
+            Recipe? recipe = await _recipeRepository.GetRecipeDetailsByIdAsync(recipeDTO.Id, cancellationToken);
+            if (recipe == null)
+            {
+                throw new RecipeRetrievalException($"Recipe with id {recipeDTO.Id} not found.");
+            }
+
+            if (recipe.CreatedBy.Id.ToString() != userId)
+            {
+                throw new RecipeUpdateException("User not own this recipe");
+            }
+
+            await DeleteRecipeByIdAsync(recipe.Id, cancellationToken);
+
+            var updatedRecipe = await CreateRecipeAsync(userId, recipeDTO, cancellationToken);
+
+            return updatedRecipe;
+        }
     }
 }

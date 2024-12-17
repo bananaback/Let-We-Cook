@@ -1,0 +1,67 @@
+﻿@model List<LetWeCook.Services.DTOs.RecipeDTO>
+
+<div class="hidden" id="author-id">
+    @ViewData["UserId"]
+</div>
+
+<div class="container mx-auto px-6 py-16">
+    <div id="user-bio-card" class="mx-auto my-8 w-3/4 rounded-xl bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100 p-6 shadow-lg">
+        <!-- Profile Info -->
+        <div class="flex items-center space-x-6">
+            <!-- Profile Picture -->
+            <img id="author-avatar" src="https://via.placeholder.com/80" alt="Profile Picture" class="border-4 h-24 w-24 rounded-full border-white shadow-md">
+
+            <!-- Info Section -->
+            <div class="flex-1">
+                <h2 id="author-name" class="text-2xl font-bold text-gray-800">Loading...</h2>
+                <p id="author-details" class="mt-1 text-sm text-gray-600">Fetching details...</p>
+                <p id="author-contact" class="mt-1 text-sm text-gray-600">Contact: <span class="font-medium text-gray-700">N/A</span></p>
+            </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="my-4 border-t border-gray-300"></div>
+
+        <!-- Quote Section -->
+        <div id="chef-quote" class="mt-4 text-center">
+            <p class="text-lg italic text-gray-700">"Cooking is an art, and every dish tells a story."</p>
+        </div>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="grid-cols-1 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            @foreach (var recipe in Model)
+            {
+                <div class="overflow-hidden rounded-md bg-white shadow-lg transition duration-300 hover:shadow-xl">
+                    <img src="@recipe.RecipeCoverImage.Url" alt="@recipe.Title" class="h-48 w-full object-cover">
+                    <div class="flex flex-col items-center justify-center gap-y-4 p-4">
+                        <h2 class="h-12 text-ellipsis text-center text-xl font-semibold">@recipe.Title</h2>
+                        <p class="line-clamp-4 leading-[1.5rem] h-[6rem] overflow-hidden text-gray-600">
+                            @recipe.Description
+                        </p>
+
+                        <a href="@Url.Action("Details", "Recipe", new { area = "Cooking", id = recipe.Id })" class="flex w-3/4 flex-row items-center justify-center gap-x-2 rounded-lg bg-blue-500 px-4 py-2 hover:bg-blue-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 fill-white" viewBox="0 -960 960 960">
+                                <path d="M440-280h80v-240h-80v240Zm40-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+                            </svg>
+                            <div class="font-semibold text-white">Details</div>
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <!-- No recipes message -->
+        <div class="flex flex-col items-center justify-center text-center text-gray-600">
+            <p class="text-lg">This author hasn't added any recipes yet.</p>
+            <img src="https://via.placeholder.com/400x300?text=No+Recipes" alt="No recipes" class="mt-6 max-w-xs rounded-lg shadow-md">
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script src="~/js/user-recipes.js"></script>
+}

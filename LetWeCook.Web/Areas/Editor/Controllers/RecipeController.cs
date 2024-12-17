@@ -11,5 +11,14 @@ namespace LetWeCook.Web.Areas.Editor.Controllers
         {
             return View();
         }
+
+        [Authorize]
+
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            ViewData["RecipeId"] = id;
+
+            return View();
+        }
     }
 }
