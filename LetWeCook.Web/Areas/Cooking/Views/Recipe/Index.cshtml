@@ -19,7 +19,7 @@
             <!-- Search Bar -->
             <div class="relative w-full max-w-md">
                 <input type="text" name="SearchTerm" value="@Model.SearchTerm" placeholder="Search recipes..."
-                       class="w-full rounded-lg border border-gray-300 px-4 py-4 text-gray-700 shadow focus:outline-none focus:ring-2 focus:ring-blue-400" />
+                class="w-full rounded-lg border border-gray-300 px-4 py-4 text-gray-700 shadow focus:outline-none focus:ring-2 focus:ring-blue-400" />
             </div>
 
             <!-- Filter Section -->
@@ -47,8 +47,8 @@
                     <label for="cookTimeRange" class="text-base font-medium text-blue-600">Cook time:</label>
                     <div class="flex items-center space-x-2">
                         <input type="range" name="CookTime" min="0" max="120" step="5" value="@Model.CookTime"
-                               id="cookTimeRange"
-                               class="h-2 w-3/4 cursor-pointer appearance-none rounded-lg bg-blue-300 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400" />
+                        id="cookTimeRange"
+                        class="h-2 w-3/4 cursor-pointer appearance-none rounded-lg bg-blue-300 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400" />
                         <span id="cookTimeValue" class="text-base font-semibold text-blue-600">@Model.CookTime minutes</span>
                     </div>
                 </div>
@@ -58,8 +58,8 @@
                     <label for="servingsRange" class="font-medium text-green-600">Servings:</label>
                     <div class="flex items-center space-x-2">
                         <input type="range" name="Servings" min="0" max="10" step="1" value="@Model.Servings"
-                               id="servingsRange"
-                               class="h-2 w-3/4 cursor-pointer appearance-none rounded-lg bg-green-300 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-400" />
+                        id="servingsRange"
+                        class="h-2 w-3/4 cursor-pointer appearance-none rounded-lg bg-green-300 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-400" />
                         <span id="servingsValue" class="font-semibold text-green-600">@Model.Servings peoples</span>
                     </div>
                 </div>
@@ -70,7 +70,7 @@
             <!-- Sort Dropdown -->
             <select name="SortBy" class="w-48 max-w-xs rounded border border-gray-300 px-3 py-2 shadow focus:outline-none focus:ring-2 focus:ring-blue-400">
                 <option value="" selected>Sort by</option>
-                <option value="Popular" selected=@(Model.SortBy == "Popular")>Most Popular</option>
+                <option value="Name" selected=@(Model.SortBy == "Name")>Name</option>
                 <option value="Newest" selected=@(Model.SortBy == "Newest")>Newest</option>
                 <option value="Rating" selected=@(Model.SortBy == "Rating")>Top Rated</option>
             </select>
@@ -99,7 +99,8 @@
         @foreach (var recipe in Model.Recipes)
         {
             // Generate a random rating between 0 and 5
-            var rating = random.NextDouble() * 5;
+            //var rating = random.NextDouble() * 5;
+            var rating = (double)recipe.AverageRating;
             var roundedRating = Math.Round(rating, 1); // Round to 1 decimal place
 
             <a href="@Url.Action("Details", "Recipe", new { area = "Cooking", id = recipe.Id })" class="cursor-pointer overflow-hidden rounded-lg bg-white shadow-lg transition-transform duration-300 hover:scale-105 hover:shadow-xl">

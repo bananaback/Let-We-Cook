@@ -14,6 +14,7 @@ namespace LetWeCook.Data.Entities
         public ApplicationUser CreatedBy { get; set; } = null!;
         public MediaUrl? RecipeCoverImage { get; set; }
         public DateTime DateCreated { get; set; }
+        public decimal AverageRating { get; set; } = 0;
 
         public List<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
         public List<RecipeIngredient> RecipeIngredients { get; set; } = new List<RecipeIngredient>();

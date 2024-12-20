@@ -62,5 +62,7 @@ namespace LetWeCook.Data.Repositories.IngredientRepositories
         /// <exception cref="OperationCanceledException">Thrown if the operation is canceled via the <paramref name="cancellationToken"/>.</exception>
         Task<Ingredient?> GetIngredientByIdAsync(Guid id, CancellationToken cancellationToken);
 
+        Task DeleteIngredientAsync(Ingredient ingredient);
+        Task UpdateIngredient(Ingredient ingredient);
     }
 }

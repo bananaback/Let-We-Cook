@@ -42,6 +42,7 @@ namespace LetWeCook.Data.Repositories.IngredientRepositories
             return await _context.Ingredients
                 .Include(i => i.CoverImageUrl)                // Eagerly load CoverImageUrl
                 .Include(i => i.IngredientSections)           // Eagerly load IngredientSections
+                .ThenInclude(ins => ins.MediaUrl)
                 .FirstOrDefaultAsync(i => i.Id == id, cancellationToken);
         }
 
@@ -64,5 +65,16 @@ namespace LetWeCook.Data.Repositories.IngredientRepositories
                 .FirstOrDefaultAsync(cancellationToken);
         }
 
+        public async Task DeleteIngredientAsync(Ingredient ingredient)
+        {
+            _context.Ingredients.Remove(ingredient);
+            await Task.CompletedTask;
+        }
+
+        public async Task UpdateIngredient(Ingredient ingredient)
+        {
+            _context.Ingredients.Update(ingredient);
+            await Task.CompletedTask;
+        }
     }
 }

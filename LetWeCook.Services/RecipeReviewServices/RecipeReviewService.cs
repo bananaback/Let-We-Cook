@@ -60,11 +60,23 @@ namespace LetWeCook.Services.RecipeReviewServices
 
             var savedReview = await _recipeReviewRepository.AddReviewAsync(recipeReview, cancellationToken);
 
+            // Save changes to ensure the review is persisted
             int res = await _unitOfWork.SaveChangesAsync(cancellationToken);
             if (res <= 0)
             {
                 throw new RecipeReviewCreationException("Cannot save changes after create recipe review");
             }
+
+            // Recalculate the average rating
+            var reviews = await _recipeReviewRepository.GetAllReviewsByRecipeIdAsync(recipeId, cancellationToken);
+
+            decimal averageRating = reviews.Any() ? reviews.Average(r => r.Rating) : rating;
+
+            recipe.AverageRating = averageRating;
+
+            // Save updated recipe with the new average rating
+            await _recipeRepository.UpdateRecipe(recipe);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return new RecipeReviewDTO
             {
@@ -75,8 +87,8 @@ namespace LetWeCook.Services.RecipeReviewServices
                 Rating = rating,
                 CreatedDate = savedReview.CreatedDate,
             };
-
         }
+
 
         public async Task<bool> DeleteReviewForUser(string userId, Guid reviewId, CancellationToken cancellationToken)
         {

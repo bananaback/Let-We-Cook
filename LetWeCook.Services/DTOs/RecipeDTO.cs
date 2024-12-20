@@ -10,6 +10,7 @@
         public decimal CookTimeInMinutes { get; set; }
         public int Serving { get; set; }
         public Guid CreatedBy { get; set; }
+        public decimal AverageRating { get; set; }
         public MediaUrlDTO RecipeCoverImage { get; set; } = null!;
         public DateTime DateCreated { get; set; }
         public List<RecipeIngredientDTO> RecipeIngredientDTOs { get; set; } = new List<RecipeIngredientDTO>();

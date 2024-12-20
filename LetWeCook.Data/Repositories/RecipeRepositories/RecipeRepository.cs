@@ -198,5 +198,11 @@ namespace LetWeCook.Data.Repositories.RecipeRepositories
             _context.Recipes.Remove(recipe);
             await Task.CompletedTask;
         }
+
+        public async Task UpdateRecipe(Recipe recipe)
+        {
+            _context.Recipes.Update(recipe);
+            await Task.CompletedTask;
+        }
     }
 }

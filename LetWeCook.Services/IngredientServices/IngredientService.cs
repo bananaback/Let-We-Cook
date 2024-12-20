@@ -206,5 +206,47 @@ namespace LetWeCook.Services.IngredientServices
             return ingredientDTOs;
 
         }
+
+        public async Task DeleteIngredientByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        {
+            Ingredient? ingredient = await _ingredientRepository.GetIngredientByIdAsync(id, cancellationToken);
+
+            if (ingredient == null)
+            {
+                throw new IngredientRetrievalException($"Ingredient with id {id} not found.");
+            }
+
+            await _ingredientRepository.DeleteIngredientAsync(ingredient);
+
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task<IngredientDTO> UpdateIngredientAsync(RawIngredientDTO ingredientDTO, CancellationToken cancellationToken = default)
+        {
+            Ingredient? ingredient = await _ingredientRepository.GetIngredientWithDetailsByIdAsync(ingredientDTO.Id, cancellationToken);
+            if (ingredient == null)
+            {
+                throw new IngredientRetrievalException($"Ingredient with id {ingredientDTO.Id} not found.");
+
+            }
+
+            ingredient.Name = ingredientDTO.IngredientName;
+            ingredient.Description = ingredientDTO.IngredientDescription;
+            ingredient.CoverImageUrl!.Url = ingredientDTO.CoverImageUrl;
+
+            ingredient.IngredientSections.Clear();
+
+            // Step 3: Persist ingredient sections
+            ingredient.IngredientSections = await PersistIngredientSectionsAsync(ingredientDTO.RawFrameDTOs, ingredient, cancellationToken);
+
+            // Step 4: Persist ingredient
+            await _ingredientRepository.UpdateIngredient(ingredient);
+
+            // Step 5: Save changes in a whole with unit of work
+            int saveChangesResult = await SaveChangesAsync(cancellationToken);
+
+            // Return the resulting DTO
+            return new IngredientDTO();
+        }
     }
 }

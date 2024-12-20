@@ -1,8 +1,8 @@
 ﻿using LetWeCook.Web.Areas.Cooking.Models.DTOs;
 
-namespace LetWeCook.Services.DTOs
+namespace LetWeCook.Web.Areas.Cooking.Models.Requests
 {
-    public class RawIngredientDTO
+    public class UpdateIngredientRequest
     {
         public Guid Id { get; set; }
         public string IngredientName { get; set; } = string.Empty;
