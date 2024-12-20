@@ -7,7 +7,21 @@
         </a>
     </div>
 
+    <!-- Admin Actions -->
+    @if (User.IsInRole("Admin"))
+    {
+        <div class="my-6 flex items-center justify-center space-x-4">
+            <a href="/Editor/Ingredient" class="create-btn rounded-lg bg-green-500 px-4 py-2 text-white transition duration-200 ease-in-out hover:bg-green-400">
+                Create Ingredient
+            </a>
+            <div class="font-semibold">
+                Hello admin, create new ingredient here
+            </div>
+        </div>
+    }
+
     <h1 class="mt-8 text-3xl font-bold text-gray-800">Ingredients</h1>
+
 
     <!-- Search Form -->
     <div class="mb-4 mt-6">

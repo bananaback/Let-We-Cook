@@ -48,6 +48,9 @@ namespace LetWeCook.Data.Configurations
             builder.Property(r => r.DateCreated)
                 .HasColumnName("date_created");
 
+            builder.Property(r => r.AverageRating)
+                .HasColumnName("averate_rating");
+
             builder.HasMany(r => r.Ingredients)
                 .WithMany(i => i.Recipes)
                 .UsingEntity<RecipeIngredient>(

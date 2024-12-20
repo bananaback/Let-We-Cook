@@ -40,6 +40,42 @@ namespace LetWeCook.Web.Areas.Cooking.Controllers
             return View(model);
         }
 
+        [HttpPost("api/ingredients/")]
+        public async Task<IActionResult> UpdateIngredient([FromBody] UpdateIngredientRequest request, CancellationToken cancellationToken = default)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errorMessage = string.Join("; ", ModelState
+                    .Where(ms => ms.Value!.Errors.Count > 0)
+                    .SelectMany(ms => ms.Value!.Errors.Select(e => e.ErrorMessage)));
+
+                return BadRequest(new ErrorResponse(errorMessage));
+            }
+
+            RawIngredientDTO rawIngredientDto = new RawIngredientDTO
+            {
+                Id = request.Id,
+                IngredientName = request.IngredientName,
+                IngredientDescription = request.IngredientDescription,
+                CoverImageUrl = request.CoverImageUrl,
+                RawFrameDTOs = request.RawFrameDTOs
+            };
+
+            try
+            {
+                IngredientDTO ingredientDTO = await _ingredientService.UpdateIngredientAsync(rawIngredientDto, cancellationToken);
+                return Ok(new
+                {
+                    Message = "Ingredient updated successfully",
+                    Ingredient = ingredientDTO
+                });
+            }
+            catch (IngredientUpdateException ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(ex.Message));
+            }
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> CreateIngredient([FromBody] CreateIngredientRequest request, CancellationToken cancellationToken = default)
@@ -99,6 +135,37 @@ namespace LetWeCook.Web.Areas.Cooking.Controllers
         public async Task<IActionResult> Error()
         {
             return View();
+        }
+
+        [HttpGet("/api/ingredients/{id:guid}")]
+        public async Task<IActionResult> GetRecipeDetails(Guid id, CancellationToken cancellationToken = default)
+        {
+            IngredientDTO ingredient = await _ingredientService.GetIngredientByIdAsync(id, cancellationToken);
+
+            var ingredientDetailsViewModel = new IngredientDetailsViewModel
+            {
+                Id = ingredient.Id,
+                IngredientName = ingredient.IngredientName,
+                IngredientDescription = ingredient.IngredientDescription,
+                CoverImageUrl = ingredient.CoverImageUrl,
+                Frames = ingredient.Frames
+            };
+
+            return Ok(ingredientDetailsViewModel);
+        }
+
+        [HttpDelete("api/ingredients/{id:guid}")]
+        public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                await _ingredientService.DeleteIngredientByIdAsync(id, cancellationToken);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(ex.Message));
+            }
         }
     }
 }

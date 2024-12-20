@@ -103,5 +103,6 @@ namespace LetWeCook.Data.Repositories.RecipeRepositories
         Task<List<Recipe>> GetTrendingRecipesAsync(int count, CancellationToken cancellationToken);
 
         Task DeleteRecipeAsync(Recipe recipe);
+        Task UpdateRecipe(Recipe recipe);
     }
 }

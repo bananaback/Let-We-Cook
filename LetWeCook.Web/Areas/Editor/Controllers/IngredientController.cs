@@ -21,6 +21,14 @@ namespace LetWeCook.Web.Areas.Editor.Controllers
             return View();
         }
 
+        // Secured Index action for Admin role only
+        [Authorize(Roles = "Admin")] // Only users with the Admin role can access this action
+        public async Task<IActionResult> Edit(Guid id, CancellationToken cancellationToken = default)
+        {
+            ViewData["IngredientId"] = id;
+            return View();
+        }
+
         // New endpoint that returns a single line of text
         [HttpGet]
         [AllowAnonymous] // Allow anyone to access this action

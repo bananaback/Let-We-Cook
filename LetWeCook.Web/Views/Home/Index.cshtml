@@ -27,21 +27,16 @@
 <div class="flex w-full flex-col items-center justify-center">
     <div class="header-bar flex w-full flex-row items-center justify-between">
         <div class="nav-bar flex flex-row items-center justify-center gap-x-4 py-4">
-            <a href ="@Url.Action("Index", "Recipe", new { area = "Cooking" })" class="flex h-11 w-36 cursor-pointer items-center justify-center rounded-[20px] border-[#FF2600] text-center text-xl font-medium text-[#575757] hover:border-2">
-                Recipes
-            </a>
+            
             <div class="flex h-11 w-36 cursor-pointer items-center justify-center rounded-[20px] border-[#FF2600] text-center text-xl font-medium text-[#575757] hover:border-2">
                 About
             </div>
+            <a href="@Url.Action("Index", "Recipe", new { area = "Cooking" })" class="flex h-11 w-36 cursor-pointer items-center justify-center rounded-[20px] border-[#FF2600] text-center text-xl font-medium text-[#575757] hover:border-2">
+                Recipes
+            </a>
             <a href="@Url.Action("Index", "Ingredient", new { area = "Cooking" })" class="flex h-11 w-36 cursor-pointer items-center justify-center rounded-[20px] border-[#FF2600] text-center text-xl font-medium text-[#575757] hover:border-2">
                 Ingredients
             </a>
-            <div class="flex h-11 w-36 cursor-pointer items-center justify-center rounded-[20px] border-[#FF2600] text-center text-xl font-medium text-[#575757] hover:border-2">
-                Courses
-            </div>
-            <div class="flex h-11 w-36 cursor-pointer items-center justify-center rounded-[20px] border-[#FF2600] text-center text-xl font-medium text-[#575757] hover:border-2">
-                News
-            </div>
         </div>
         <div class="right-panel flex flex-row items-center justify-center">
             @if (User.Identity!.IsAuthenticated)

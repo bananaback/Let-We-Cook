@@ -482,6 +482,15 @@ namespace LetWeCook.Services.RecipeServices
                         .ToList();
                 }
 
+                // Apply sorting
+                filteredRecipes = sortBy switch
+                {
+                    "Newest" => filteredRecipes.OrderByDescending(r => r.DateCreated).ToList(),
+                    "Name" => filteredRecipes.OrderBy(r => r.Title).ToList(),
+                    "Rating" => filteredRecipes.OrderByDescending(r => r.AverageRating).ToList(),
+                    _ => filteredRecipes // Default, no sorting
+                };
+
                 int totalItems = filteredRecipes.Count;
 
                 var pagedRecipes = filteredRecipes
@@ -497,6 +506,7 @@ namespace LetWeCook.Services.RecipeServices
                         CookTimeInMinutes = r.CookTimeInMinutes,
                         Serving = r.Serving,
                         CreatedBy = r.CreatedBy.Id,
+                        AverageRating = r.AverageRating,
                         RecipeCoverImage = new MediaUrlDTO
                         {
                             Id = r.RecipeCoverImage!.Id,
