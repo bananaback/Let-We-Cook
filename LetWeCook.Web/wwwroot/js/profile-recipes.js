@@ -6,7 +6,7 @@
         // Use SweetAlert2
         Swal.fire({
             title: 'Confirm Delete',
-            text: `Are you sure you want to delete recipe ${recipeId}?`,
+            text: `Are you sure you want to delete recipe?`,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Yes, delete it!',
@@ -19,7 +19,7 @@
                     type: 'POST',
                     data: {}, // Empty data object since this is a POST request
                     success: function () {
-                        Swal.fire('Deleted!', `Recipe ${recipeId} has been deleted.`, 'success');
+                        Swal.fire('Deleted!', `Recipe has been deleted.`, 'success');
                         // Optionally remove the recipe from the DOM
                         $(`[data-id="${recipeId}"]`).closest('.overflow-hidden').remove();
                     },

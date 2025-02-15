@@ -6,7 +6,6 @@
         data: {}, // Pass any additional data if required
         success: function (response) {
             console.log(response);
-            Swal.fire('Fetched recipe', JSON.stringify(response), 'success');
             populateRecipeDetails(response);
             populateIngredients(response);
         },
@@ -184,7 +183,7 @@ function fetchIngredients() {
 let stepCounter = 1;
 
 $(document).ready(function () {
-    
+    getRecipeDetails();
 
     // Add Step functionality
     $('#addStepButton').on('click', function () {
