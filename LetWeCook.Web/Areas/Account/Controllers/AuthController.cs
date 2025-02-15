@@ -1,4 +1,5 @@
-﻿using LetWeCook.Web.Areas.Account.Models.ViewModels;
+﻿using LetWeCook.Services.Exceptions;
+using LetWeCook.Web.Areas.Account.Models.ViewModels;
 using LetWeCook.Web.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -110,7 +111,22 @@ namespace LetWeCook.Web.Areas.Account.Controllers
         [HttpGet]
         public async Task<IActionResult> ConfirmEmail(string userId, string code)
         {
-            throw new NotImplementedException();
+            if (userId == null || code == null)
+            {
+                return View("EmailConfirmError");
+            }
+
+            try
+            {
+                await _authenticationService.ConfirmEmailAsync(userId, code);
+            }
+            catch (EmailConfirmationException ex)
+            {
+                _logger.LogError(ex, "Error confirming email for user {UserId}", userId);
+                return View("EmailConfirmError");
+            }
+
+            return View("EmailConfirmed");
         }
 
 

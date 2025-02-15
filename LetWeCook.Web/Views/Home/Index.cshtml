@@ -27,14 +27,17 @@
 <div class="flex w-full flex-col items-center justify-center">
     <div class="header-bar flex w-full flex-row items-center justify-between">
         <div class="nav-bar flex flex-row items-center justify-center gap-x-4 py-4">
-            
-            <div class="flex h-11 w-36 cursor-pointer items-center justify-center rounded-[20px] border-[#FF2600] text-center text-xl font-medium text-[#575757] hover:border-2">
+
+            <div
+                class="flex h-11 w-36 cursor-pointer items-center justify-center rounded-[20px] border-[#FF2600] text-center text-xl font-medium text-[#575757] hover:border-2">
                 About
             </div>
-            <a href="@Url.Action("Index", "Recipe", new { area = "Cooking" })" class="flex h-11 w-36 cursor-pointer items-center justify-center rounded-[20px] border-[#FF2600] text-center text-xl font-medium text-[#575757] hover:border-2">
+            <a href="@Url.Action("Index", "Recipe", new { area = "Cooking" })"
+                class="flex h-11 w-36 cursor-pointer items-center justify-center rounded-[20px] border-[#FF2600] text-center text-xl font-medium text-[#575757] hover:border-2">
                 Recipes
             </a>
-            <a href="@Url.Action("Index", "Ingredient", new { area = "Cooking" })" class="flex h-11 w-36 cursor-pointer items-center justify-center rounded-[20px] border-[#FF2600] text-center text-xl font-medium text-[#575757] hover:border-2">
+            <a href="@Url.Action("Index", "Ingredient", new { area = "Cooking" })"
+                class="flex h-11 w-36 cursor-pointer items-center justify-center rounded-[20px] border-[#FF2600] text-center text-xl font-medium text-[#575757] hover:border-2">
                 Ingredients
             </a>
         </div>
@@ -46,17 +49,27 @@
                     <div id="profile-dropdown-trigger" class="cursor-pointer">
                         @if (!string.IsNullOrEmpty(pictureUrl))
                         {
-                            <img class="mx-4 h-9 w-9 rounded-full hover:border-2 hover:border-blue-500" src="@pictureUrl" alt="Profile Image" />
+                            <img class="mx-4 h-9 w-9 rounded-full hover:border-2 hover:border-blue-500" src="@pictureUrl"
+                                alt="Profile Image" />
+                        }
+                        else
+                        {
+                            <img class="mx-4 h-9 w-9 rounded-full hover:border-2 hover:border-blue-500"
+                                src="~/images/default-profile.jpg" alt="Profile Image" />
                         }
                     </div>
 
                     <!-- Dropdown Menu -->
-                    <div id="profile-dropdown-menu" class="z-10 ring-1 ring-opacity-5 absolute right-0 hidden w-40 rounded-md bg-white shadow-lg ring-black">
-                        <form asp-area="Account" asp-controller="Auth" asp-action="Logout" method="post" class="block w-full text-left">
+                    <div id="profile-dropdown-menu"
+                        class="z-10 ring-1 ring-opacity-5 absolute right-0 hidden w-40 rounded-md bg-white shadow-lg ring-black">
+                        <form asp-area="Account" asp-controller="Auth" asp-action="Logout" method="post"
+                            class="block w-full text-left">
                             @Html.AntiForgeryToken()
-                            <button type="submit" class="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100">Logout</button>
+                            <button type="submit"
+                                class="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100">Logout</button>
                         </form>
-                        <a asp-area="Account" asp-controller="Profile" asp-action="Index" class="block w-full px-4 py-2 text-gray-700 hover:bg-gray-100">
+                        <a asp-area="Account" asp-controller="Profile" asp-action="Index"
+                            class="block w-full px-4 py-2 text-gray-700 hover:bg-gray-100">
                             Profile
                         </a>
                     </div>
@@ -65,16 +78,17 @@
 
             else
             {
-                <a asp-area="Account" asp-controller="Auth" asp-action="Login" class="font-semibold text-gray-500 underline">
+                <a asp-area="Account" asp-controller="Auth" asp-action="Login"
+                    class="font-semibold text-gray-500 underline">
                     Login
                 </a>
-                
+
             }
         </div>
     </div>
     <div class="main-section relative flex flex-row items-center justify-center">
         <div class="decoration-home-1 -rotate-45 absolute translate-x-[750px] translate-y-[280px]">
-            <img src="~/images/vegetable-1.png" alt="vegetable-1"/>
+            <img src="~/images/vegetable-1.png" alt="vegetable-1" />
         </div>
         <div class="decoration-home-2 -translate-x-[300px] -translate-y-[80px] absolute left-0 top-0 rotate-90">
             <img class="w-96" src="~/images/chilli.png" alt="chilli" />
@@ -90,7 +104,9 @@
                 with green apple, Goat cheese and Candies
             </div>
             <div class="description w-full pt-3 text-base text-[#746F6F]">
-                While eating at a restaurant is an enjoyable and convenient occasion treat, most individuals and families prepare their meals at home. To make breakfast, lunch, and dinner daily, these persons must have the required foods on handy and ingredients to go.
+                While eating at a restaurant is an enjoyable and convenient occasion treat, most individuals and
+                families prepare their meals at home. To make breakfast, lunch, and dinner daily, these persons must
+                have the required foods on handy and ingredients to go.
             </div>
             <div class="flex w-4/5 items-center justify-around pt-8">
                 <div class="flex flex-col items-center">
@@ -113,7 +129,7 @@
 
         </div>
         <div class="flex-1 flex items-center justify-center">
-            <img class="h-5/6 w-5/6" src="~/images/home-dish-1.png" alt="home-dish-1"/>
+            <img class="h-5/6 w-5/6" src="~/images/home-dish-1.png" alt="home-dish-1" />
         </div>
     </div>
 
