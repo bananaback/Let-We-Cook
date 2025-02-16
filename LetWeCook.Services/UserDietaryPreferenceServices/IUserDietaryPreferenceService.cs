@@ -6,6 +6,7 @@ namespace LetWeCook.Services.UserDietaryPreferenceServices
     {
         Task<List<DietaryPreferenceDTO>> GetAllDietaryPreferences(CancellationToken cancellationToken);
         Task SaveDietaryPreferencesAsync(Guid userId, SaveDietaryPreferencesDTO dto, CancellationToken cancellationToken);
+        Task<List<DietaryPreferenceDTO>> GetUserDietaryPreferencesAsync(Guid userId, CancellationToken cancellationToken);
 
     }
 }

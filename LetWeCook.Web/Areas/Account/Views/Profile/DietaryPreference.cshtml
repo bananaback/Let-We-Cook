@@ -1,33 +1,33 @@
-@model LetWeCook.Web.Areas.Account.Models.ViewModels.UserDietaryPreferencesViewModel
+﻿@model LetWeCook.Web.Areas.Account.Models.ViewModels.UserDietaryPreferencesViewModel
 
 @{
     ViewData["Title"] = "Dietary Preferences";
     Layout = "_ProfileLayout";
 }
 
-<div class="max-w-3xl mx-auto p-8">
-    <h2 class="text-3xl font-bold text-gray-600 text-center mb-4">Choose Your Dietary Preferences</h2>
-    <p class="text-gray-400 text-center mb-8">Select dietary preferences that match your lifestyle. You can choose
+<div class="mx-auto max-w-3xl p-8">
+    <h2 class="mb-4 text-center text-3xl font-bold text-gray-600">Choose Your Dietary Preferences</h2>
+    <p class="mb-8 text-center text-gray-400">Select dietary preferences that match your lifestyle. You can choose
         multiple.</p>
 
     <form method="post" asp-action="SaveDietaryPreferences" asp-controller="Profile" class="space-y-6">
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+        <div class="grid-cols-2 grid gap-6 md:grid-cols-3">
             @for (int i = 0; i < Model.Preferences.Count; i++)
             {
                 var option = Model.Preferences[i];
                 <label
-                    class="group relative flex flex-col items-center p-5 rounded-xl shadow-md cursor-pointer transition hover:scale-105 hover:shadow-lg @option.Color">
+                    class="group relative flex cursor-pointer flex-col items-center rounded-xl p-5 shadow-md transition hover:scale-105 hover:shadow-lg @option.Color">
                     <input type="hidden" asp-for="Preferences[i].Name" />
                     <input type="hidden" asp-for="Preferences[i].Description" />
                     <input type="hidden" asp-for="Preferences[i].Color" />
                     <input type="hidden" asp-for="Preferences[i].Icon" />
 
-                    <input type="checkbox" asp-for="Preferences[i].IsSelected" class="hidden peer">
+                    <input type="checkbox" asp-for="Preferences[i].IsSelected" class="peer hidden">
 
                     <!-- Animated checkmark -->
                     <div
-                        class="absolute top-3 right-3 w-6 h-6 bg-gray-900 rounded-full flex items-center justify-center opacity-0 peer-checked:opacity-100 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white" viewBox="0 0 20 20"
+                        class="opacity-0 absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-gray-900 transition peer-checked:opacity-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" viewBox="0 0 20 20"
                             fill="currentColor">
                             <path fill-rule="evenodd"
                                 d="M16.707 5.293a1 1 0 010 1.414L8 15.414l-4.707-4.707a1 1 0 111.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -36,19 +36,33 @@
                     </div>
 
                     <!-- Unique Icon -->
-                    <div class="w-12 h-12 text-3xl text-white flex items-center justify-center mb-3">
+                    <div class="mb-3 flex h-12 w-12 items-center justify-center text-3xl text-white">
                         @option.Icon
                     </div>
 
-                    <span class="text-white font-medium text-lg">@option.Name</span>
-                    <p class="text-white text-sm text-center opacity-80 mt-1">@option.Description</p>
+                    <span class="text-lg font-medium text-white">@option.Name</span>
+                    <p class="opacity-80 mt-1 text-center text-sm text-white">@option.Description</p>
                 </label>
             }
         </div>
 
         <button type="submit"
-            class="w-full bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white font-medium py-3 px-6 rounded-lg transition transform hover:scale-105 shadow-lg">
+            class="w-full transform rounded-lg bg-gradient-to-r from-blue-500 to-blue-700 px-6 py-3 font-medium text-white shadow-lg transition hover:from-blue-600 hover:to-blue-800 hover:scale-105">
             Save Preferences
         </button>
     </form>
 </div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            Swal.fire({
+                title: "Success!",
+                text: "@TempData["SuccessMessage"]",
+                icon: "success",
+                confirmButtonText: "OK"
+            });
+        });
+    </script>
+}

@@ -36,7 +36,9 @@ namespace LetWeCook.Web.Areas.Account.Controllers
         [HttpGet]
         public async Task<IActionResult> DietaryPreference(CancellationToken cancellationToken = default)
         {
-            var dietaryPreferences = await _userDietaryPreferenceService.GetAllDietaryPreferences(cancellationToken);
+            var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? throw new UnauthorizedAccessException("User not authenticated."));
+
+            var dietaryPreferences = await _userDietaryPreferenceService.GetUserDietaryPreferencesAsync(userId, cancellationToken);
 
             var viewModel = new UserDietaryPreferencesViewModel
             {
@@ -46,22 +48,23 @@ namespace LetWeCook.Web.Areas.Account.Controllers
                     Description = dp.Description,
                     Color = dp.Color,
                     Icon = dp.Icon,
-                    IsSelected = false // Default to false (change logic later based on user preference)
+                    IsSelected = dp.IsSelected
                 }).ToList()
             };
+
             return View(viewModel);
         }
 
-        [Authorize] // Ensure only authenticated users can access
+
+        [Authorize]
         [HttpPost]
-        public async Task<IActionResult> SaveDietaryPreferences(UserDietaryPreferencesViewModel model,
-    CancellationToken cancellationToken)
+        public async Task<IActionResult> SaveDietaryPreferences(UserDietaryPreferencesViewModel model, CancellationToken cancellationToken)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Get user ID from auth context
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId) || !Guid.TryParse(userId, out var parsedUserId))
             {
                 _logger.LogWarning("User ID not found or invalid.");
-                return Unauthorized(); // Prevent unauthenticated users
+                return Unauthorized();
             }
 
             _logger.LogInformation("Saving dietary preferences for User ID: {UserId}", parsedUserId);
@@ -72,12 +75,11 @@ namespace LetWeCook.Web.Areas.Account.Controllers
                 return View("DietaryPreference", model);
             }
 
-            // Map ViewModel to DTO
             var saveDto = new SaveDietaryPreferencesDTO
             {
                 Preferences = model.Preferences.Select(p => new DietaryPreferenceDTO
                 {
-                    Value = p.Name, // Assuming "Name" in ViewModel is the preference value
+                    Value = p.Name,
                     Description = p.Description,
                     Color = p.Color,
                     Icon = p.Icon,
@@ -85,13 +87,17 @@ namespace LetWeCook.Web.Areas.Account.Controllers
                 }).ToList()
             };
 
-            // Call the service
             await _userDietaryPreferenceService.SaveDietaryPreferencesAsync(parsedUserId, saveDto, cancellationToken);
 
             _logger.LogInformation("Dietary preferences saved successfully.");
 
-            return View("DietaryPreference", model);
+            // Store success message in TempData
+            TempData["SuccessMessage"] = "Dietary preferences saved successfully!";
+
+            // Redirect to prevent form resubmission
+            return RedirectToAction("DietaryPreference");
         }
+
 
         [Authorize]
         [HttpGet]

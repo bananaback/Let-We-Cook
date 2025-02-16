@@ -1,9 +1,9 @@
-using LetWeCook.Services.DTOs;
-using LetWeCook.Data.Repositories.DietaryPreferenceRepositories;
-using LetWeCook.Data.Repositories.UserDietaryPreferenceRepositories;
 using LetWeCook.Data.Entities;
+using LetWeCook.Data.Repositories.DietaryPreferenceRepositories;
 using LetWeCook.Data.Repositories.ProfileRepositories;
 using LetWeCook.Data.Repositories.UnitOfWork;
+using LetWeCook.Data.Repositories.UserDietaryPreferenceRepositories;
+using LetWeCook.Services.DTOs;
 using Microsoft.Extensions.Logging;
 
 namespace LetWeCook.Services.UserDietaryPreferenceServices
@@ -42,6 +42,29 @@ namespace LetWeCook.Services.UserDietaryPreferenceServices
                 Icon = dp.Icon
             }).ToList();
         }
+
+        public async Task<List<DietaryPreferenceDTO>> GetUserDietaryPreferencesAsync(Guid userId, CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("Fetching user dietary preferences for User ID: {UserId}", userId);
+
+            var allPreferences = await _dietaryPreferenceRepository.GetAllAsync(cancellationToken);
+            var userPreferences = await _userDietaryPreferenceRepository.GetAllByUserIdAsync(userId, cancellationToken);
+            var selectedPreferences = userPreferences.Select(up => up.DietaryPreference.Id).ToHashSet();
+
+            var result = allPreferences.Select(dp => new DietaryPreferenceDTO
+            {
+                Id = dp.Id,
+                Value = dp.Value,
+                Description = dp.Description,
+                Color = dp.Color,
+                Icon = dp.Icon,
+                IsSelected = selectedPreferences.Contains(dp.Id)
+            }).ToList();
+
+            _logger.LogInformation("Retrieved {Count} dietary preferences for User ID: {UserId}", result.Count, userId);
+            return result;
+        }
+
 
         public async Task SaveDietaryPreferencesAsync(Guid userId, SaveDietaryPreferencesDTO dto, CancellationToken cancellationToken)
         {
