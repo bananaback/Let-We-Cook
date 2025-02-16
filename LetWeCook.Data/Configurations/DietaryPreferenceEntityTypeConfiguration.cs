@@ -16,7 +16,20 @@ namespace LetWeCook.Data.Configurations
 				.HasColumnName("id");
 
 			builder.Property(dp => dp.Value)
-				.HasColumnName("value");
+				.HasColumnName("value")
+				.IsRequired();
+
+			builder.Property(dp => dp.Description)
+				.HasColumnName("description")
+				.IsRequired();
+
+			builder.Property(dp => dp.Color)
+				.HasColumnName("color")
+				.IsRequired();
+
+			builder.Property(dp => dp.Icon)
+			.HasColumnName("icon")
+			.IsRequired();
 		}
 	}
 }

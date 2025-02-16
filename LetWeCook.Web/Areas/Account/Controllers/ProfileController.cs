@@ -2,6 +2,7 @@
 using LetWeCook.Services.DTOs;
 using LetWeCook.Services.ProfileServices;
 using LetWeCook.Services.RecipeServices;
+using LetWeCook.Services.UserDietaryPreferenceServices;
 using LetWeCook.Web.Areas.Account.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,12 +16,14 @@ namespace LetWeCook.Web.Areas.Account.Controllers
         private readonly IRecipeService _recipeService;
         private readonly IProfileService _profileService;
         private readonly IDishCollectionService _dishCollectionService;
+        private readonly IUserDietaryPreferenceService _userDietaryPreferenceService;
         private readonly ILogger<ProfileController> _logger;
-        public ProfileController(IRecipeService recipeService, IProfileService profileService, IDishCollectionService dishCollectionService, ILogger<ProfileController> logger)
+        public ProfileController(IRecipeService recipeService, IProfileService profileService, IDishCollectionService dishCollectionService, IUserDietaryPreferenceService userDietaryPreferenceService, ILogger<ProfileController> logger)
         {
             _recipeService = recipeService;
             _profileService = profileService;
             _dishCollectionService = dishCollectionService;
+            _userDietaryPreferenceService = userDietaryPreferenceService;
             _logger = logger;
         }
 
@@ -30,6 +33,65 @@ namespace LetWeCook.Web.Areas.Account.Controllers
             return Ok(await _profileService.GetUserProfileAsync(id.ToString(), cancellationToken));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> DietaryPreference(CancellationToken cancellationToken = default)
+        {
+            var dietaryPreferences = await _userDietaryPreferenceService.GetAllDietaryPreferences(cancellationToken);
+
+            var viewModel = new UserDietaryPreferencesViewModel
+            {
+                Preferences = dietaryPreferences.Select(dp => new DietaryPreferenceViewModel
+                {
+                    Name = dp.Value,
+                    Description = dp.Description,
+                    Color = dp.Color,
+                    Icon = dp.Icon,
+                    IsSelected = false // Default to false (change logic later based on user preference)
+                }).ToList()
+            };
+            return View(viewModel);
+        }
+
+        [Authorize] // Ensure only authenticated users can access
+        [HttpPost]
+        public async Task<IActionResult> SaveDietaryPreferences(UserDietaryPreferencesViewModel model,
+    CancellationToken cancellationToken)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Get user ID from auth context
+            if (string.IsNullOrEmpty(userId) || !Guid.TryParse(userId, out var parsedUserId))
+            {
+                _logger.LogWarning("User ID not found or invalid.");
+                return Unauthorized(); // Prevent unauthenticated users
+            }
+
+            _logger.LogInformation("Saving dietary preferences for User ID: {UserId}", parsedUserId);
+
+            if (model.Preferences == null || model.Preferences.Count == 0)
+            {
+                _logger.LogWarning("No dietary preferences received.");
+                return View("DietaryPreference", model);
+            }
+
+            // Map ViewModel to DTO
+            var saveDto = new SaveDietaryPreferencesDTO
+            {
+                Preferences = model.Preferences.Select(p => new DietaryPreferenceDTO
+                {
+                    Value = p.Name, // Assuming "Name" in ViewModel is the preference value
+                    Description = p.Description,
+                    Color = p.Color,
+                    Icon = p.Icon,
+                    IsSelected = p.IsSelected
+                }).ToList()
+            };
+
+            // Call the service
+            await _userDietaryPreferenceService.SaveDietaryPreferencesAsync(parsedUserId, saveDto, cancellationToken);
+
+            _logger.LogInformation("Dietary preferences saved successfully.");
+
+            return View("DietaryPreference", model);
+        }
 
         [Authorize]
         [HttpGet]

@@ -4,6 +4,7 @@ using LetWeCook.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LetWeCook.Data.Migrations
 {
     [DbContext(typeof(LetWeCookDbContext))]
-    partial class LetWeCookDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250216185104_DietaryPerferenceMigration")]
+    partial class DietaryPerferenceMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -244,11 +247,6 @@ namespace LetWeCook.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("description");
-
-                    b.Property<string>("Icon")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("icon");
 
                     b.Property<string>("Value")
                         .IsRequired()

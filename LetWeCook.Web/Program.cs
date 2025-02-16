@@ -142,6 +142,7 @@ using (var scope = app.Services.CreateScope())
     try
     {
         await DataSeeder.SeedRolesAsync(services);
+        await DataSeeder.SeedDietaryPreferencesAsync(services);
 
         // Export ingredients to file
         var applicationLifetime = services.GetRequiredService<IHostApplicationLifetime>();

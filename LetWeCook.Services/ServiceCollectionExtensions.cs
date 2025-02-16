@@ -2,6 +2,7 @@
 using LetWeCook.Data;
 using LetWeCook.Data.Entities;
 using LetWeCook.Data.Repositories.CollectionRecipeRepositories;
+using LetWeCook.Data.Repositories.DietaryPreferenceRepositories;
 using LetWeCook.Data.Repositories.DishCollectionRepositories;
 using LetWeCook.Data.Repositories.IngredientRepositories;
 using LetWeCook.Data.Repositories.IngredientSectionRepositories;
@@ -10,6 +11,7 @@ using LetWeCook.Data.Repositories.ProfileRepositories;
 using LetWeCook.Data.Repositories.RecipeRepositories;
 using LetWeCook.Data.Repositories.RecipeReviewRepositories;
 using LetWeCook.Data.Repositories.UnitOfWork;
+using LetWeCook.Data.Repositories.UserDietaryPreferenceRepositories;
 using LetWeCook.Services.DishCollectionServices;
 using LetWeCook.Services.FileStorageServices;
 using LetWeCook.Services.IngredientServices;
@@ -17,6 +19,7 @@ using LetWeCook.Services.MediaUrlServices;
 using LetWeCook.Services.ProfileServices;
 using LetWeCook.Services.RecipeReviewServices;
 using LetWeCook.Services.RecipeServices;
+using LetWeCook.Services.UserDietaryPreferenceServices;
 using LetWeCook.Web.Models.Configs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -56,6 +59,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IDishCollectionRepository, DishCollectionRepository>();
         services.AddScoped<ICollectionRecipeRepository, CollectionRecipeRepository>();
         services.AddScoped<IRecipeReviewRepository, RecipeReviewRepository>();
+        services.AddScoped<IDietaryPreferenceRepository, DietaryPreferenceRepository>();
+        services.AddScoped<IUserDietaryPreferenceRepository, UserDietaryPreferenceRepository>();
 
 
         Cloudinary cloudinary = new Cloudinary(appSettings.CloudinaryUrl);
@@ -69,6 +74,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IProfileService, ProfileService>();
         services.AddScoped<IDishCollectionService, DishCollectionService>();
         services.AddScoped<IRecipeReviewService, RecipeReviewService>();
+        services.AddScoped<IUserDietaryPreferenceService, UserDietaryPreferenceService>();
 
     }
 }
