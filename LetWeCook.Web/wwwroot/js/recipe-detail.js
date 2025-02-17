@@ -1,6 +1,32 @@
 ﻿$(document).ready(function () {
+
+
     getUserCollections();
     getUserBio();
+
+    $("#shareBtn").click(function () {
+        Swal.fire({
+            title: "Share on Facebook",
+            input: "textarea",
+            inputPlaceholder: "Write something about this recipe...",
+            showCancelButton: true,
+            confirmButtonText: "Copy & Share",
+            cancelButtonText: "Cancel",
+            confirmButtonColor: "#1877F2",
+            preConfirm: (message) => {
+                var currentPageUrl = window.location.href;
+                var fullMessage = message.trim() ? `${message.trim()}\n\nCheck it out: ${currentPageUrl}` : `Check it out: ${currentPageUrl}`;
+                var fbShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentPageUrl)}`;
+
+                // Copy full message to clipboard
+                navigator.clipboard.writeText(fullMessage);
+                Swal.fire("Copied!", "Your message has been copied. Paste it on Facebook.", "success").then(() => {
+                    // Open Facebook share dialog in a new tab
+                    window.open(fbShareUrl, '_blank');
+                });
+            }
+        });
+    });
 
     // Delegate click event to dynamically added collection items
     $('#collectionList').on('click', '.collection-item', function () {
